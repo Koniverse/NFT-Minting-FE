@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/static/css/main.f804ebb1.css",
+    "main.js": "/static/js/main.b088cd7f.js",
+    "static/media/dot-event-afica.png": "/static/media/dot-event-afica.62e855c7c2a564db11a9.png",
+    "static/media/sub-wallet-logo.svg": "/static/media/sub-wallet-logo.637b860fce4059c3a3b6b7c876a13601.svg",
+    "static/media/1.Polkadot.svg": "/static/media/1.Polkadot.51f911ff27b045014462b2654abcccfd.svg",
+    "static/media/2.Kusama.svg": "/static/media/2.Kusama.6d0c5ceb4938b6d8322b52bb73d79689.svg",
+    "index.html": "/index.html"
+  },
+  "entrypoints": [
+    "static/css/main.f804ebb1.css",
+    "static/js/main.b088cd7f.js"
+  ]
+}
