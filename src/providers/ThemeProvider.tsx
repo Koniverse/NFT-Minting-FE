@@ -2,24 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 
-import {generateTheme, SW_THEME_CONFIGS, SwThemeConfig, ThemeNames} from '../themes';
+import {generateTheme, SW_THEME_CONFIGS} from '../themes';
 import {ConfigProvider, ModalContextProvider, theme as reactUiTheme} from '@subwallet/react-ui';
 import React, { useMemo } from 'react';
 import styled, { createGlobalStyle, ThemeProvider as StyledComponentThemeProvider } from 'styled-components';
-import {GlobalToken} from "@subwallet/react-ui/es/theme/interface";
-import {Web3LogoMap} from "@subwallet/react-ui/es/config-provider/context";
+import {SwThemeConfig, Theme, ThemeProps} from "../types";
 
-export type Theme = {
-  id: ThemeNames;
-  name: string;
-  token: GlobalToken;
-  logoMap: Web3LogoMap,
-};
 
-export interface ThemeProps {
-  theme: Theme;
-  className?: string;
-}
 
 interface Props {
   children: React.ReactNode;

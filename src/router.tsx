@@ -6,10 +6,28 @@ import App from "./App";
 import Welcome from "./pages/Welcome";
 import MintNFT from "./pages/MintNFT";
 import NFTResult from "./pages/NFTResult";
+import {Console} from "inspector";
 
+const timeLoader = () => {
+  return new Promise((resolve) => {
+    const checkInterval = setInterval(() => {
+      // @ts-ignore
+      if (window.injectedWeb3) {
+        console.log('window.injectedWeb3');
+        clearInterval(checkInterval);
+        resolve(true);
+      }
+    }, 10);
+    setTimeout(() => {
+      clearInterval(checkInterval);
+      resolve(true);
+    }, 666);
+  })
+}
 export const router = createHashRouter([
   {
     path: '/',
+    loader: timeLoader,
     element: <App />,
     children: [
       {

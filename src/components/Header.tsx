@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import {ThemeProps} from "../contexts/ThemeContext";
 import CN from 'classnames';
 import {Image} from "@subwallet/react-ui";
 import logo from '../assets/logo.png';
 import {AccountSelector} from "./AccountSelector";
+import {ThemeProps} from "../types";
 
 
 type HeaderProps = ThemeProps;
@@ -29,7 +29,7 @@ export const Header = styled(Component)<HeaderProps>(({theme}) => {
 
     '.right-header': {
       flex: '1 1 120px',
-      paddingLeft: 60
+      paddingLeft: 36
     }
   }
 });

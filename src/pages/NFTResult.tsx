@@ -1,28 +1,51 @@
 import {Button, Image, Typography} from "@subwallet/react-ui";
-import dotEventAfica from '../assets/dot-event-afica.png';
-import {ThemeProps} from "../contexts/ThemeContext";
 import styled from "styled-components";
 import CN from "classnames";
+import {ThemeProps} from "../types";
+import {useCallback, useContext, useState} from "react";
+import {AppContext, WalletContext} from "../contexts";
+import {getWalletBySource, isWalletInstalled} from "@subwallet/wallet-connect/dotsama/wallets";
 
-type WelcomeProps = ThemeProps;
-function Component({className}: ThemeProps): React.ReactElement<WelcomeProps> {
+type NFTResultProps = ThemeProps;
+function Component({className}: ThemeProps): React.ReactElement<NFTResultProps> {
+  const [isInstallSubWallet] = useState(isWalletInstalled('subwallet'));
+  const {collection} = useContext(AppContext);
+  const walletContext = useContext(WalletContext);
+
+  const onConnectWallet = useCallback(() => {
+    const wallet = getWalletBySource('subwallet-js');
+    walletContext.setWallet(wallet, 'substrate');
+  }, [walletContext]);
+
   return (<div className={CN('common-page', className)}>
-    <div>
-      <Typography.Title className={'mb-lg'} level={4}>
-        Africa’s Polkadot Event
+    {collection && <div>
+      <Typography.Title className={'project-title'} level={4}>
+        {collection?.name}
       </Typography.Title>
-      <Image className={'mb-md'} width={262} src={dotEventAfica} shape={'default'}/>
+      <Image className={'project-image'} width={262} height={262} src={`https://artzeronft.infura-ipfs.io/ipfs/${collection?.avatarImage}`} shape={'default'}/>
       <Typography.Paragraph className={'project-description'}>
-        Polkadot Safari will bring together an auspicious group of 400 people from Africa and around the world to learn
+        {collection?.description},
+        <a target={'_blank'} href={`https://alephzero.artzero.io/#/launchpad/${collection?.nftContractAddress}`}>see more</a>
       </Typography.Paragraph>
-    </div>
-    <Button className={'mb-sm'} schema={"secondary"} ghost={true} block={true}>Successfully</Button>
+    </div>}
+    <Button className={'mb-sm'} schema={"secondary"} ghost={true} block={true}>Video Instructions</Button>
   </div>)
 }
 
-const Welcome = styled(Component)<WelcomeProps>(({theme}) => {
+const NFTResult = styled(Component)<NFTResultProps>(({theme}) => {
   return {
     textAlign: 'center',
+
+    '.project-title': {
+      marginBottom: 24
+    },
+    '.project-image': {
+      marginBottom: 24,
+      height: 262,
+    },
+    '.project-description': {
+      marginBottom: 16
+    }
   }
 });
-export default Welcome;
+export default NFTResult;
