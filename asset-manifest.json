@@ -1,15 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.f804ebb1.css",
-    "main.js": "/static/js/main.b088cd7f.js",
-    "static/media/dot-event-afica.png": "/static/media/dot-event-afica.62e855c7c2a564db11a9.png",
-    "static/media/sub-wallet-logo.svg": "/static/media/sub-wallet-logo.637b860fce4059c3a3b6b7c876a13601.svg",
+    "main.css": "/static/css/main.f3a3445b.css",
+    "main.js": "/static/js/main.530f9b25.js",
+    "static/media/SubWalletLogo.svg": "/static/media/SubWalletLogo.637b860fce4059c3a3b6b7c876a13601.svg",
+    "static/media/MetaMaskLogo.svg": "/static/media/MetaMaskLogo.1e91d234a70747385cb8c9123cf4869d.svg",
+    "static/media/TalismanLogo.svg": "/static/media/TalismanLogo.d2bc76e57d50979e1e7bfa71211ddc6f.svg",
     "static/media/1.Polkadot.svg": "/static/media/1.Polkadot.51f911ff27b045014462b2654abcccfd.svg",
     "static/media/2.Kusama.svg": "/static/media/2.Kusama.6d0c5ceb4938b6d8322b52bb73d79689.svg",
+    "static/media/PolkadotLogo.svg": "/static/media/PolkadotLogo.8492330aac9d174faa4886cab4cb5b93.svg",
     "index.html": "/index.html"
   },
   "entrypoints": [
-    "static/css/main.f804ebb1.css",
-    "static/js/main.b088cd7f.js"
+    "static/css/main.f3a3445b.css",
+    "static/js/main.530f9b25.js"
   ]
 }
