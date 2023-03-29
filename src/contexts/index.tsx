@@ -41,6 +41,7 @@ export interface AppContextType {
   setCurrentAccount: (account: string) => void,
   isApiReady: boolean,
   apiPromise?: ApiPromise,
+  freeBalance: number,
   collection?: NFTCollection,
   mintedNFTs?: NFTItem[],
   setMintedNFTs: (nfts: NFTItem[]) => void
@@ -49,6 +50,7 @@ export interface AppContextType {
 export const AppContext = createContext<AppContextType>({
   currentAccount: undefined,
   isApiReady: false,
+  freeBalance: 0,
   setCurrentAccount: (account: string) => {},
   setMintedNFTs(nfts: NFTItem[]): void {},
 })

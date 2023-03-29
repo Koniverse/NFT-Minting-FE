@@ -12,7 +12,6 @@ const timeLoader = () => {
     const checkInterval = setInterval(() => {
       // @ts-ignore
       if (window.injectedWeb3) {
-        console.log('window.injectedWeb3');
         clearInterval(checkInterval);
         resolve(true);
       }

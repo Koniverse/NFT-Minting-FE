@@ -19,7 +19,7 @@ function Component({className}: ThemeProps): React.ReactElement<NFTResultProps> 
       <CollectionImage className={'collection-image'} collection={collection}/>
       <Typography.Title level={4} className={'nft-title'}>
         {collection.name.toUpperCase()}
-        <span className={'nft-number'}>#{mintedNFTs[0].name}</span>
+        <span className={'nft-number'}>#{mintedNFTs[0].tokenID}</span>
       </Typography.Title>
     </div>}
     <Button schema={"secondary"}

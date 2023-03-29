@@ -63,7 +63,38 @@ export interface NFTCollection {
   isDuplicationChecked: boolean
 }
 
+const NFTItemObject = {
+    "_id": "6423bc9631ed64179fd6145d",
+    "nftName": null,
+    "description": null,
+    "avatar": null,
+    "nftContractAddress": "5HDHdUUF51MKWCcz8pBm7a7Cy7gopUwttEcsjdp1eoi6jecC",
+    "owner": "5ENp8Z2pquNyiPpRa59ihAeb5a871G3REMhn27Rzwp4P84SL",
+    "tokenID": 4,
+    "attributes": [],
+    "attributesValue": [],
+    "listed_date": 0,
+    "price": 0,
+    "is_for_sale": false,
+    "nft_owner": "",
+    "is_locked": false,
+    "traits": null
+}
+
 export interface NFTItem {
-  name: string,
-  collection_id: string,
+  _id: string,
+  nftName: string,
+  description: string,
+  avatar: string,
+  nftContractAddress: string,
+  owner: string,
+  tokenID: number,
+  attributes: string[],
+  attributesValue: string[],
+  listed_date: number,
+  price: number,
+  is_for_sale: boolean,
+  nft_owner: string,
+  is_locked: boolean,
+  traits: any
 }

@@ -4,39 +4,62 @@
 import {useContext, useEffect, useState} from "react";
 import {AppContext, WalletContext} from "../contexts";
 import {useLocalStorage} from "../hooks/useLocalStorage";
-import {ApiPromise, WsProvider} from "@polkadot/api";
 import {NFTCollection, NFTItem} from "../types";
-import {ArtZeroApi} from "../utils/ArtZeroApi";
 import {ENVIRONMENT} from "../utils/environment";
+import {APICall} from "../api/client";
+import {ChainApiImpl} from "../api/chainApi";
 
 export interface AppContextProps {
   children: React.ReactNode;
 }
 
-const chainApi = new ApiPromise({provider: new WsProvider(ENVIRONMENT.CHAIN_ENDPOINT)});
-
 export function AppStateProvider({children}: AppContextProps): React.ReactElement<AppContextProps> {
   const [currentAccount, setCurrentAccount] = useLocalStorage('currentAccount');
-  const [collectionId, ] = useState(ENVIRONMENT.COLLECTION_ID);
+  const [collectionId,] = useState(ENVIRONMENT.COLLECTION_ID);
   const [collection, setCollection] = useState<NFTCollection | undefined>()
   const [mintedNFTs, setMintedNFTs] = useState<NFTItem[] | undefined>(undefined);
-  const walletContext = useContext(WalletContext);
+  const [balance, setBalance] = useState<number>(0);
   const [isApiReady, setIsApiReady] = useState(false);
+  const walletContext = useContext(WalletContext);
 
   useEffect(() => {
-    ArtZeroApi.fetchCollection(collectionId).then(setCollection);
+    //Fetching collection info
+    collectionId && APICall.getCollectionByAddress({collection_address: collectionId})
+      .then((rs: {ret: NFTCollection[]}) => {
+        setCollection(rs.ret[0])
+      });
   }, [collectionId]);
 
+  useEffect(() => {
+    //Fetching minted NFTs
+    currentAccount && APICall.getNFTsByOwnerAndCollection({collection_address: collectionId, owner: currentAccount})
+      .then((rs: {ret: NFTItem[]}) => {
+        setMintedNFTs(rs.ret)
+      });
+  }, [collectionId, currentAccount]);
+
+  // Check balance
+  useEffect(() => {
+    const unsubPromise = currentAccount && ChainApiImpl.subscribeBalance(currentAccount, (balance) => {
+      setBalance(balance);
+    })
+
+    return () => {
+      unsubPromise && unsubPromise.then(unsub => unsub());
+    }
+
+    }, [currentAccount]);
+
 
   useEffect(() => {
-    chainApi.isReady.then(() => {
+    ChainApiImpl.api.isReady.then(() => {
       setIsApiReady(true);
     }).catch((e) => {
       console.error(e);
       setIsApiReady(false);
     });
   }, []);
-  
+
   useEffect(() => {
     const walletAccounts = walletContext.accounts;
     if (walletAccounts.length > 0 && (!currentAccount || !walletAccounts)) {
@@ -46,7 +69,16 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
 
 
   return (
-    <AppContext.Provider value={{currentAccount, setCurrentAccount, isApiReady, apiPromise: chainApi, collection, mintedNFTs, setMintedNFTs}}>
+    <AppContext.Provider value={{
+      currentAccount,
+      setCurrentAccount,
+      isApiReady,
+      apiPromise: ChainApiImpl.api,
+      freeBalance: balance,
+      collection,
+      mintedNFTs,
+      setMintedNFTs
+    }}>
       {children}
     </AppContext.Provider>
   );

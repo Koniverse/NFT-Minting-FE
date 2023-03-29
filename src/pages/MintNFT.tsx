@@ -12,16 +12,15 @@ import CollectionTitle from "../components/CollectionTitle";
 
 type MintNFTProps = ThemeProps;
 function Component({className}: ThemeProps): React.ReactElement<MintNFTProps> {
-  const {collection, setMintedNFTs} = useContext(AppContext);
+  const {collection, freeBalance, setMintedNFTs} = useContext(AppContext);
   const [loading, setLoading] = useState(false);
 
   const onMint = useCallback(() => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      setMintedNFTs([{name: '200', collection_id: ENVIRONMENT.COLLECTION_ID}]);
     }, 3000)
-  }, [setMintedNFTs]);
+  }, []);
 
   return (<div className={CN('common-page', className)}>
     {collection && <div>
@@ -40,13 +39,13 @@ function Component({className}: ThemeProps): React.ReactElement<MintNFTProps> {
       </div>
       <CollectionDescription collection={collection} />
     </div>}
-    <Button className={'faucet-button mb-sm'}
+    {freeBalance === 0 && (<Button className={'faucet-button mb-sm'}
             schema={'secondary'}
             onClick={() => {window.open('https://faucet.test.azero.dev')}}
             icon={<Icon phosphorIcon={Drop} weight={'fill'} />}
             block={true}>
       Faucet Token
-    </Button>
+    </Button>)}
     <VideoInstruction />
   </div>)
 }

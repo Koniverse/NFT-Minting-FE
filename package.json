@@ -58,6 +58,8 @@
     ]
   },
   "devDependencies": {
+    "@polkadot/api-augment": "^10.2.1",
+    "@polkadot/types": "^10.2.1",
     "@svgr/webpack": "^7.0.0",
     "@types/react-copy-to-clipboard": "^5.0.4",
     "@types/styled-components": "^5.1.26",

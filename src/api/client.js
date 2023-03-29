@@ -1,9 +1,10 @@
 import axios from "axios";
+import {ENVIRONMENT} from "../utils/environment";
 const IPFS_BASE_URL = ''
 // const { create } = require("ipfs-http-client");
 const baseURL = 'https://a0-test-api.artzero.io';
-const projectId = 'process.env.REACT_APP_IPFS_PROJECT_ID';
-const projectKey = 'process.env.REACT_APP_IPFS_PROJECT_KEY';
+// const projectId = 'process.env.REACT_APP_IPFS_PROJECT_ID';
+// const projectKey = 'process.env.REACT_APP_IPFS_PROJECT_KEY';
 
 export const clientAPI = async (method, url, options) => {
   if (!options) options = {};
@@ -42,7 +43,7 @@ const client = async (
   method,
   url,
   options = {},
-  baseURL = process.env.REACT_APP_API_BASE_URL
+  baseURL = ENVIRONMENT.ARTZERO_API_ENDPOINT
 ) => {
   const headers = {
     Accept: "*/*",
