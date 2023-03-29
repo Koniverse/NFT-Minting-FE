@@ -6,7 +6,6 @@ import App from "./App";
 import Welcome from "./pages/Welcome";
 import MintNFT from "./pages/MintNFT";
 import NFTResult from "./pages/NFTResult";
-import {Console} from "inspector";
 
 const timeLoader = () => {
   return new Promise((resolve) => {

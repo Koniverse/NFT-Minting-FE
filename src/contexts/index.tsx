@@ -5,7 +5,7 @@ import { Wallet, WalletAccount } from '@subwallet/wallet-connect/types';
 import { EvmWallet } from '@subwallet/wallet-connect/types';
 import React, {createContext} from 'react';
 import {ApiPromise} from "@polkadot/api";
-import {NFTCollection} from "../types";
+import {NFTCollection, NFTItem} from "../types";
 
 export interface WalletContextInterface {
   wallet?: Wallet,
@@ -42,10 +42,13 @@ export interface AppContextType {
   isApiReady: boolean,
   apiPromise?: ApiPromise,
   collection?: NFTCollection,
+  mintedNFTs?: NFTItem[],
+  setMintedNFTs: (nfts: NFTItem[]) => void
 }
 
 export const AppContext = createContext<AppContextType>({
   currentAccount: undefined,
   isApiReady: false,
-  setCurrentAccount: (account: string) => {}
+  setCurrentAccount: (account: string) => {},
+  setMintedNFTs(nfts: NFTItem[]): void {},
 })

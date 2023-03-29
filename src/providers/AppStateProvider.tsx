@@ -5,7 +5,7 @@ import {useContext, useEffect, useState} from "react";
 import {AppContext, WalletContext} from "../contexts";
 import {useLocalStorage} from "../hooks/useLocalStorage";
 import {ApiPromise, WsProvider} from "@polkadot/api";
-import {NFTCollection} from "../types";
+import {NFTCollection, NFTItem} from "../types";
 import {ArtZeroApi} from "../utils/ArtZeroApi";
 import {ENVIRONMENT} from "../utils/environment";
 
@@ -19,10 +19,9 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
   const [currentAccount, setCurrentAccount] = useLocalStorage('currentAccount');
   const [collectionId, ] = useState(ENVIRONMENT.COLLECTION_ID);
   const [collection, setCollection] = useState<NFTCollection | undefined>()
+  const [mintedNFTs, setMintedNFTs] = useState<NFTItem[] | undefined>(undefined);
   const walletContext = useContext(WalletContext);
   const [isApiReady, setIsApiReady] = useState(false);
-
-  console.log(collection)
 
   useEffect(() => {
     ArtZeroApi.fetchCollection(collectionId).then(setCollection);
@@ -33,7 +32,7 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
     chainApi.isReady.then(() => {
       setIsApiReady(true);
     }).catch((e) => {
-      console.log(e);
+      console.error(e);
       setIsApiReady(false);
     });
   }, []);
@@ -47,7 +46,7 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
 
 
   return (
-    <AppContext.Provider value={{currentAccount, setCurrentAccount, isApiReady, apiPromise: chainApi, collection}}>
+    <AppContext.Provider value={{currentAccount, setCurrentAccount, isApiReady, apiPromise: chainApi, collection, mintedNFTs, setMintedNFTs}}>
       {children}
     </AppContext.Provider>
   );

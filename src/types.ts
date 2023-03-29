@@ -62,3 +62,8 @@ export interface NFTCollection {
   isDoxxed: boolean,
   isDuplicationChecked: boolean
 }
+
+export interface NFTItem {
+  name: string,
+  collection_id: string,
+}

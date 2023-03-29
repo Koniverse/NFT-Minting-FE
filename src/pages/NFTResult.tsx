@@ -1,43 +1,47 @@
-import {Button, Image, Typography} from "@subwallet/react-ui";
+import {Button, Icon, Typography} from "@subwallet/react-ui";
 import styled from "styled-components";
 import CN from "classnames";
 import {ThemeProps} from "../types";
 import {useContext} from "react";
 import {AppContext} from "../contexts";
-import {ENVIRONMENT} from "../utils/environment";
+import CollectionTitle from "../components/CollectionTitle";
+import CollectionImage from "../components/CollectionImage";
+import {CheckCircle} from "phosphor-react";
 
 type NFTResultProps = ThemeProps;
+
 function Component({className}: ThemeProps): React.ReactElement<NFTResultProps> {
-  const {collection} = useContext(AppContext);
+  const {collection, mintedNFTs} = useContext(AppContext);
 
   return (<div className={CN('common-page', className)}>
-    {collection && <div>
-      <Typography.Title className={'project-title'} level={4}>
-        {collection?.name}
+    {collection && mintedNFTs && mintedNFTs.length > 0 && <div>
+      <CollectionTitle collection={collection}/>
+      <CollectionImage className={'collection-image'} collection={collection}/>
+      <Typography.Title level={4} className={'nft-title'}>
+        {collection.name.toUpperCase()}
+        <span className={'nft-number'}>#{mintedNFTs[0].name}</span>
       </Typography.Title>
-      <Image className={'project-image'} width={262} height={262} src={ENVIRONMENT.ARTZERO_IMAGE_PATTERN.replace('{{id}}', collection?.avatarImage)} shape={'default'}/>
-      <Typography.Paragraph className={'project-description'}>
-        {collection?.description},
-        <a target={'_blank'} href={`${ENVIRONMENT.ARTZERO_PORTAL}/#/launchpad/${collection?.nftContractAddress}`} rel="noreferrer">see more</a>
-      </Typography.Paragraph>
     </div>}
-    <Button className={'mb-sm'} schema={"secondary"} ghost={true} block={true}>Video Instructions</Button>
+    <Button schema={"secondary"}
+            icon={<Icon phosphorIcon={CheckCircle} weight={"fill"}/>}
+            ghost={true}
+            block={true}>
+      Successfully
+    </Button>
   </div>)
 }
 
 const NFTResult = styled(Component)<NFTResultProps>(({theme}) => {
   return {
-    textAlign: 'center',
-
-    '.project-title': {
+    '.collection-image': {
       marginBottom: 24
     },
-    '.project-image': {
+    '.nft-title': {
+      textAlign: 'center',
       marginBottom: 24,
-      height: 262,
     },
-    '.project-description': {
-      marginBottom: 16
+    '.nft-number': {
+      color: theme.token.colorSecondary
     }
   }
 });

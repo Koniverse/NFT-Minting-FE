@@ -1,4 +1,4 @@
-import {Button, Image, Typography} from "@subwallet/react-ui";
+import {Button, Icon, Image, Typography} from "@subwallet/react-ui";
 import styled from "styled-components";
 import CN from "classnames";
 import {ThemeProps} from "../types";
@@ -6,8 +6,12 @@ import {useCallback, useContext, useState} from "react";
 import {AppContext, WalletContext} from "../contexts";
 import {getWalletBySource, isWalletInstalled} from "@subwallet/wallet-connect/dotsama/wallets";
 import {ENVIRONMENT} from "../utils/environment";
+import {Wallet} from "phosphor-react";
+import {VideoInstruction} from "../components/VideoInstruction";
+import {CollectionDescription} from "../components/CollectionDescription";
 
 type WelcomeProps = ThemeProps;
+
 function Component({className}: ThemeProps): React.ReactElement<WelcomeProps> {
   const [isInstallSubWallet] = useState(isWalletInstalled('subwallet'));
   const {collection} = useContext(AppContext);
@@ -20,32 +24,33 @@ function Component({className}: ThemeProps): React.ReactElement<WelcomeProps> {
 
   return (<div className={CN('common-page', className)}>
     {collection && <div>
-      <Typography.Title className={'project-title'} level={4}>
+      <Typography.Title className={'collection-title'} level={4}>
         {collection?.name}
       </Typography.Title>
-      <Image className={'project-image'} width={262} height={262} src={ENVIRONMENT.ARTZERO_IMAGE_PATTERN.replace('{{id}}', collection?.avatarImage)} shape={'default'}/>
-      <Typography.Paragraph className={'project-description'}>
-        {collection?.description},
-        <a target={'_blank'} href={`${ENVIRONMENT.ARTZERO_PORTAL}/#/launchpad/${collection?.nftContractAddress}`} rel="noreferrer">see more</a>
-      </Typography.Paragraph>
+      <Image className={'collection-image'} width={262} height={262}
+             src={ENVIRONMENT.ARTZERO_IMAGE_PATTERN.replace('{{id}}', collection?.avatarImage)} shape={'default'}/>
+      <CollectionDescription collection={collection} />
     </div>}
-    <Button className={'mb-sm'} schema={'primary'} onClick={onConnectWallet} disabled={isInstallSubWallet} block={true}>Connect Wallet</Button>
+    <Button className={'mb-md'}
+            schema={'primary'}
+            onClick={onConnectWallet}
+            disabled={isInstallSubWallet}
+            icon={<Icon phosphorIcon={Wallet} weight={"fill"}/>}
+            block={true}>
+      Connect Wallet
+    </Button>
+    <VideoInstruction />
   </div>)
 }
 
 const Welcome = styled(Component)<WelcomeProps>(({theme}) => {
   return {
-    textAlign: 'center',
-
-    '.project-title': {
-      marginBottom: 24
-    },
-    '.project-image': {
+    textAlign: "center",
+    '.collection-title': {
       marginBottom: 24,
-      height: 262,
     },
-    '.project-description': {
-      marginBottom: 16
+    '.collection-image': {
+      marginBottom: 24
     }
   }
 });

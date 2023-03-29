@@ -1,20 +1,26 @@
-import React from "react";
+import React, {useContext} from "react";
 import styled from "styled-components";
 import CN from 'classnames';
-import {Image} from "@subwallet/react-ui";
+import {Button, Icon, Image} from "@subwallet/react-ui";
 import logo from '../assets/logo.png';
 import {AccountSelector} from "./AccountSelector";
 import {ThemeProps} from "../types";
+import {WalletContext} from "../contexts";
+import {Question} from "phosphor-react";
 
 
 type HeaderProps = ThemeProps;
 
 export function Component({className}: HeaderProps): React.ReactElement {
+  const walletContext = useContext(WalletContext);
+
   return (
     <div className={CN('main-header', className)}>
       <Image className={'left-header logo'} width={120} src={logo}/>
       <div className={'right-header'}>
-        <AccountSelector/>
+        {walletContext.wallet && <AccountSelector/>}
+        {!walletContext.wallet &&
+          <Button type={'ghost'} icon={<Icon phosphorIcon={Question} weight={'duotone'}/>} size={'xs'}>Help</Button>}
       </div>
     </div>
   );
@@ -29,7 +35,13 @@ export const Header = styled(Component)<HeaderProps>(({theme}) => {
 
     '.right-header': {
       flex: '1 1 120px',
-      paddingLeft: 36
+      textAlign: 'right',
+      paddingLeft: 36,
+
+      '.ant-btn': {
+        position: "relative",
+        right: -12,
+      }
     }
   }
 });

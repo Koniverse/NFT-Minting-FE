@@ -136,7 +136,8 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
     },
 
     '.common-page': {
-      padding: token.paddingSM
+      padding: token.paddingSM,
+      paddingBottom: token.paddingLG,
     },
 
     '.project-description': {

@@ -1,13 +1,14 @@
 import React, {useCallback, useContext} from "react";
 import styled from "styled-components";
-import CN from 'classnames';
-import {SelectModal} from "@subwallet/react-ui";
+import {Button, Icon, SelectModal} from "@subwallet/react-ui";
 import {ThemeProps} from "../types";
 import {AppContext, WalletContext} from "../contexts";
 import {WalletAccount} from "@subwallet/wallet-connect/types";
 import AccountCard from "@subwallet/react-ui/es/web3-block/account-card";
 import AccountItem from "@subwallet/react-ui/es/web3-block/account-item";
 import {toShort} from "@subwallet/react-ui/es/_util/address";
+import {Copy} from "phosphor-react";
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 
 type AccountSelectorProps = ThemeProps;
@@ -19,8 +20,31 @@ export function Component({className}: AccountSelectorProps): React.ReactElement
   const renderAccount = useCallback(
     (account: WalletAccount, isSelected: boolean) => {
       return (
-        <AccountCard address={account.address} accountName={account.name || ''} avatarIdentPrefix={42}
-                     isSelected={isSelected}/>
+        <AccountCard
+          address={account.address}
+          accountName={account.name || ''} avatarIdentPrefix={42}
+          isSelected={isSelected}
+          addressPreLength={9}
+          addressSufLength={9}
+          renderRightItem={(dItem) => (
+            <>
+              {dItem}
+              <CopyToClipboard text={account.address}>
+                <Button
+                  icon={
+                    <Icon
+                      phosphorIcon={Copy}
+                      weight={'light'}
+                      size='sm'
+                    />
+                  }
+                  size='xs'
+                  type='ghost'
+                />
+              </CopyToClipboard>
+            </>
+          )}
+        />
       );
     },
     [],
