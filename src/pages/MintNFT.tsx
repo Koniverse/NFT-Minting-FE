@@ -15,7 +15,7 @@ import {APICall} from "../api/client";
 type MintNFTProps = ThemeProps;
 
 function Component({className}: ThemeProps): React.ReactElement<MintNFTProps> {
-  const {collection, freeBalance, currentAccount, setMintedNFTs} = useContext(AppContext);
+  const {collection, freeBalance, currentAccount, currentAddress, setMintedNFTs} = useContext(AppContext);
   const [loading, setLoading] = useState(false);
 
   const onMint = useCallback(() => {
@@ -62,7 +62,7 @@ function Component({className}: ThemeProps): React.ReactElement<MintNFTProps> {
             <Button className={'faucet-button'}
                     schema={'primary'}
                     onClick={() => {
-                      navigator.clipboard.writeText(currentAccount?.address || '');
+                      navigator.clipboard.writeText(currentAddress || '');
                       setTimeout(() => {
                         window.open('https://faucet.test.azero.dev')
                       }, 100)

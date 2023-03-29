@@ -12,7 +12,7 @@ export interface EnvironmentType {
 }
 export const ENVIRONMENT : EnvironmentType = {
   NODE_ENV: process.env.NODE_ENV || 'development',
-  COLLECTION_ID: '5HDHdUUF51MKWCcz8pBm7a7Cy7gopUwttEcsjdp1eoi6jecC',
+  COLLECTION_ID: '5DVG2kveDY5msL6stCh83QAz6pNN1yLa2D3yfJnLVprYWsAq',
   CHAIN_ENDPOINT: 'wss://ws.test.azero.dev',
   FAUCET_URL: 'https://faucet.test.azero.dev',
   INSTRUCTION_URL: 'https://www.youtube.com/watch?v=JiSEGXdV0V0&ab_channel=SubWalletApp',

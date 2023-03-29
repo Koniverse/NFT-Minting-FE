@@ -15,7 +15,7 @@ export function Component({collection, className}: Props) {
     </Typography.Title>
     <Button
       icon={<Icon phosphorIcon={ArrowSquareOut} weight={'light'}/>} size={'xs'} type={'ghost'}
-      onClick={() => {window.open(`${ENVIRONMENT.ARTZERO_PORTAL}/#/launchpad/${collection?.nftContractAddress}`)}}
+      onClick={() => {window.open(`${ENVIRONMENT.ARTZERO_PORTAL}/#/collection/${collection?.nftContractAddress}?is_for_sale=false`)}}
     />
   </div>;
 }

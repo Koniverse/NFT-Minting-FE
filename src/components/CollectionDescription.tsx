@@ -10,7 +10,7 @@ interface Props extends ThemeProps {
 export function Component({collection, className}: Props) {
   return <Typography.Paragraph className={CN(className, 'collection-description')}>
         {collection?.description},
-        <a target={'_blank'} href={`${ENVIRONMENT.ARTZERO_PORTAL}/#/launchpad/${collection?.nftContractAddress}`} rel="noreferrer">see more</a>
+        <a target={'_blank'} href={`${ENVIRONMENT.ARTZERO_PORTAL}/#/collection/${collection?.nftContractAddress}?is_for_sale=false`} rel="noreferrer">see more</a>
       </Typography.Paragraph>;
 }
 
