@@ -2,7 +2,7 @@ import axios from "axios";
 import {ENVIRONMENT} from "../utils/environment";
 const IPFS_BASE_URL = ''
 // const { create } = require("ipfs-http-client");
-const baseURL = 'https://a0-test-api.artzero.io';
+const baseURL = ENVIRONMENT.ARTZERO_PORTAL;
 // const projectId = 'process.env.REACT_APP_IPFS_PROJECT_ID';
 // const projectKey = 'process.env.REACT_APP_IPFS_PROJECT_KEY';
 

@@ -80,10 +80,10 @@ export function Component({className}: AccountSelectorProps): React.ReactElement
         placeholder={'Select Account'}
         items={walletState.accounts}
         itemKey={'address'}
-        selected={appState.currentAccount || ''}
+        selected={appState.currentAddress || ''}
         renderSelected={renderSelectedAccount}
         renderItem={renderAccount}
-        onSelect={appState.setCurrentAccount}
+        onSelect={appState.setCurrentAddress}
       />
     </div>
   );

@@ -1,7 +1,7 @@
 import {Button, Icon, Image} from "@subwallet/react-ui";
 import styled from "styled-components";
 import CN from "classnames";
-import {ThemeProps} from "../types";
+import {NFTItem, ThemeProps} from "../types";
 import {useCallback, useContext, useState} from "react";
 import {AppContext} from "../contexts";
 import {ENVIRONMENT} from "../utils/environment";
@@ -9,19 +9,47 @@ import {VideoInstruction} from "../components/VideoInstruction";
 import {CollectionDescription} from "../components/CollectionDescription";
 import {Drop, Ticket} from "phosphor-react";
 import CollectionTitle from "../components/CollectionTitle";
+import {ChainApiImpl} from "../api/chainApi";
+import {APICall} from "../api/client";
 
 type MintNFTProps = ThemeProps;
 
 function Component({className}: ThemeProps): React.ReactElement<MintNFTProps> {
-  const {collection, freeBalance, currentAccount} = useContext(AppContext);
+  const {collection, freeBalance, currentAccount, setMintedNFTs} = useContext(AppContext);
   const [loading, setLoading] = useState(false);
 
   const onMint = useCallback(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 3000)
-  }, []);
+    if (collection && currentAccount) {
+      setLoading(true);
+      ChainApiImpl.mintNFT(collection.nftContractAddress, currentAccount)
+        .then((rs) => {
+          const fetchInput = {collection_address: collection.nftContractAddress, owner: currentAccount.address}
+          let retry = 0;
+
+          // Start checking minted NFT with delay 3 sec and 6 retry
+          setTimeout(() => {
+            const checkInterval = setInterval(() => {
+              APICall.getNFTsByOwnerAndCollection(fetchInput)
+                .then((rs: { ret: NFTItem[] }) => {
+                  if (rs.ret && rs.ret.length > 0) {
+                    clearInterval(checkInterval);
+                    setMintedNFTs(rs.ret)
+                    setLoading(false)
+                  } else {
+                    retry += 1
+                    if (retry > 9) {
+                      clearInterval(checkInterval);
+                    }
+                  }
+                })
+            }, 1000)
+          }, 3000)
+        }).catch((e) => {
+        setLoading(false);
+        console.error(e)
+      });
+    }
+  }, [collection, currentAccount, setMintedNFTs]);
 
   return (<div className={CN('common-page', className)}>
     {collection && <div>
@@ -34,7 +62,7 @@ function Component({className}: ThemeProps): React.ReactElement<MintNFTProps> {
             <Button className={'faucet-button'}
                     schema={'primary'}
                     onClick={() => {
-                      navigator.clipboard.writeText(currentAccount || '');
+                      navigator.clipboard.writeText(currentAccount?.address || '');
                       setTimeout(() => {
                         window.open('https://faucet.test.azero.dev')
                       }, 100)

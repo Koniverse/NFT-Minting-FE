@@ -1,20 +1,22 @@
 // Copyright 2019-2022 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import {useContext, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useState} from "react";
 import {AppContext, WalletContext} from "../contexts";
 import {useLocalStorage} from "../hooks/useLocalStorage";
 import {NFTCollection, NFTItem} from "../types";
 import {ENVIRONMENT} from "../utils/environment";
 import {APICall} from "../api/client";
 import {ChainApiImpl} from "../api/chainApi";
+import {WalletAccount} from "@subwallet/wallet-connect/types";
 
 export interface AppContextProps {
   children: React.ReactNode;
 }
 
 export function AppStateProvider({children}: AppContextProps): React.ReactElement<AppContextProps> {
-  const [currentAccount, setCurrentAccount] = useLocalStorage('currentAccount');
+  const [currentAddress, setCurrentAddress] = useLocalStorage('currentAccount');
+  const [currentAccount, setCurrentAccount] = useState<WalletAccount | undefined>(undefined);
   const [collectionId,] = useState(ENVIRONMENT.COLLECTION_ID);
   const [collection, setCollection] = useState<NFTCollection | undefined>()
   const [mintedNFTs, setMintedNFTs] = useState<NFTItem[] | undefined>(undefined);
@@ -32,15 +34,15 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
 
   useEffect(() => {
     //Fetching minted NFTs
-    currentAccount && APICall.getNFTsByOwnerAndCollection({collection_address: collectionId, owner: currentAccount})
+    currentAddress && APICall.getNFTsByOwnerAndCollection({collection_address: collectionId, owner: currentAddress})
       .then((rs: {ret: NFTItem[]}) => {
         setMintedNFTs(rs.ret)
       });
-  }, [collectionId, currentAccount]);
+  }, [collectionId, currentAddress]);
 
   // Check balance
   useEffect(() => {
-    const unsubPromise = currentAccount && ChainApiImpl.subscribeBalance(currentAccount, (balance) => {
+    const unsubPromise = currentAddress && ChainApiImpl.subscribeBalance(currentAddress, (balance) => {
       setBalance(balance);
     })
 
@@ -48,7 +50,7 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
       unsubPromise && unsubPromise.then(unsub => unsub());
     }
 
-    }, [currentAccount]);
+    }, [currentAddress]);
 
 
   useEffect(() => {
@@ -60,18 +62,37 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
     });
   }, []);
 
+  const _setCurrentAddress = useCallback((address: string) => {
+    setCurrentAddress(address);
+    const currentAccount = walletContext.accounts.find((x) => (x.address === address));
+    setCurrentAccount(currentAccount)
+  }, [setCurrentAddress, walletContext.accounts])
+
   useEffect(() => {
     const walletAccounts = walletContext.accounts;
-    if (walletAccounts.length > 0 && (!currentAccount || !walletAccounts)) {
-      setCurrentAccount(walletAccounts[0].address);
+    let currentAccount: WalletAccount | undefined;
+
+    // Check currentAddress with wallet accounts list
+    if (currentAddress) {
+      currentAccount = walletAccounts.find((a) => (a.address === currentAddress))
+      if (currentAccount) {
+        setCurrentAccount(currentAccount);
+      }
     }
-  }, [currentAccount, setCurrentAccount, walletContext.accounts]);
+
+    // Set default account if not found current account
+    if (!currentAccount && walletAccounts.length > 0 && (!currentAddress || !walletAccounts)) {
+      setCurrentAccount(walletAccounts[0]);
+      setCurrentAddress(walletAccounts[0].address);
+    }
+  }, [currentAddress, setCurrentAddress, walletContext.accounts]);
 
 
   return (
     <AppContext.Provider value={{
+      currentAddress,
+      setCurrentAddress: _setCurrentAddress,
       currentAccount,
-      setCurrentAccount,
       isApiReady,
       apiPromise: ChainApiImpl.api,
       freeBalance: balance,

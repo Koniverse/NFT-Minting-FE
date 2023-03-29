@@ -37,20 +37,21 @@ export const OpenSelectWallet = React.createContext<OpenSelectWalletInterface>({
 });
 
 export interface AppContextType {
-  currentAccount?: string,
-  setCurrentAccount: (account: string) => void,
+  currentAddress?: string,
+  setCurrentAddress: (address: string) => void,
+  currentAccount?: WalletAccount,
   isApiReady: boolean,
   apiPromise?: ApiPromise,
   freeBalance: number,
   collection?: NFTCollection,
   mintedNFTs?: NFTItem[],
-  setMintedNFTs: (nfts: NFTItem[]) => void
+  setMintedNFTs: (nfts: NFTItem[]) => void,
 }
 
 export const AppContext = createContext<AppContextType>({
-  currentAccount: undefined,
+  currentAddress: undefined,
   isApiReady: false,
   freeBalance: 0,
-  setCurrentAccount: (account: string) => {},
-  setMintedNFTs(nfts: NFTItem[]): void {},
+  setCurrentAddress: (account: string) => {},
+  setMintedNFTs(nfts: NFTItem[]): void {}
 })

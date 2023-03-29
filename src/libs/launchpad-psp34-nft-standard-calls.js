@@ -3,6 +3,7 @@ import { ContractPromise } from "@polkadot/api-contract";
 import {web3FromSource} from "./extension-dapp";
 import {formatNumberOutput, formatOutput, getEstimatedGas, readOnlyGasLimit} from "../utils";
 import launchpad_psp34_nft_standard from "./launchpad-psp34-nft-standard";
+import {APICall} from "../api/client";
 // import {APICall} from "../api/client";
 
 let contract;
@@ -10,27 +11,6 @@ let contract;
 export const setContract = (c) => {
   contract = c;
 };
-
-async function getTotalSupply(caller_account) {
-  if (!contract || !caller_account) {
-    return null;
-  }
-
-  const address = caller_account?.address;
-  const gasLimit = readOnlyGasLimit(contract);
-  const azero_value = 0;
-
-  const { result, output } = await contract.query[
-    "psp34LaunchPadTraits::getTotalSupply"
-  ](address, {
-    value: azero_value,
-    gasLimit,
-  });
-  if (result.isOk) {
-    return formatOutput(output);
-  }
-  return null;
-}
 
 async function getLastPhaseId(caller_account) {
   if (!contract || !caller_account) {
@@ -49,63 +29,6 @@ async function getLastPhaseId(caller_account) {
   });
   if (result.isOk) {
     return formatNumberOutput(output);
-  }
-  return null;
-}
-
-
-async function getPhaseAccountLink(caller_account, phaseId, index) {
-  if (!contract || !caller_account) {
-    console.log("invalid inputs");
-    return null;
-  }
-  const address = caller_account?.address;
-  const gasLimit = readOnlyGasLimit(contract);
-  const azero_value = 0;
-
-  const { result, output } = await contract.query[
-    "psp34LaunchPadTraits::getPhaseAccountLink"
-  ](
-    address,
-    {
-      value: azero_value,
-      gasLimit,
-    },
-    phaseId,
-    index
-  );
-  if (result.isOk) {
-    return output.toHuman().Ok;
-  }
-  return null;
-}
-
-async function getWhitelistByAccountId(
-  caller_account,
-  phaseId,
-  accountAddress
-) {
-  if (!contract || !caller_account) {
-    console.log("invalid inputs");
-    return null;
-  }
-  const address = caller_account?.address;
-  const gasLimit = readOnlyGasLimit(contract);
-  const azero_value = 0;
-  const { result, output } = await contract.query[
-    "psp34LaunchPadTraits::getWhitelistByAccountId"
-  ](
-    address,
-    {
-      value: azero_value,
-      gasLimit,
-    },
-    accountAddress,
-    phaseId
-  );
-
-  if (result.isOk) {
-    return output.toHuman().Ok;
   }
   return null;
 }
@@ -182,22 +105,16 @@ async function publicMint(
   collection_address,
   wallet
 ) {
-  console.log('co vao day k')
   if (!contract || !caller_account) {
-    // toast.error(`Contract or caller not valid!`);
-    return null;
+    return `Contract or caller not valid!`;
   }
-
-  console.log('co vao day k1')
 
   let unsubscribe;
   let gasLimit;
 
   const address = caller_account?.address;
-  console.log(address)
   const { signer } = wallet;
   const value = new BN(mintingFee * 10 ** 6).mul(new BN(10 ** 6)).toString();
-  console.log(value)
 
   gasLimit = await getEstimatedGas(
     address,
@@ -207,7 +124,6 @@ async function publicMint(
     phaseId,
     mintAmount
   );
-  console.log(gasLimit)
   const txNotSign = contract.tx.publicMint(
     { gasLimit, value },
     phaseId,
@@ -224,8 +140,8 @@ async function publicMint(
       //   api,
       //   caller_account,
       // });
-      console.log(status)
-      console.log(status.isFinalized)
+      // console.log(status)
+      // console.log(status.isFinalized)
 
       if (status.isFinalized) {
         contract.query["psp34Traits::getLastTokenId"](address, {
@@ -241,18 +157,16 @@ async function publicMint(
               token_id <= lastTokenId;
               token_id++
             ) {
-              // await APICall.askBeUpdateNftData({
-              //   collection_address,
-              //   token_id,
-              // });
+              await APICall.askBeUpdateNftData({
+                collection_address,
+                token_id,
+              });
             }
           }
         });
       }
     })
     .then((unsub) => (unsubscribe = unsub))
-    .catch((error) => {
-      console.log('error')});
 
   return unsubscribe;
 }
@@ -295,27 +209,6 @@ async function getProjectInfo(caller_account) {
   return null;
 }
 
-async function tokenUri(caller_account, tokenId) {
-  if (!contract || !caller_account) {
-    return null;
-  }
-  const address = caller_account?.address;
-  const gasLimit = readOnlyGasLimit(contract);
-  const azero_value = 0;
-
-  const { result, output } = await contract.query["psp34Traits::tokenUri"](
-    address,
-    {
-      value: azero_value,
-      gasLimit,
-    },
-    tokenId
-  );
-  if (result.isOk) {
-    return output.toHuman().Ok;
-  }
-  return null;
-}
 
 
 async function getPublicMintedCount(caller_account) {
