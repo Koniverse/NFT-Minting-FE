@@ -13,14 +13,20 @@ import {CollectionDescription} from "../components/CollectionDescription";
 type WelcomeProps = ThemeProps;
 
 function Component({className}: ThemeProps): React.ReactElement<WelcomeProps> {
-  const [isInstallSubWallet] = useState(isWalletInstalled('subwallet'));
+  const [isInstallSubWallet] = useState(isWalletInstalled('subwallet-js'));
   const {collection} = useContext(AppContext);
   const walletContext = useContext(WalletContext);
 
   const onConnectWallet = useCallback(() => {
-    const wallet = getWalletBySource('subwallet-js');
-    walletContext.setWallet(wallet, 'substrate');
+    if (isWalletInstalled('subwallet-js')) {
+      const wallet = getWalletBySource('subwallet-js');
+      walletContext.setWallet(wallet, 'substrate');
+    }
   }, [walletContext]);
+
+  const onInstallWallet = useCallback(() => {
+    window.open(`https://mobile.subwallet.app/?url=${encodeURI(window.location.href)}`)
+  }, []);
 
   return (<div className={CN('common-page', className)}>
     {collection && <div>
@@ -31,14 +37,20 @@ function Component({className}: ThemeProps): React.ReactElement<WelcomeProps> {
              src={ENVIRONMENT.ARTZERO_IMAGE_PATTERN.replace('{{id}}', collection?.avatarImage)} shape={'default'}/>
       <CollectionDescription collection={collection} />
     </div>}
-    <Button className={'mb-md'}
+    {isInstallSubWallet && <Button className={'mb-md'}
             schema={'primary'}
             onClick={onConnectWallet}
-            disabled={isInstallSubWallet}
             icon={<Icon phosphorIcon={Wallet} weight={"fill"}/>}
             block={true}>
       Connect Wallet
-    </Button>
+    </Button>}
+    {!isInstallSubWallet && <Button className={'mb-md'}
+            schema={'primary'}
+            onClick={onInstallWallet}
+            icon={<Icon phosphorIcon={Wallet} weight={"fill"}/>}
+            block={true}>
+      Install Wallet
+    </Button>}
     <VideoInstruction />
   </div>)
 }

@@ -63,6 +63,7 @@
     "@svgr/webpack": "^7.0.0",
     "@types/react-copy-to-clipboard": "^5.0.4",
     "@types/styled-components": "^5.1.26",
-    "gh-pages": "^5.0.0"
+    "gh-pages": "^5.0.0",
+    "node-polyfill-webpack-plugin": "^2.0.1"
   }
 }

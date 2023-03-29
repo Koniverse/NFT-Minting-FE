@@ -7,6 +7,7 @@ import {AccountSelector} from "./AccountSelector";
 import {ThemeProps} from "../types";
 import {WalletContext} from "../contexts";
 import {Question} from "phosphor-react";
+import {ENVIRONMENT} from "../utils/environment";
 
 
 type HeaderProps = ThemeProps;
@@ -20,7 +21,15 @@ export function Component({className}: HeaderProps): React.ReactElement {
       <div className={'right-header'}>
         {walletContext.wallet && <AccountSelector/>}
         {!walletContext.wallet &&
-          <Button type={'ghost'} icon={<Icon phosphorIcon={Question} weight={'duotone'}/>} size={'xs'}>Help</Button>}
+          <Button
+            type={'ghost'}
+            onClick={() => {
+              window.open(ENVIRONMENT.INSTRUCTION_URL)
+            }}
+            icon={<Icon phosphorIcon={Question} weight={'duotone'}/>}
+            size={'xs'}>
+            Help
+          </Button>}
       </div>
     </div>
   );
