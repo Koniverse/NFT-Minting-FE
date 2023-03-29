@@ -25,7 +25,7 @@ function Component({className}: ThemeProps): React.ReactElement<WelcomeProps> {
       <Image className={'project-image'} width={262} height={262} src={`https://artzeronft.infura-ipfs.io/ipfs/${collection?.avatarImage}`} shape={'default'}/>
       <Typography.Paragraph className={'project-description'}>
         {collection?.description},
-        <a target={'_blank'} href={`https://alephzero.artzero.io/#/launchpad/${collection?.nftContractAddress}`}>see more</a>
+        <a target={'_blank'} href={`https://alephzero.artzero.io/#/launchpad/${collection?.nftContractAddress}`} rel="noreferrer">see more</a>
       </Typography.Paragraph>
     </div>}
     <Button className={'mb-sm'} schema={'primary'} onClick={onConnectWallet} disabled={isInstallSubWallet} block={true}>Connect Wallet</Button>

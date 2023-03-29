@@ -1,12 +1,12 @@
 // Copyright 2019-2022 @subwallet/wallet-connect authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { getWalletBySource } from '@subwallet/wallet-connect/dotsama/wallets';
-import { getEvmWalletBySource } from '@subwallet/wallet-connect/evm/evmWallets';
-import { EvmWallet, Wallet, WalletAccount } from '@subwallet/wallet-connect/types';
-import React, { useCallback, useEffect, useState } from 'react';
+import {getWalletBySource} from '@subwallet/wallet-connect/dotsama/wallets';
+import {getEvmWalletBySource} from '@subwallet/wallet-connect/evm/evmWallets';
+import {EvmWallet, Wallet, WalletAccount} from '@subwallet/wallet-connect/types';
+import React, {useCallback, useEffect, useState} from 'react';
 
-import { WalletContext, WalletContextInterface } from '../contexts';
+import {WalletContext, WalletContextInterface} from '../contexts';
 import {useLocalStorage} from "../hooks/useLocalStorage";
 import {windowReload} from "../utils/window";
 
@@ -14,7 +14,7 @@ interface Props {
   children: React.ReactElement;
 }
 
-export function WalletProvider ({ children }: Props) {
+export function WalletProvider({children}: Props) {
   const [walletKey, setWalletKey] = useLocalStorage('wallet-key');
   const [walletType, setWalletType] = useLocalStorage('wallet-type', 'substrate');
   const [currentWallet, setCurrentWallet] = useState<Wallet | EvmWallet | undefined>(getWalletBySource(walletKey));

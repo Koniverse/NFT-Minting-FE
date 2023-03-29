@@ -4,7 +4,7 @@
 import { Wallet, WalletAccount } from '@subwallet/wallet-connect/types';
 import { EvmWallet } from '@subwallet/wallet-connect/types';
 import React, {createContext} from 'react';
-import {ApiPromise, ApiRx} from "@polkadot/api";
+import {ApiPromise} from "@polkadot/api";
 import {NFTCollection} from "../types";
 
 export interface WalletContextInterface {
@@ -40,7 +40,7 @@ export interface AppContextType {
   currentAccount?: string,
   setCurrentAccount: (account: string) => void,
   isApiReady: boolean,
-  apiRx?: ApiRx,
+  apiPromise?: ApiPromise,
   collection?: NFTCollection,
 }
 

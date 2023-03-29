@@ -8,8 +8,6 @@ import React, { useMemo } from 'react';
 import styled, { createGlobalStyle, ThemeProvider as StyledComponentThemeProvider } from 'styled-components';
 import {SwThemeConfig, Theme, ThemeProps} from "../types";
 
-
-
 interface Props {
   children: React.ReactNode;
   themeConfig: SwThemeConfig

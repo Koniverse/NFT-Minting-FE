@@ -4,9 +4,9 @@
 import {useContext, useEffect, useState} from "react";
 import {AppContext, WalletContext} from "../contexts";
 import {useLocalStorage} from "../hooks/useLocalStorage";
-import {ApiRx, WsProvider} from "@polkadot/api";
-import {useArtZeroApi} from "../hooks/useArtZeroApi";
+import {ApiPromise, WsProvider} from "@polkadot/api";
 import {NFTCollection} from "../types";
+import {ArtZeroApi} from "../hooks/useArtZeroApi";
 
 const _collectionId = '5EcYrfdLPZWHdXWtSdacVQjPfBfUhydzs2CYFwJRUEmdCRZB';
 const chainEndpoint = 'wss://ws.test.azero.dev'
@@ -15,31 +15,29 @@ export interface AppContextProps {
   children: React.ReactNode;
 }
 
-const chainApi = new ApiRx({provider: new WsProvider(chainEndpoint)});
+const chainApi = new ApiPromise({provider: new WsProvider(chainEndpoint)});
 
 export function AppStateProvider({children}: AppContextProps): React.ReactElement<AppContextProps> {
   const [currentAccount, setCurrentAccount] = useLocalStorage('currentAccount');
-  const [collectionId, setCollectionId] = useState(_collectionId);
+  const [collectionId, ] = useState(_collectionId);
   const [collection, setCollection] = useState<NFTCollection | undefined>()
   const walletContext = useContext(WalletContext);
   const [isApiReady, setIsApiReady] = useState(false);
-  const artZeroApi = useArtZeroApi();
 
   console.log(collection)
 
   useEffect(() => {
-    artZeroApi.fetchCollection(collectionId).then(setCollection);
-  }, []);
+    ArtZeroApi.fetchCollection(collectionId).then(setCollection);
+  }, [collectionId]);
 
 
   useEffect(() => {
-    const sub = chainApi.isReady.subscribe((ready) => {
+    chainApi.isReady.then(() => {
       setIsApiReady(true);
+    }).catch((e) => {
+      console.log(e);
+      setIsApiReady(false);
     });
-
-    return () => {
-      sub.unsubscribe();
-    }
   }, []);
   
   useEffect(() => {
@@ -51,7 +49,7 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
 
 
   return (
-    <AppContext.Provider value={{currentAccount, setCurrentAccount, isApiReady: isApiReady, apiRx: chainApi, collection}}>
+    <AppContext.Provider value={{currentAccount, setCurrentAccount, isApiReady, apiPromise: chainApi, collection}}>
       {children}
     </AppContext.Provider>
   );
