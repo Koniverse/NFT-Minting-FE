@@ -18,7 +18,6 @@ export function WalletProvider({children}: Props) {
   const [walletKey, setWalletKey] = useLocalStorage('wallet-key');
   const [walletType, setWalletType] = useLocalStorage('wallet-type', 'substrate');
   const [currentWallet, setCurrentWallet] = useState<Wallet | EvmWallet | undefined>(getWalletBySource(walletKey));
-  const [isSelectWallet, setIsSelectWallet] = useState(false);
   const [accounts, setAccounts] = useState<WalletAccount[]>([]);
 
   const afterSelectWallet = useCallback(
@@ -78,15 +77,15 @@ export function WalletProvider({children}: Props) {
     walletType
   };
 
-  const selectWalletContext = {
-    isOpen: isSelectWallet,
-    open: () => {
-      setIsSelectWallet(true);
-    },
-    close: () => {
-      setIsSelectWallet(false);
-    }
-  };
+  // const selectWalletContext = {
+  //   isOpen: isSelectWallet,
+  //   open: () => {
+  //     setIsSelectWallet(true);
+  //   },
+  //   close: () => {
+  //     setIsSelectWallet(false);
+  //   }
+  // };
 
   useEffect(
     () => {

@@ -5,6 +5,7 @@ import {ThemeProps} from "../types";
 import {useCallback, useContext, useState} from "react";
 import {AppContext, WalletContext} from "../contexts";
 import {getWalletBySource, isWalletInstalled} from "@subwallet/wallet-connect/dotsama/wallets";
+import {ENVIRONMENT} from "../utils/environment";
 
 type WelcomeProps = ThemeProps;
 function Component({className}: ThemeProps): React.ReactElement<WelcomeProps> {
@@ -22,10 +23,10 @@ function Component({className}: ThemeProps): React.ReactElement<WelcomeProps> {
       <Typography.Title className={'project-title'} level={4}>
         {collection?.name}
       </Typography.Title>
-      <Image className={'project-image'} width={262} height={262} src={`https://artzeronft.infura-ipfs.io/ipfs/${collection?.avatarImage}`} shape={'default'}/>
+      <Image className={'project-image'} width={262} height={262} src={ENVIRONMENT.ARTZERO_IMAGE_PATTERN.replace('{{id}}', collection?.avatarImage)} shape={'default'}/>
       <Typography.Paragraph className={'project-description'}>
         {collection?.description},
-        <a target={'_blank'} href={`https://alephzero.artzero.io/#/launchpad/${collection?.nftContractAddress}`} rel="noreferrer">see more</a>
+        <a target={'_blank'} href={`${ENVIRONMENT.ARTZERO_PORTAL}/#/launchpad/${collection?.nftContractAddress}`} rel="noreferrer">see more</a>
       </Typography.Paragraph>
     </div>}
     <Button className={'mb-sm'} schema={'primary'} onClick={onConnectWallet} disabled={isInstallSubWallet} block={true}>Connect Wallet</Button>

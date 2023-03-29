@@ -6,20 +6,18 @@ import {AppContext, WalletContext} from "../contexts";
 import {useLocalStorage} from "../hooks/useLocalStorage";
 import {ApiPromise, WsProvider} from "@polkadot/api";
 import {NFTCollection} from "../types";
-import {ArtZeroApi} from "../hooks/useArtZeroApi";
-
-const _collectionId = '5EcYrfdLPZWHdXWtSdacVQjPfBfUhydzs2CYFwJRUEmdCRZB';
-const chainEndpoint = 'wss://ws.test.azero.dev'
+import {ArtZeroApi} from "../utils/ArtZeroApi";
+import {ENVIRONMENT} from "../utils/environment";
 
 export interface AppContextProps {
   children: React.ReactNode;
 }
 
-const chainApi = new ApiPromise({provider: new WsProvider(chainEndpoint)});
+const chainApi = new ApiPromise({provider: new WsProvider(ENVIRONMENT.CHAIN_ENDPOINT)});
 
 export function AppStateProvider({children}: AppContextProps): React.ReactElement<AppContextProps> {
   const [currentAccount, setCurrentAccount] = useLocalStorage('currentAccount');
-  const [collectionId, ] = useState(_collectionId);
+  const [collectionId, ] = useState(ENVIRONMENT.COLLECTION_ID);
   const [collection, setCollection] = useState<NFTCollection | undefined>()
   const walletContext = useContext(WalletContext);
   const [isApiReady, setIsApiReady] = useState(false);
