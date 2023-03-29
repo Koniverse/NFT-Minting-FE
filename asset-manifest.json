@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.bcfe2487.css",
-    "main.js": "/static/js/main.03f4c5bd.js",
+    "main.js": "/static/js/main.ae8da654.js",
     "static/media/SubWalletLogo.svg": "/static/media/SubWalletLogo.637b860fce4059c3a3b6b7c876a13601.svg",
     "static/media/MetaMaskLogo.svg": "/static/media/MetaMaskLogo.1e91d234a70747385cb8c9123cf4869d.svg",
     "static/media/TalismanLogo.svg": "/static/media/TalismanLogo.d2bc76e57d50979e1e7bfa71211ddc6f.svg",
@@ -12,6 +12,6 @@
   },
   "entrypoints": [
     "static/css/main.bcfe2487.css",
-    "static/js/main.03f4c5bd.js"
+    "static/js/main.ae8da654.js"
   ]
 }
