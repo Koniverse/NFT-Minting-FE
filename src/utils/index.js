@@ -342,20 +342,9 @@ export async function getEstimatedGas(
     return ret;
   };
 
-  let result;
+  let result = await fetchGas();
 
-  // await toast.promise(
-  //   fetchGas().then((data) => (result = data)),
-  //   {
-  //     success: `Estimated transaction fee...`,
-  //     error: "Could not fetching gas!",
-  //   },
-  //   {
-  //     success: {
-  //       icon: "🔥",
-  //     },
-  //   }
-  // );
+
 
   return result;
 }

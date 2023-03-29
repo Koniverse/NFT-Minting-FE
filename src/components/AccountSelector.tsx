@@ -119,9 +119,9 @@ export const AccountSelector = styled(Component)<AccountSelectorProps>(({theme})
         maxWidth: 90,
       },
       '.__address': {
-        display: 'inline-block'
+        display: 'inline-block',
+        whiteSpace: "nowrap"
       }
-      // backgroundColor: 'red'
     }
   }
 });
