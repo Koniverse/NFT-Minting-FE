@@ -2,7 +2,7 @@ import {Button, Icon, Image} from "@subwallet/react-ui";
 import styled from "styled-components";
 import CN from "classnames";
 import {NFTItem, ThemeProps} from "../types";
-import {useCallback, useContext, useEffect, useState} from "react";
+import {useCallback, useContext, useState} from "react";
 import {AppContext} from "../contexts";
 import {ENVIRONMENT} from "../utils/environment";
 import {VideoInstruction} from "../components/VideoInstruction";

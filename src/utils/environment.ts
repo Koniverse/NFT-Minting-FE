@@ -15,7 +15,7 @@ export const ENVIRONMENT : EnvironmentType = {
   COLLECTION_ID: '5DVG2kveDY5msL6stCh83QAz6pNN1yLa2D3yfJnLVprYWsAq',
   CHAIN_ENDPOINT: 'wss://ws.test.azero.dev',
   FAUCET_URL: 'https://faucet.test.azero.dev',
-  INSTRUCTION_URL: 'https://www.youtube.com/watch?v=JiSEGXdV0V0&ab_channel=SubWalletApp',
+  INSTRUCTION_URL: 'https://youtu.be/7O2XUmAPpKE',
   ARTZERO_IMAGE_PATTERN: 'https://imagedelivery.net/Iw4Pp5uTB3HCaJ462QFK1Q/{{id}}/500',
   ARTZERO_PORTAL: 'https://a0-test.artzero.io',
   ARTZERO_API_ENDPOINT: 'https://a0-test-api.artzero.io',
