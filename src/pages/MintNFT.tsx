@@ -2,7 +2,7 @@ import {Button, Icon, Image} from "@subwallet/react-ui";
 import styled from "styled-components";
 import CN from "classnames";
 import {NFTItem, ThemeProps} from "../types";
-import {useCallback, useContext, useState} from "react";
+import {useCallback, useContext, useEffect, useState} from "react";
 import {AppContext} from "../contexts";
 import {ENVIRONMENT} from "../utils/environment";
 import {VideoInstruction} from "../components/VideoInstruction";
@@ -11,12 +11,14 @@ import {Drop, Ticket} from "phosphor-react";
 import CollectionTitle from "../components/CollectionTitle";
 import {ChainApiImpl} from "../api/chainApi";
 import {APICall} from "../api/client";
+import {useNotify} from "../hooks/useNotify";
 
 type MintNFTProps = ThemeProps;
 
 function Component({className}: ThemeProps): React.ReactElement<MintNFTProps> {
   const {collection, freeBalance, currentAccount, currentAddress, setMintedNFTs} = useContext(AppContext);
   const [loading, setLoading] = useState(false);
+  const notify = useNotify();
 
   const onMint = useCallback(() => {
     if (collection && currentAccount) {
@@ -46,10 +48,11 @@ function Component({className}: ThemeProps): React.ReactElement<MintNFTProps> {
           }, 3000)
         }).catch((e) => {
         setLoading(false);
+        notify.error({message: e?.message || 'Get error in minting process', placement: 'top'})
         console.error(e)
       });
     }
-  }, [collection, currentAccount, setMintedNFTs]);
+  }, [collection, currentAccount, notify, setMintedNFTs]);
 
   return (<div className={CN('common-page', className)}>
     {collection && <div>

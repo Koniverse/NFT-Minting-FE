@@ -20,7 +20,7 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
   const [collectionId,] = useState(ENVIRONMENT.COLLECTION_ID);
   const [collection, setCollection] = useState<NFTCollection | undefined>()
   const [mintedNFTs, setMintedNFTs] = useState<NFTItem[] | undefined>(undefined);
-  const [balance, setBalance] = useState<number>(0);
+  const [balance, setBalance] = useState<number>(-1);
   const [isApiReady, setIsApiReady] = useState(false);
   const walletContext = useContext(WalletContext);
 
@@ -42,6 +42,7 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
 
   // Check balance
   useEffect(() => {
+    setBalance(-1);
     const unsubPromise = currentAddress && ChainApiImpl.subscribeBalance(currentAddress, (balance) => {
       setBalance(balance);
     })

@@ -6,6 +6,7 @@ import { EvmWallet } from '@subwallet/wallet-connect/types';
 import React, {createContext} from 'react';
 import {ApiPromise} from "@polkadot/api";
 import {NFTCollection, NFTItem} from "../types";
+import {NotificationInstance} from "@subwallet/react-ui/es/notification/interface";
 
 export interface WalletContextInterface {
   wallet?: Wallet,
@@ -55,3 +56,5 @@ export const AppContext = createContext<AppContextType>({
   setCurrentAddress: (account: string) => {},
   setMintedNFTs(nfts: NFTItem[]): void {}
 })
+
+export const NotificationContext = createContext<NotificationInstance>({} as unknown as NotificationInstance)

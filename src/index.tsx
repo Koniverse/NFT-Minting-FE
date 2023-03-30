@@ -6,6 +6,7 @@ import {router} from "./router";
 import {ThemeProvider} from "./providers/ThemeProvider";
 import {AppStateProvider} from "./providers/AppStateProvider";
 import {WalletProvider} from "./providers/WalletProvider";
+import NotificationProvider from './providers/NotificationProvider';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -13,11 +14,13 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ThemeProvider>
-      <WalletProvider>
-        <AppStateProvider>
-          <RouterProvider router={router}/>
-        </AppStateProvider>
-      </WalletProvider>
+      <NotificationProvider>
+        <WalletProvider>
+          <AppStateProvider>
+            <RouterProvider router={router}/>
+          </AppStateProvider>
+        </WalletProvider>
+      </NotificationProvider>
     </ThemeProvider>
   </React.StrictMode>
 );
