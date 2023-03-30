@@ -4,7 +4,7 @@ import {web3FromSource} from "./extension-dapp";
 import {formatNumberOutput, formatOutput, getEstimatedGas, readOnlyGasLimit} from "../utils";
 import launchpad_psp34_nft_standard from "./launchpad-psp34-nft-standard";
 import {APICall} from "../api/client";
-// import {APICall} from "../api/client";
+import {txResponseErrorHandler} from "./txStatus";
 
 let contract;
 
@@ -103,7 +103,8 @@ async function publicMint(
   txType,
   api,
   collection_address,
-  wallet
+  wallet,
+  notify
 ) {
   if (!contract || !caller_account) {
     return `Contract or caller not valid!`;
@@ -132,14 +133,11 @@ async function publicMint(
 
   await txNotSign
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
-      // txResponseErrorHandler({
-      //   status,
-      //   dispatchError,
-      //   dispatch,
-      //   txType,
-      //   api,
-      //   caller_account,
-      // });
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        notify
+      });
       // console.log(status)
       // console.log(status.isFinalized)
 

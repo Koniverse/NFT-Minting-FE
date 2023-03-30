@@ -12,6 +12,7 @@ import BN from "bn.js";
 import {Wallet, WalletAccount} from "@subwallet/wallet-connect/types";
 import {WalletContextInterface} from "../contexts";
 import {keyring as Keyring} from "@polkadot/ui-keyring/bundle";
+import {NotificationInstance} from "@subwallet/react-ui/es/notification/interface";
 
 // Mint API helper
 const fetchPublicPhasesInfoData = async () => {
@@ -105,7 +106,7 @@ export class ChainApi {
     return unsub;
   }
 
-  async mintNFT(collectionId: string, sendAccount: WalletAccount) {
+  async mintNFT(collectionId: string, sendAccount: WalletAccount, notify: NotificationInstance) {
     await this.api.isReady;
     const launchpad_psp34_nft_standard_contract = new ContractPromise(this.api,
       launchpad_psp34_nft_standard.CONTRACT_ABI,
@@ -125,11 +126,11 @@ export class ChainApi {
 
     const mintingFee = currentPhase?.publicMintingFee / 10 ** 12;
     if (balance < 0.5) {
-      return "Low balance to mint";
+      throw {message: "Low balance to mint"};
     }
 
     if (balance < mintingFee + 0.01) {
-      return "Not enough balance to mint";
+      throw {message: "Not enough balance to mint"};
     }
 
     const currentPhaseId = currentPhase ? currentPhase.id : 1;
@@ -142,7 +143,8 @@ export class ChainApi {
       'publicMint',
       this.api,
       collectionId,
-      sendAccount
+      sendAccount,
+      notify
     );
   }
 }

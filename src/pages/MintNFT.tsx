@@ -23,7 +23,7 @@ function Component({className}: ThemeProps): React.ReactElement<MintNFTProps> {
   const onMint = useCallback(() => {
     if (collection && currentAccount) {
       setLoading(true);
-      ChainApiImpl.mintNFT(collection.nftContractAddress, currentAccount)
+      ChainApiImpl.mintNFT(collection.nftContractAddress, currentAccount, notify)
         .then((rs) => {
           const fetchInput = {collection_address: collection.nftContractAddress, owner: currentAccount.address}
           let retry = 0;
