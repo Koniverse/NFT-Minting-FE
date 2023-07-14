@@ -67,9 +67,40 @@ export function WalletProvider({children}: Props) {
     [afterSelectEvmWallet, currentWallet, setWalletKey]
   );
 
-  const walletContext: WalletContextInterface = {
+  const signMessage = useCallback(async (address: string, message: string): Promise<string | null> => {
+    return new Promise((resolve, reject) => {
+      if (!currentWallet) {
+        return null;
+      }
+
+      if (walletType === 'evm') {
+        if (currentWallet) {
+          (currentWallet as EvmWallet).request({
+            method: 'personal_sign',
+            params: [message, address]
+          }).then(rs => {
+            resolve(rs as unknown as string);
+          }).catch(reject);
+        }
+      } else {
+        if (walletType === 'substrate' && currentWallet) {
+          (currentWallet as Wallet).signer?.signRaw?.({
+            address: address,
+            type: 'payload',
+            data: message
+          }).then(rs => {
+            resolve(rs.signature);
+          }).catch(reject);
+        }
+      }
+    });
+  }, [currentWallet, walletType]);
+
+
+  const walletContext = {
     wallet: getWalletBySource(walletKey),
     evmWallet: getEvmWalletBySource(walletKey),
+    signMessage,
     accounts,
     setWallet: (wallet: Wallet | EvmWallet | undefined, walletType: 'substrate' | 'evm') => {
       if (walletType === 'substrate') {

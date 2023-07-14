@@ -2,9 +2,9 @@ import {ThemeProps} from '../../types';
 import styled from 'styled-components';
 import React, {useContext} from 'react';
 import {Button, Image, ModalContext} from '@subwallet/react-ui';
-import {EventTitles} from './EventTitles';
 import {SelectAccountTypeModal, SelectAccountTypeModalId} from './SelectAccountTypeModal';
 import logo from '../../assets/squircle-logo.svg';
+import { EventTitles } from './EventTitles';
 
 type Props = ThemeProps;
 

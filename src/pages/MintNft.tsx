@@ -2,12 +2,12 @@ import {MintCheckResult, MintedNFTItem, ThemeProps} from '../types';
 import styled from 'styled-components';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router';
-import {AppContext} from '../contexts';
-import {Button, Form, Image, Input} from '@subwallet/react-ui';
+import {AppContext, WalletContext} from '../contexts';
+import {Button, Form, Icon, Image, Input, List, Typography} from '@subwallet/react-ui';
 import {APICall} from '../api/nft';
 import {isAddress, isEthereumAddress} from '@polkadot/util-crypto';
 import {RuleObject} from "@subwallet/react-ui/es/form";
-import {Wallet} from "phosphor-react";
+import {Check, CheckCircle, Wallet, XCircle} from "phosphor-react";
 
 type Props = ThemeProps;
 
@@ -20,42 +20,17 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
     collectionInfo,
     currentAddress,
     currentAccountData,
+    setCurrentAccountData,
     setMintedNft,
   } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<'check' | 'confirm'>('check')
+  const walletContext = useContext(WalletContext);
 
   // Mint Data
-  const [mintCheckResult, setMintCheckResult] = useState<MintCheckResult | undefined>(undefined);
-  const [isMinted, setIsMinted] = useState<boolean>(false);
-  const [isMinting, setIsMinting] = useState<boolean>(false);
-  const [isCheckFetchMintedNftDone, setIsCheckFetchMintedNftDone] = useState<boolean>(false);
+  const [mintCheckResult, setMintCheckResult] = useState<Partial<MintCheckResult>>({});
   const [recipient, setRecipient] = useState<string | undefined>(undefined);
-
   const [form] = Form.useForm<RecipientAddressInput>();
-
-  const isReadyToMintCheck =
-    !mintCheckResult
-    && isCheckFetchMintedNftDone
-    && !isMinting
-    && !isMinted
-    && collectionInfo?.currentCampaignId
-    && currentAccountData.userId
-    && currentAccountData.signature
-    && currentAddress;
-
-  useEffect(() => {
-    if (currentAddress && currentAccountData.userId && currentAccountData.signature && isReadyToMintCheck) {
-      APICall.mintCheck({
-        address: currentAddress,
-        campaignId: collectionInfo?.currentCampaignId,
-        userId: currentAccountData.userId,
-        signature: currentAccountData.signature,
-      }).then((rs: MintCheckResult) => {
-        setMintCheckResult(rs);
-      });
-    }
-  }, [isReadyToMintCheck, collectionInfo?.currentCampaignId, currentAccountData, currentAddress]);
 
   const accountAddressValidator = useCallback(
     (rule: RuleObject, value: string) => {
@@ -75,24 +50,65 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
     []
   );
 
+  const mintCheck = useCallback(
+    () => {
+      let cancel = false;
+      const {userId, signature, randomCode} = currentAccountData;
+      const campaignId = collectionInfo?.currentCampaignId;
+      const needSign = currentAddress! && userId && randomCode && !signature;
+      const canCheck = currentAddress && userId && signature && campaignId;
 
-  const minCheck = () => {
-    const { userId, signature} = currentAccountData;
-    const campaignId = collectionInfo?.currentCampaignId;
+      // Sign message
+      if (needSign) {
+        setLoading(true);
+        walletContext.signMessage(currentAddress, randomCode)
+          .then((signature) => {
+            if (!cancel && signature) {
+              setCurrentAccountData({
+                ...currentAccountData,
+                signature,
+              });
+            }
+          }).catch(console.error).finally(() => {
+          setLoading(false);
+        });
+      } else if (canCheck) {
+        // Ready to check mint
+        if (currentAddress && userId && signature && campaignId) {
+          APICall.mintCheck({
+            address: currentAddress,
+            userId,
+            signature,
+            campaignId,
+          }).then((rs: MintCheckResult) => {
+            if (!cancel) {
+              setMintCheckResult(rs);
+            }
+          }).finally(() => {
+            setLoading(false);
+          });
+        }
+      }
 
-    if (currentAddress && userId && signature && campaignId) {
+      return () => {
+        setLoading(false);
+        cancel = true;
+      }
+    },
+    [collectionInfo?.currentCampaignId, currentAccountData, currentAddress, walletContext],
+  );
 
-      APICall.mintCheck({
-        address: currentAddress,
-        userId,
-        signature,
-        campaignId,
-      }).then((rs: MintCheckResult) => {
-
-      });
+  const nextStep = useCallback(() => {
+    const {isOwner, hasBalance, notDuplicated} = mintCheckResult;
+    if (isOwner && hasBalance && notDuplicated) {
+      setStep('confirm');
     }
+  }, [mintCheckResult])
 
-  }
+  // Mint check if in step check
+  useEffect(() => {
+    mintCheck();
+  }, [mintCheck])
 
   const mintSubmit = () => {
     if (mintCheckResult?.requestId && currentAddress && (!recipient || isEthereumAddress(currentAddress))) {
@@ -104,7 +120,6 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
         }
       ).then((rs: MintedNFTItem) => {
         setMintedNft(rs);
-        setIsMinted(true);
       }).finally(() => {
         setLoading(false);
       });
@@ -114,31 +129,47 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
   return (
     <div className={className}>
       {step === 'check' && (
-        <Form form={form}>
-          <Form.Item
-            name={'address'}
-            rules={[
-              {
-                validator: accountAddressValidator
-              }
-            ]}
-            statusHelpAsTooltip={true}
-          >
-            <Input
-              placeholder={'Enter address'}
-              prefix={<Wallet size={24}/>}
-              type={'text'}
-            />
-          </Form.Item>
+        <div className={'__box'}>
+          <div className={'__box-left-part'}>
+            {
+              collectionInfo && (
+                <Image className={className}
+                       width={'100%'}
+                       src={collectionInfo.image}
+                       shape={'default'}/>
+              )
+            }
+          </div>
+          <div className={'__box-right-part'}>
+            <div className={'checklist'}>
+              <Typography.Title>
+                Check eligibility
+              </Typography.Title>
+              <div>
+                <Icon size='sm' phosphorIcon={(mintCheckResult.isOwner && currentAccountData.signature) ? CheckCircle : XCircle}
+                      weight={'fill'}/>
+                <Typography.Text>Own this wallet</Typography.Text>
+              </div>
+              <div>
+                <Icon size='sm' phosphorIcon={mintCheckResult.hasBalance ? CheckCircle : XCircle} weight={'fill'}/>
+                <Typography.Text>Has balance</Typography.Text>
+              </div>
+              <div>
+                <Icon size='sm' phosphorIcon={mintCheckResult.notDuplicated ? CheckCircle : XCircle} weight={'fill'}/>
+                <Typography.Text>Minted before</Typography.Text>
+              </div>
+            </div>
 
-          <Button
-            block
-            onClick={form.submit}
-            schema="primary"
-          >
-            Start to mint
-          </Button>
-        </Form>
+            <Button block={true}
+                    onClick={mintCheckResult.requestId ? nextStep : mintCheck}
+                    schema="primary"
+                    className={'__button'}
+                    loading={loading}>
+              {loading ? 'Checking...' : mintCheckResult.requestId ? 'Mint for free' : 'Check Again'}
+            </Button>
+          </div>
+        </div>
+
       )}
       {step === 'confirm' && (<div className={'__box'}>
         <div className={'__box-left-part'}>
@@ -176,9 +207,32 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
             </div>
           </div>
 
-          <Button onClick={mintSubmit} className={'__button'} loading={loading}>
-            Mint for free
+          <Form form={form}>
+            <Form.Item
+              name={'address'}
+              rules={[
+                {
+                  validator: accountAddressValidator
+                }
+              ]}
+              statusHelpAsTooltip={true}
+            >
+              <Input
+                placeholder={'Enter address'}
+                prefix={<Wallet size={24}/>}
+                type={'text'}
+              />
+            </Form.Item>
+
+          </Form>
+
+          <Button block
+                  onClick={mintSubmit}
+                  schema="primary"
+                  className={'__button'} loading={loading}>
+            Mint NFT
           </Button>
+
         </div>
       </div>)}
     </div>
@@ -203,6 +257,7 @@ export const MintNft = styled(Component)<Props>(({theme: {token}}: Props) => {
     },
 
     '.__box-right-part': {
+      width: 500,
       marginLeft: 30
     },
 

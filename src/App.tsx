@@ -15,7 +15,7 @@ function Component({className}: Props) {
   const walletContext = useContext(WalletContext);
 
   useEffect(() => {
-    if (!currentAddress || !walletContext.wallet && !walletContext.evmWallet) {
+    if (!currentAddress || !(walletContext.wallet || walletContext.evmWallet)) {
       navigate('/connect-wallet');
     } else if (mintedNft) {
       navigate('/congratulation');

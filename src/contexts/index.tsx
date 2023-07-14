@@ -13,6 +13,7 @@ export interface WalletContextInterface {
   accounts: WalletAccount[],
   setWallet: (wallet: Wallet | EvmWallet | undefined, walletType: 'substrate'|'evm') => void
   walletType: 'substrate'|'evm';
+  signMessage: (address: string, message: string) => Promise<string | null>
   disconnectAccount: () => void,
 }
 
@@ -20,8 +21,11 @@ export const WalletContext = React.createContext<WalletContextInterface>({
   accounts: [],
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setWallet: (wallet, walletType: 'substrate'|'evm') => {},
+  walletType: 'substrate',
+  signMessage: async (address: string, message: string) => {
+    return null;
+  },
   disconnectAccount: () => {},
-  walletType: 'substrate'
 });
 
 interface OpenSelectWalletInterface {
@@ -47,12 +51,14 @@ export interface AppContextType {
   userId?: number,
   collectionInfo?: CollectionItem,
   setCurrentAddress: (address: string) => void,
+  setCurrentAccountData: (accountData: CurrentAccountData) => void,
   setMintedNft: (nft: MintedNFTItem) => void
 }
 
 export const AppContext = createContext<AppContextType>({
   currentAccountData: {},
   setCurrentAddress: (account: string) => {},
+  setCurrentAccountData: (accountData: CurrentAccountData) => {},
   setMintedNft: (nft: MintedNFTItem) => {}
 })
 

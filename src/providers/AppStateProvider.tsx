@@ -189,6 +189,7 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
       currentAccountData,
       walletAccount,
       setCurrentAddress: _setCurrentAddress,
+      setCurrentAccountData,
       mintedNft,
       collectionInfo,
       setMintedNft
