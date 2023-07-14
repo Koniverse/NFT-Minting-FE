@@ -13,12 +13,14 @@ export interface WalletContextInterface {
   accounts: WalletAccount[],
   setWallet: (wallet: Wallet | EvmWallet | undefined, walletType: 'substrate'|'evm') => void
   walletType: 'substrate'|'evm';
+  disconnectAccount: () => void,
 }
 
 export const WalletContext = React.createContext<WalletContextInterface>({
   accounts: [],
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setWallet: (wallet, walletType: 'substrate'|'evm') => {},
+  disconnectAccount: () => {},
   walletType: 'substrate'
 });
 

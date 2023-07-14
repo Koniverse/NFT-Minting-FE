@@ -1,13 +1,13 @@
-import React, {useCallback, useContext} from "react";
-import styled from "styled-components";
-import {Button, Icon, SelectModal} from "@subwallet/react-ui";
-import {ThemeProps} from "../types";
+import React, {useCallback, useContext} from 'react';
+import styled from 'styled-components';
+import {Button, Icon, SelectModal} from '@subwallet/react-ui';
+import {ThemeProps} from '../types';
 import {AppContext, WalletContext} from '../contexts';
-import {WalletAccount} from "@subwallet/wallet-connect/types";
-import AccountCard from "@subwallet/react-ui/es/web3-block/account-card";
-import AccountItem from "@subwallet/react-ui/es/web3-block/account-item";
-import {toShort} from "@subwallet/react-ui/es/_util/address";
-import {Copy} from "phosphor-react";
+import {WalletAccount} from '@subwallet/wallet-connect/types';
+import AccountCard from '@subwallet/react-ui/es/web3-block/account-card';
+import AccountItem from '@subwallet/react-ui/es/web3-block/account-item';
+import {toShort} from '@subwallet/react-ui/es/_util/address';
+import {Copy} from 'phosphor-react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 
 
@@ -35,11 +35,11 @@ export function Component({className}: AccountSelectorProps): React.ReactElement
                     <Icon
                       phosphorIcon={Copy}
                       weight={'light'}
-                      size='sm'
+                      size="sm"
                     />
                   }
-                  size='xs'
-                  type='ghost'
+                  size="xs"
+                  type="ghost"
                 />
               </CopyToClipboard>
             </>
@@ -60,7 +60,7 @@ export function Component({className}: AccountSelectorProps): React.ReactElement
               return <>
                 <span className={'__name'}>{account.name}</span>
                 <span className={'__address'}>({toShort(account.address, 0, 3)})</span>
-              </>
+              </>;
             }}
             avatarSize={20}
             avatarIdentPrefix={0}
@@ -84,6 +84,14 @@ export function Component({className}: AccountSelectorProps): React.ReactElement
         renderSelected={renderSelectedAccount}
         renderItem={renderAccount}
         onSelect={appState.setCurrentAddress}
+        footer={(
+          <>
+            <Button shape={'circle'} className={'general-bordered-button general-button-width'}
+                    onClick={walletState.disconnectAccount}>
+              Disconnect
+            </Button>
+          </>
+        )}
       />
     </div>
   );
@@ -103,9 +111,9 @@ export const AccountSelector = styled(Component)<AccountSelectorProps>(({theme})
       padding: 0,
       paddingRight: 6,
       '.ant-web3-block-middle-item': {
-        width: "auto",
+        width: 'auto',
         flexDirection: 'row',
-        justifyContent: "flex-start"
+        justifyContent: 'flex-start'
       },
     },
 
@@ -120,8 +128,8 @@ export const AccountSelector = styled(Component)<AccountSelectorProps>(({theme})
       },
       '.__address': {
         display: 'inline-block',
-        whiteSpace: "nowrap"
+        whiteSpace: 'nowrap'
       }
     }
-  }
+  };
 });

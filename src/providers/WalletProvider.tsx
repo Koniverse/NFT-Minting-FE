@@ -62,12 +62,12 @@ export function WalletProvider({children}: Props) {
       setWalletKey(wallet.extensionName);
 
       //todo: do need reload ?
-      windowReload();
+      // windowReload();
     },
     [afterSelectEvmWallet, currentWallet, setWalletKey]
   );
 
-  const walletContext = {
+  const walletContext: WalletContextInterface = {
     wallet: getWalletBySource(walletKey),
     evmWallet: getEvmWalletBySource(walletKey),
     accounts,
@@ -80,7 +80,11 @@ export function WalletProvider({children}: Props) {
 
       wallet && setWalletType(walletType);
     },
-    walletType
+    walletType: walletType as WalletContextInterface['walletType'],
+    disconnectAccount: () => {
+      window.localStorage.clear();
+      windowReload();
+    }
   };
 
   useEffect(() => {
@@ -103,7 +107,7 @@ export function WalletProvider({children}: Props) {
     },
     [afterSelectEvmWallet, afterSelectWallet, walletKey, walletType]);
 
-  return <WalletContext.Provider value={walletContext as WalletContextInterface}>
+  return <WalletContext.Provider value={walletContext}>
     {children}
   </WalletContext.Provider>;
 }

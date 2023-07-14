@@ -15,14 +15,14 @@ function Component({className}: Props) {
   const walletContext = useContext(WalletContext);
 
   useEffect(() => {
-    if (!currentAddress || !walletContext.wallet) {
+    if (!currentAddress || !walletContext.wallet && !walletContext.evmWallet) {
       navigate('/connect-wallet');
     } else if (mintedNft) {
       navigate('/congratulation');
     } else {
       navigate('/mint-nft')
     }
-  }, [currentAddress, mintedNft, navigate, walletContext.wallet]);
+  }, [currentAddress, mintedNft, navigate, walletContext.wallet, walletContext.evmWallet]);
 
   return (
     <div className={className}>
