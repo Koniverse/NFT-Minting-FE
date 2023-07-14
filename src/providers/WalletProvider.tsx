@@ -121,7 +121,7 @@ export function WalletProvider({children}: Props) {
   useEffect(() => {
       if (walletType === 'substrate') {
         const wallet = getWalletBySource(walletKey);
-
+        setCurrentWallet(wallet);
         setTimeout(() => {
           if (wallet && wallet?.installed) {
             // eslint-disable-next-line no-void
@@ -130,7 +130,7 @@ export function WalletProvider({children}: Props) {
         }, 150);
       } else {
         const evmWallet = getEvmWalletBySource(walletKey);
-
+        setCurrentWallet(evmWallet);
         evmWallet && evmWallet?.isReady.then(() => {
           afterSelectEvmWallet(evmWallet).catch(console.error);
         });
