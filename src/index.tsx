@@ -7,7 +7,7 @@ import {ThemeProvider} from "./providers/ThemeProvider";
 import {WalletProvider} from "./providers/WalletProvider";
 import NotificationProvider from './providers/NotificationProvider';
 import {ScreenContextProvider} from "./providers/ScreenProvider";
-import {AppStateProvider} from './providers/AppStateProvider2';
+import {AppStateProvider} from './providers/AppStateProvider';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

@@ -2,16 +2,11 @@ import {ApiPromise, WsProvider} from "@polkadot/api";
 import {ENVIRONMENT} from "../utils/environment";
 import "@polkadot/api-augment"
 import {convertStringToPrice, getPublicCurrentAccount, strToNumber} from "../utils";
-import launchpad_psp34_nft_standard_calls, {
-  getAccountBalanceOfPsp34NFT
-} from "../libs/launchpad-psp34-nft-standard-calls";
+import launchpad_psp34_nft_standard_calls from "../libs/launchpad-psp34-nft-standard-calls";
 import {ContractPromise} from "@polkadot/api-contract";
 import launchpad_psp34_nft_standard from "../libs/launchpad-psp34-nft-standard";
-import {keyring} from "@polkadot/ui-keyring";
 import BN from "bn.js";
-import {Wallet, WalletAccount} from "@subwallet/wallet-connect/types";
-import {WalletContextInterface} from "../contexts";
-import {keyring as Keyring} from "@polkadot/ui-keyring/bundle";
+import {WalletAccount} from "@subwallet/wallet-connect/types";
 
 // Mint API helper
 const fetchPublicPhasesInfoData = async () => {

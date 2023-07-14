@@ -1,84 +1,54 @@
-import {Button, Icon, Image, Typography} from "@subwallet/react-ui";
-import styled from "styled-components";
-import CN from "classnames";
-import {ThemeProps} from "../types";
-import {useCallback, useContext, useState} from "react";
-import {AppContext, WalletContext} from "../contexts";
-import {getWalletBySource, isWalletInstalled} from "@subwallet/wallet-connect/dotsama/wallets";
-import {ENVIRONMENT} from "../utils/environment";
-import {Wallet} from "phosphor-react";
-import {VideoInstruction} from "../components/VideoInstruction";
-import {CollectionDescription} from "../components/CollectionDescription";
-import {getEvmWalletBySource} from "@subwallet/wallet-connect/evm/evmWallets";
+import {ThemeProps} from '../types';
+import styled from 'styled-components';
+import React from 'react';
+import {Button} from '@subwallet/react-ui';
+import {useNavigate} from 'react-router';
+import {EventTitles} from './shared/EventTitles';
 
-type WelcomeProps = ThemeProps;
+type Props = ThemeProps;
 
-function Component({className}: ThemeProps): React.ReactElement<WelcomeProps> {
-  const [isInstallSubWallet] = useState(isWalletInstalled('subwallet-js'));
-  const {collection} = useContext(AppContext);
-  const walletContext = useContext(WalletContext);
+function Component({className}: ThemeProps): React.ReactElement<Props> {
+  const navigate = useNavigate();
 
-  const onConnectSubstrateWallet = useCallback(() => {
-    const wallet = getWalletBySource('subwallet-js');
-    walletContext.setWallet(wallet, 'substrate');
-  }, [walletContext]);
+  return (
+    <div className={className}>
+      <EventTitles/>
 
-  const onConnectEvmWallet = useCallback(() => {
-    const wallet = getEvmWalletBySource('SubWallet');
-    walletContext.setWallet(wallet, 'evm');
-  }, [walletContext]);
+      <div className={'__subtitle'}>
+        Exclusive for holders of Polkadot ecosystem’s relaychain
+        and parachain projects
+      </div>
 
-  const onInstallWallet = useCallback(() => {
-    window.open(`https://mobile.subwallet.app/?url=${encodeURI(window.location.href)}`)
-  }, []);
+      <div className={'__mint-count'}>
+        Already minted: 300
+      </div>
 
-  return (<div className={CN('common-page', className)}>
-    {collection && <div>
-      <Typography.Title className={'collection-title'} level={4}>
-        {collection?.name}
-      </Typography.Title>
-      <Image className={'collection-image'} width={262} height={262}
-             src={ENVIRONMENT.ARTZERO_IMAGE_PATTERN.replace('{{id}}', collection?.avatarImage)} shape={'default'}/>
-      <CollectionDescription collection={collection} />
-    </div>}
-    {isInstallSubWallet && (
-        <>
-          <Button className={'mb-md'}
-                  schema={'primary'}
-                  onClick={onConnectSubstrateWallet}
-                  icon={<Icon phosphorIcon={Wallet} weight={"fill"}/>}
-                  block={true}>
-            Connect Substrate Wallet
-          </Button>
-          <Button className={'mb-md'}
-                  schema={'primary'}
-                  onClick={onConnectEvmWallet}
-                  icon={<Icon phosphorIcon={Wallet} weight={"fill"}/>}
-                  block={true}>
-            Connect EVM Wallet
-          </Button>
-        </>
-    )}
-    {!isInstallSubWallet && <Button className={'mb-md'}
-            schema={'primary'}
-            onClick={onInstallWallet}
-            icon={<Icon phosphorIcon={Wallet} weight={"fill"}/>}
-            block={true}>
-      Install Wallet
-    </Button>}
-    <VideoInstruction />
-  </div>)
+      <Button onClick={() => {
+        navigate('/connect-wallet');
+      }}>
+        Mint for Free
+      </Button>
+    </div>
+  );
 }
 
-const Welcome = styled(Component)<WelcomeProps>(({theme}) => {
+export const Welcome = styled(Component)<Props>(({theme: {token}}: Props) => {
   return {
-    textAlign: "center",
-    '.collection-title': {
-      marginBottom: 24,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+
+    '.__subtitle': {
+      fontSize: 32,
+      lineHeight: 1.3,
+      maxWidth: 1090,
+      textAlign: 'center',
     },
-    '.collection-image': {
-      marginBottom: 24
-    }
-  }
+    '.__mint-count': {
+      fontSize: 48,
+      lineHeight: 1.3,
+      fontWeight: '700',
+      color: token.colorSecondary
+    },
+  };
 });
-export default Welcome;

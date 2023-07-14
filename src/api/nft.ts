@@ -1,11 +1,11 @@
 import axios from "axios";
 import {ENVIRONMENT} from "../utils/environment";
+import {MintCheckInput, MintSubmitInput} from "./types";
 
-// @ts-ignore
 const client = async (
-    method,
-    url,
-    options = {},
+    method: string,
+    url: string,
+    options: any = {},
     baseURL = ENVIRONMENT.API_ENDPOINT
 ) => {
     const headers = {
@@ -33,7 +33,7 @@ const client = async (
 };
 
 const clientWithGetParams = async (
-  url,
+  url: string,
   options = {},
   baseURL = ENVIRONMENT.API_ENDPOINT
 ) => {
@@ -59,7 +59,7 @@ const clientWithGetParams = async (
 
 
 export const APICall = {
-    getUserCode: async (address) => {
+    getUserCode: async (address: string) => {
         return await client("POST", "/api/user/get-code", {
             address,
         });
@@ -67,19 +67,15 @@ export const APICall = {
     fetchALlCollection: async () => {
         return await client("GET", "/api/collection/fetch", {});
     },
-    fetchMintedNft: async (address) => {
+    fetchMintedNft: async (address: string) => {
         return await clientWithGetParams( "/api/mint/fetch", {
             address
         });
     },
-    mintCheck: async ({ address, userId, signature, campaignId }) => {
-        return await client("POST", "/api/mint/check", {
-            address, userId, signature, campaignId
-        });
+    mintCheck: async (checkInput: MintCheckInput) => {
+        return await client("POST", "/api/mint/check", checkInput);
     },
-    mintSubmit: async ({ recipient, requestId }) => {
-        return await client("POST", "/api/mint/submit", {
-            recipient, requestId
-        });
+    mintSubmit: async (submitInput: MintSubmitInput) => {
+        return await client("POST", "/api/mint/submit", submitInput);
     },
 };

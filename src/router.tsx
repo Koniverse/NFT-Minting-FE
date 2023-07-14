@@ -4,12 +4,12 @@
 import {createHashRouter} from "react-router-dom";
 import App from "./App";
 import React from "react";
-import { Welcome } from "./pages2/Welcome";
-import {ConnectWallet} from "./pages2/ConnectWallet";
-import {SelectAccountType} from "./pages2/SelectAccountType";
-import {EligibilityCheck} from "./pages2/EligibilityCheck";
-import {MintDetail} from "./pages2/MintDetail";
-import {Congratulation} from "./pages2/Congratulation";
+import { Welcome } from "./pages/Welcome";
+import {ConnectWallet} from "./pages/ConnectWallet";
+import {SelectAccountType} from "./pages/SelectAccountType";
+import {EligibilityCheck} from "./pages/EligibilityCheck";
+import {MintDetail} from "./pages/MintDetail";
+import {Congratulation} from "./pages/Congratulation";
 
 const timeLoader = () => {
   return new Promise((resolve) => {
