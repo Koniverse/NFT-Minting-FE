@@ -9,6 +9,7 @@ export interface EnvironmentType {
   ARTZERO_IMAGE_PATTERN: string;
   ARTZERO_PORTAL: string;
   ARTZERO_API_ENDPOINT: string;
+  API_ENDPOINT: string;
 }
 export const ENVIRONMENT : EnvironmentType = {
   NODE_ENV: process.env.NODE_ENV || 'development',
@@ -19,4 +20,5 @@ export const ENVIRONMENT : EnvironmentType = {
   ARTZERO_IMAGE_PATTERN: 'https://imagedelivery.net/Iw4Pp5uTB3HCaJ462QFK1Q/{{id}}/500',
   ARTZERO_PORTAL: 'https://a0-test.artzero.io',
   ARTZERO_API_ENDPOINT: 'https://a0-test-api.artzero.io',
+  API_ENDPOINT: 'http://192.168.10.220:3001',
 }

@@ -4,9 +4,10 @@ import './index.css';
 import {RouterProvider} from "react-router";
 import {router} from "./router";
 import {ThemeProvider} from "./providers/ThemeProvider";
-import {AppStateProvider} from "./providers/AppStateProvider";
 import {WalletProvider} from "./providers/WalletProvider";
 import NotificationProvider from './providers/NotificationProvider';
+import {ScreenContextProvider} from "./providers/ScreenProvider";
+import {AppStateProvider} from './providers/AppStateProvider2';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -17,7 +18,9 @@ root.render(
       <NotificationProvider>
         <WalletProvider>
           <AppStateProvider>
-            <RouterProvider router={router}/>
+            <ScreenContextProvider>
+              <RouterProvider router={router}/>
+            </ScreenContextProvider>
           </AppStateProvider>
         </WalletProvider>
       </NotificationProvider>

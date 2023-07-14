@@ -44,6 +44,11 @@ export function WalletProvider({children}: Props) {
   const afterSelectEvmWallet = useCallback(
     async (wallet: EvmWallet) => {
       await wallet?.enable(); // Quick call extension?.request({ method: 'eth_requestAccounts' });
+      const _accounts = await wallet?.request({ method: 'eth_accounts' }) as string[];
+
+      if (_accounts) {
+        setAccounts(_accounts.map(a => ({address: a, source: walletKey})));
+      }
     },
     []
   );
@@ -56,6 +61,7 @@ export function WalletProvider({children}: Props) {
 
       setWalletKey(wallet.extensionName);
 
+      //todo: do need reload ?
       windowReload();
     },
     [afterSelectEvmWallet, currentWallet, setWalletKey]
@@ -76,16 +82,6 @@ export function WalletProvider({children}: Props) {
     },
     walletType
   };
-
-  // const selectWalletContext = {
-  //   isOpen: isSelectWallet,
-  //   open: () => {
-  //     setIsSelectWallet(true);
-  //   },
-  //   close: () => {
-  //     setIsSelectWallet(false);
-  //   }
-  // };
 
   useEffect(
     () => {

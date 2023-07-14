@@ -1,33 +1,62 @@
 import React, {useContext, useEffect} from 'react';
 import './App.css';
-import {Header} from "./components/Header";
-import {Outlet, useNavigate} from "react-router";
-import {AppContext, WalletContext} from "./contexts";
+import {Header} from './components/Header';
+import {Outlet, useNavigate} from 'react-router';
+import {AppContext2, WalletContext} from './contexts';
+import styled from 'styled-components';
+import {ThemeProps} from './types';
+import {Footer} from './components/Footer';
 
-function App() {
+type Props = ThemeProps;
+
+function Component({className}: Props) {
   const navigate = useNavigate();
-  const appContext = useContext(AppContext);
+  const {isMinted, mintCheckResult, currentAddress} = useContext(AppContext2);
   const walletContext = useContext(WalletContext);
 
   useEffect(() => {
-    if (walletContext.wallet === undefined) {
-      navigate('/welcome');
-    } else if (!appContext.mintedNFTs || appContext.mintedNFTs.length === 0) {
-      navigate('/mint-nft');
-    } else {
-      navigate('/result')
+    if (currentAddress) {
+      if (isMinted) {
+        navigate('/congratulation');
+      } else {
+        if (!mintCheckResult?.requestId) {
+          navigate('/eligibility-check');
+        }
+      }
     }
-  }, [appContext.mintedNFTs, navigate, walletContext.wallet]);
-
+  }, [currentAddress, navigate, isMinted, mintCheckResult?.requestId]);
 
   return (
-    <div className="main-wrapper">
-      <div className="main-content">
-        <Header/>
-        <Outlet />
+    <div className={className}>
+      <div className="app-layout">
+        <Header className={'app-header'}/>
+        <div className={'app-body'}>
+          <Outlet/>
+        </div>
+        <Footer className={'app-footer'}/>
       </div>
     </div>
   );
 }
+
+const App = styled(Component)<Props>(({theme: {token}}: ThemeProps) => {
+  return {
+    backgroundColor: token.colorBgDefault,
+    height: '100%',
+    overflow: 'auto',
+
+    '.app-layout': {
+      maxWidth: '1440px',
+      height: '100%',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    '.app-body': {
+      flex: 1,
+    },
+  };
+});
 
 export default App;

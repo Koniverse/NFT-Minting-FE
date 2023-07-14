@@ -1,12 +1,11 @@
 // Copyright 2019-2022 @subwallet/sub-connect authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Wallet, WalletAccount } from '@subwallet/wallet-connect/types';
-import { EvmWallet } from '@subwallet/wallet-connect/types';
+import {EvmWallet, Wallet, WalletAccount} from '@subwallet/wallet-connect/types';
 import React, {createContext} from 'react';
-import {ApiPromise} from "@polkadot/api";
-import {NFTCollection, NFTItem} from "../types";
-import {NotificationInstance} from "@subwallet/react-ui/es/notification/interface";
+import {ApiPromise} from '@polkadot/api';
+import {CollectionItem, MintCheckResult, MintedNFTItem, NFTCollection, NFTItem} from '../types';
+import {NotificationInstance} from '@subwallet/react-ui/es/notification/interface';
 
 export interface WalletContextInterface {
   wallet?: Wallet,
@@ -49,6 +48,33 @@ export interface AppContextType {
   setMintedNFTs: (nfts: NFTItem[]) => void,
 }
 
+export interface AppContextType2 {
+  currentAddress?: string,
+  currentAccount?: WalletAccount,
+  mintedNft?: MintedNFTItem,
+  campaignId?: number,
+  signature?: string,
+  userId?: number,
+  mintCheckResult?: MintCheckResult,
+  isMinted: boolean,
+  isMinting: boolean,
+  setCurrentAddress: (address: string) => void,
+  recipient?: string,
+  collectionInfo?: CollectionItem,
+  setRecipient: (address: string) => void,
+  setIsMinted: (value: boolean) => void,
+  setMintedNft: (nft: MintedNFTItem) => void,
+}
+
+export const AppContext2 = createContext<AppContextType2>({
+  isMinted: false,
+  isMinting: false,
+  setRecipient: (account: string) => {},
+  setCurrentAddress: (account: string) => {},
+  setIsMinted: (value: boolean) => {},
+  setMintedNft: (nft: MintedNFTItem) => {}
+})
+
 export const AppContext = createContext<AppContextType>({
   currentAddress: undefined,
   isApiReady: false,
@@ -58,3 +84,18 @@ export const AppContext = createContext<AppContextType>({
 })
 
 export const NotificationContext = createContext<NotificationInstance>({} as unknown as NotificationInstance)
+
+export enum Screens {
+  XS = 'xs',
+  SM = 'sm',
+  MD = 'md',
+  LG = 'lg',
+  XL = 'xl',
+  XXL = 'xxl',
+}
+
+export type ScreenContextType = {
+  screenType: `${Screens}`
+}
+
+export const ScreenContext = createContext<ScreenContextType>({screenType: Screens.XL});

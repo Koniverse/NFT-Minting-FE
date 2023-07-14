@@ -9,6 +9,7 @@ import {ENVIRONMENT} from "../utils/environment";
 import {Wallet} from "phosphor-react";
 import {VideoInstruction} from "../components/VideoInstruction";
 import {CollectionDescription} from "../components/CollectionDescription";
+import {getEvmWalletBySource} from "@subwallet/wallet-connect/evm/evmWallets";
 
 type WelcomeProps = ThemeProps;
 
@@ -17,11 +18,14 @@ function Component({className}: ThemeProps): React.ReactElement<WelcomeProps> {
   const {collection} = useContext(AppContext);
   const walletContext = useContext(WalletContext);
 
-  const onConnectWallet = useCallback(() => {
-    if (isWalletInstalled('subwallet-js')) {
-      const wallet = getWalletBySource('subwallet-js');
-      walletContext.setWallet(wallet, 'substrate');
-    }
+  const onConnectSubstrateWallet = useCallback(() => {
+    const wallet = getWalletBySource('subwallet-js');
+    walletContext.setWallet(wallet, 'substrate');
+  }, [walletContext]);
+
+  const onConnectEvmWallet = useCallback(() => {
+    const wallet = getEvmWalletBySource('SubWallet');
+    walletContext.setWallet(wallet, 'evm');
   }, [walletContext]);
 
   const onInstallWallet = useCallback(() => {
@@ -37,13 +41,24 @@ function Component({className}: ThemeProps): React.ReactElement<WelcomeProps> {
              src={ENVIRONMENT.ARTZERO_IMAGE_PATTERN.replace('{{id}}', collection?.avatarImage)} shape={'default'}/>
       <CollectionDescription collection={collection} />
     </div>}
-    {isInstallSubWallet && <Button className={'mb-md'}
-            schema={'primary'}
-            onClick={onConnectWallet}
-            icon={<Icon phosphorIcon={Wallet} weight={"fill"}/>}
-            block={true}>
-      Connect Wallet
-    </Button>}
+    {isInstallSubWallet && (
+        <>
+          <Button className={'mb-md'}
+                  schema={'primary'}
+                  onClick={onConnectSubstrateWallet}
+                  icon={<Icon phosphorIcon={Wallet} weight={"fill"}/>}
+                  block={true}>
+            Connect Substrate Wallet
+          </Button>
+          <Button className={'mb-md'}
+                  schema={'primary'}
+                  onClick={onConnectEvmWallet}
+                  icon={<Icon phosphorIcon={Wallet} weight={"fill"}/>}
+                  block={true}>
+            Connect EVM Wallet
+          </Button>
+        </>
+    )}
     {!isInstallSubWallet && <Button className={'mb-md'}
             schema={'primary'}
             onClick={onInstallWallet}

@@ -1,35 +1,35 @@
-import React, {useContext} from "react";
-import styled from "styled-components";
+import React, {useContext} from 'react';
+import styled from 'styled-components';
 import CN from 'classnames';
-import {Button, Icon, Image} from "@subwallet/react-ui";
-import logo from '../assets/logo.png';
-import {AccountSelector} from "./AccountSelector";
-import {ThemeProps} from "../types";
-import {WalletContext} from "../contexts";
-import {Question} from "phosphor-react";
-import {ENVIRONMENT} from "../utils/environment";
+import {Button, Icon, Image} from '@subwallet/react-ui';
+import logo from '../assets/logo.svg';
+import {AccountSelector} from './AccountSelector';
+import {ThemeProps} from '../types';
+import {WalletContext} from '../contexts';
+import {Question} from 'phosphor-react';
+import {useNavigate} from 'react-router';
 
 
 type HeaderProps = ThemeProps;
 
 export function Component({className}: HeaderProps): React.ReactElement {
   const walletContext = useContext(WalletContext);
+  const navigate = useNavigate();
 
   return (
     <div className={CN('main-header', className)}>
-      <Image className={'left-header logo'} width={120} src={logo}/>
+      <Image className={'left-header logo'} width={88} height={88} src={logo}/>
       <div className={'right-header'}>
-        {walletContext.wallet && <AccountSelector/>}
-        {!walletContext.wallet &&
-          <Button
-            type={'ghost'}
+        {walletContext.wallet || walletContext.evmWallet ? <AccountSelector/> :
+
+          (<Button
             onClick={() => {
-              window.open(ENVIRONMENT.INSTRUCTION_URL)
+              navigate('/select-account-type');
             }}
             icon={<Icon phosphorIcon={Question} weight={'duotone'}/>}
             size={'xs'}>
             Help
-          </Button>}
+          </Button>)}
       </div>
     </div>
   );
