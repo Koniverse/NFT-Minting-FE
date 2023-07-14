@@ -16,7 +16,7 @@ interface Props {
 const { useToken } = reactUiTheme;
 
 const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
-  const { token } = theme as Theme;
+  const { token, extendToken } = theme as Theme;
 
   return ({
     body: {
@@ -165,6 +165,12 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
       width: '100%'
     },
 
+    '.title': {
+      color: extendToken.colorTitle,
+      fontWeight: 900,
+      textTransform: 'uppercase',
+    },
+
     '.general-bordered-button.general-bordered-button': {
       height: 72,
       lineHeight: '68px',
@@ -209,6 +215,12 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
         backgroundColor: token['colorSuccess-4'],
         color: token['geekblue-1'],
       },
+    },
+
+    '.nft-image': {
+      border: '10px solid rgba(255, 255, 255, 0.12)',
+      boxShadow: '7.409873008728027px -5.5574049949646px 27.787025451660156px 0px rgba(33, 33, 33, 0.20)',
+      borderRadius: 16
     },
   });
 });

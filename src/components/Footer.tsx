@@ -5,6 +5,7 @@ import {DISCORD_URL, TELEGRAM_URL, TWITTER_URL} from '../constants';
 import {DiscordLogo, TelegramLogo, TwitterLogo} from 'phosphor-react';
 import {Button, Icon, Image, SwIconProps} from '@subwallet/react-ui';
 import logo from '../assets/logo-with-text-light.svg';
+import {openInNewTab} from '../utils/common/browser';
 
 type Props = ThemeProps;
 
@@ -58,6 +59,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
             )}
             type={'ghost'}
             className={'__social-button'}
+            onClick={openInNewTab(si.url)}
           />
         ))}
       </div>
