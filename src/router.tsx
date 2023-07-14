@@ -7,8 +7,7 @@ import React from "react";
 import { Welcome } from "./pages/Welcome";
 import {ConnectWallet} from "./pages/ConnectWallet";
 import {SelectAccountType} from "./pages/SelectAccountType";
-import {EligibilityCheck} from "./pages/EligibilityCheck";
-import {MintDetail} from "./pages/MintDetail";
+import {MintNft} from "./pages/MintNft";
 import {Congratulation} from "./pages/Congratulation";
 
 const timeLoader = () => {
@@ -45,12 +44,8 @@ export const router = createHashRouter([
         element: <SelectAccountType />
       },
       {
-        path: 'eligibility-check',
-        element: <EligibilityCheck />
-      },
-      {
-        path: 'mint-detail',
-        element: <MintDetail />
+        path: 'mint-nft',
+        element: <MintNft />
       },
       {
         path: 'congratulation',

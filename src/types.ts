@@ -61,23 +61,11 @@ export interface NFTCollection {
   isDuplicationChecked: boolean
 }
 
-const NFTItemObject = {
-  '_id': '6423bc9631ed64179fd6145d',
-  'nftName': null,
-  'description': null,
-  'avatar': null,
-  'nftContractAddress': '5HDHdUUF51MKWCcz8pBm7a7Cy7gopUwttEcsjdp1eoi6jecC',
-  'owner': '5ENp8Z2pquNyiPpRa59ihAeb5a871G3REMhn27Rzwp4P84SL',
-  'tokenID': 4,
-  'attributes': [],
-  'attributesValue': [],
-  'listed_date': 0,
-  'price': 0,
-  'is_for_sale': false,
-  'nft_owner': '',
-  'is_locked': false,
-  'traits': null
-};
+export interface CurrentAccountData {
+  userId?: number,
+  signature?: string,
+  randomCode?: string,
+}
 
 export interface NFTItem {
   _id: string,
@@ -97,15 +85,21 @@ export interface NFTItem {
   traits: any
 }
 
+export enum NetworkType {
+  SUBSTRATE = 'substrate',
+  ETHEREUM = 'ethereum',
+}
+
 export interface CollectionItem {
   id: number,
-  address: string,
+  rmrkCollectionId: string,
   name: string,
   description: string,
   image: string,
   network: string,
-  networkType: string, //todo: change to substrate and evm
+  networkType: NetworkType,
   networkName: string,
+  currentCampaignId: number,
 }
 
 export interface MintedNFTItem {

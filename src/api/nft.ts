@@ -59,7 +59,7 @@ const clientWithGetParams = async (
 
 
 export const APICall = {
-    getUserCode: async (address: string) => {
+    getUseRandomrCode: async (address: string) => {
         return await client("POST", "/api/user/get-code", {
             address,
         });

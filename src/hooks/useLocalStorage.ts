@@ -1,29 +1,25 @@
 // Copyright 2019-2022 @subwallet/sub-connect authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useEffect, useState } from 'react';
+import {useState} from 'react';
 
-export function useLocalStorage (
-  key: string,
-  initialValue = ''
-): [string, (v: string) => void] {
-  const [storedValue, setStoredValue] = useState(initialValue);
-
-  useEffect(() => {
-    const item =
-      typeof window !== 'undefined' ? window.localStorage.getItem(key) : false;
+function getLocalStorage<T>(key: string, defaultValue: T) {
+  const item =
+    typeof window !== 'undefined' ? window.localStorage.getItem(key) : false;
 
     if (item) {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        setStoredValue(JSON.parse(item as string));
-      } catch (e) {
-        setStoredValue(initialValue);
-      }
+        return JSON.parse(item as string) as T;
+      } catch (e) {}
     }
-  }, [initialValue, key, setStoredValue]);
 
-  const setValue = (value: string) => {
+    return defaultValue;
+}
+
+export function useLocalStorage<T = string>(key: string, initialValue: T = '' as unknown as T): [T, (v: T) => void] {
+  const [storedValue, setStoredValue] = useState<T>(getLocalStorage<T>(key, initialValue));
+
+  const setValue = (value: T) => {
     setStoredValue(value);
     window.localStorage.setItem(key, JSON.stringify(value));
   };

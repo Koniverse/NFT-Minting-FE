@@ -1,8 +1,8 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {AppContext2, WalletContext} from '../contexts';
+import {AppContext, WalletContext} from '../contexts';
 import {useLocalStorage} from '../hooks/useLocalStorage';
 import {WalletAccount} from '@subwallet/wallet-connect/types';
-import {CollectionItem, MintCheckResult, MintedNFTItem} from '../types';
+import {CollectionItem, CurrentAccountData, MintedNFTItem} from '../types';
 import {isEthereumAddress} from '@polkadot/util-crypto';
 import {APICall} from '../api/nft';
 
@@ -41,68 +41,72 @@ type MintedNftResponse = {
 type FetchALlCollectionResponse = FetchALlCollectionResponseItem[];
 
 type FetchMintedNftResponse = MintedNftResponse[];
+
 export function AppStateProvider({children}: AppContextProps): React.ReactElement<AppContextProps> {
-  const [currentAddress, setCurrentAddress] = useLocalStorage('currentAccount');
-  const [currentAccount, setCurrentAccount] = useState<WalletAccount | undefined>(undefined);
-  const [mintedNft, setMintedNft] = useState<MintedNFTItem | undefined>(undefined);
-  const [campaignId, setCampaignId] = useState<number | undefined>(undefined);
-  const [collectionInfo, setCollectionInfo] = useState<CollectionItem | undefined>(undefined);
-  const [signature, setSignature] = useState<string | undefined>(undefined);
-  const [userId, setUserId] = useState<number | undefined>(undefined);
-  const [mintCheckResult, setMintCheckResult] = useState<MintCheckResult| undefined>(undefined);
-  const [isMinted, setIsMinted] = useState<boolean>(false);
-  const [isMinting, setIsMinting] = useState<boolean>(false);
-  const [isCheckFetchMintedNftDone, setIsCheckFetchMintedNftDone] = useState<boolean>(false);
-  const [recipient, setRecipient] = useState<string | undefined>(undefined);
   const walletContext = useContext(WalletContext);
 
-  useEffect(() => {
-    // todo: will update logic for this (time check)
-    APICall.fetchALlCollection().then((rs: FetchALlCollectionResponse) => {
-      if (rs && rs.length) {
-        setCollectionInfo({
-          id: rs[0].id,
-          address: rs[0].address,
-          name: rs[0].name,
-          description: rs[0].description,
-          image: rs[0].image,
-          network: rs[0].network,
-          networkType: rs[0].networkType,
-          networkName: rs[0].networkName,
-        });
+  // Account data
+  const [currentAddress, setCurrentAddress] = useLocalStorage<string|undefined>('currentAddress');
+  const [currentAccountData, setCurrentAccountData] = useLocalStorage<CurrentAccountData>('currentAccountData', {});
+  const [walletAccount, setWalletAccount] = useState<WalletAccount | undefined>(undefined);
 
-        if (rs[0].campaigns && rs[0].campaigns.length) {
-          setCampaignId(rs[0].campaigns[0].id);
+  // Collection data
+  const [collectionInfo, setCollectionInfo] = useState<CollectionItem | undefined>(undefined);
+
+  // NFT Data
+  const [mintedNft, setMintedNft] = useState<MintedNFTItem | undefined>(undefined);
+
+  // Init actions
+  useEffect(() => {
+    APICall.fetchALlCollection()
+      .then((rs: FetchALlCollectionResponse) => {
+        if (rs && rs.length) {
+          const collection = rs[0];
+          setCollectionInfo({
+            id: collection.id,
+            rmrkCollectionId: collection.rmrkCollectionId,
+            name: collection.name,
+            description: collection.description,
+            image: collection.image,
+            network: collection.network,
+            networkType: collection.networkType,
+            networkName: collection.networkName,
+            currentCampaignId: collection.campaigns[0].id,
+          });
         }
-      }
-    })
+      })
   }, []);
 
+  // Fetch minted NFT when selected account
   useEffect(() => {
-    if (currentAddress && campaignId) {
+    let cancel = false;
+    if (currentAddress && collectionInfo?.currentCampaignId) {
       APICall.fetchMintedNft(currentAddress).then((rs: FetchMintedNftResponse) => {
-        const _mintedNft = rs.find(i => i.campaignId === campaignId);
-
-        if (_mintedNft) {
-          if (_mintedNft.status === 'minting') {
-            setIsMinting(true);
-          } else if (_mintedNft.status === 'success') {
-            setMintedNft({
-              id: _mintedNft.id,
-              name: _mintedNft.nftName,
-              image: _mintedNft.nftImage,
-              campaignId: _mintedNft.campaignId,
-              collectionId: _mintedNft.collectionId,
-            });
-            setIsMinted(true);
-          }
+        if (cancel) {
+          return;
         }
 
-        setIsCheckFetchMintedNftDone(true);
+        const _mintedNft = rs.find(i => i.campaignId === collectionInfo.currentCampaignId);
+        if (_mintedNft) {
+          setMintedNft({
+            id: _mintedNft.id,
+            name: _mintedNft.nftName,
+            image: _mintedNft.nftImage,
+            campaignId: _mintedNft.campaignId,
+            collectionId: _mintedNft.collectionId,
+          });
+        } else {
+          setMintedNft(undefined);
+        }
       });
     }
-  }, [currentAddress, campaignId]);
 
+    return () => {
+      cancel = true;
+    }
+  }, [currentAccountData, collectionInfo?.currentCampaignId, currentAddress]);
+
+  // Todo: Move to wallet context
   const signMessage = useCallback((randomCode: string, cb: (sig: string) => void): Promise<void> => {
     return new Promise<void>((resolve, reject) => {
       if (!currentAddress || !walletContext.walletType) {
@@ -111,9 +115,9 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
 
       if (isEthereumAddress(currentAddress)) {
         if (walletContext.walletType === 'evm' && walletContext.evmWallet) {
-          walletContext.evmWallet.request( {
+          walletContext.evmWallet.request({
             method: 'personal_sign',
-            params: [ randomCode, currentAddress ]
+            params: [randomCode, currentAccountData]
           }).then(rs => {
             cb(rs as string);
             resolve();
@@ -121,7 +125,7 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
         }
       } else {
         if (walletContext.walletType === 'substrate' && walletContext.wallet) {
-          walletContext.wallet.signer?.signRaw?.( {
+          walletContext.wallet.signer?.signRaw?.({
             address: currentAddress,
             type: 'payload',
             data: randomCode
@@ -134,96 +138,62 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
 
       return;
     });
-  }, [currentAddress, walletContext.walletType, walletContext.evmWallet, walletContext.wallet]);
+  }, [currentAccountData, walletContext.walletType, walletContext.evmWallet, walletContext.wallet]);
 
   useEffect(() => {
-    if (currentAddress && isCheckFetchMintedNftDone && !isMinted && !isMinting) {
-      APICall.getUserCode(currentAddress).then(({id, randomCode}: GetUserCodeResponse) => {
-        signMessage(randomCode, (sig) => {
-          setUserId(id);
-          setSignature(sig);
-        }).catch(e => console.log(e));
+    let cancel = false;
+    // Get user random code
+    if (currentAddress && !currentAccountData.userId) {
+      APICall.getUseRandomrCode(currentAddress).then(({id, randomCode}: GetUserCodeResponse) => {
+        !cancel && setCurrentAccountData({...currentAccountData, userId: id, randomCode});
       });
     }
-  }, [isCheckFetchMintedNftDone, isMinted, isMinting, currentAddress, signMessage]);
 
-  const isReadyToMintCheck =
-    !mintCheckResult
-    && isCheckFetchMintedNftDone
-    && !isMinting
-    && !isMinted
-    && campaignId
-    && userId
-    && signature
-    && currentAddress;
-
-  useEffect(() => {
-    if (isReadyToMintCheck) {
-      APICall.mintCheck({campaignId,
-        userId,
-        signature, address: currentAddress}).then((rs: MintCheckResult) => {
-          setMintCheckResult(rs);
-      });
+    return () => {
+      cancel = true;
     }
-  }, [isReadyToMintCheck, campaignId, userId, signature, currentAddress]);
+  }, [currentAccountData, currentAddress]);
 
-  const reset = useCallback(() => {
-    setMintedNft(undefined);
-    setSignature(undefined);
-    setUserId(undefined);
-    setMintCheckResult(undefined);
-    setIsMinted(false);
-    setIsMinting(false);
-    setIsCheckFetchMintedNftDone(false);
-    setRecipient(undefined);
-  }, []);
-
+  // Update when current account change
   const _setCurrentAddress = useCallback((address: string) => {
-    setCurrentAddress(address);
-    const _currentAccount = walletContext.accounts.find((x) => (x.address === address));
-    setCurrentAccount(_currentAccount);
-    reset();
-  }, [setCurrentAddress, walletContext.accounts, reset]);
+    if (address !== currentAddress) {
+      setCurrentAccountData({})
+      setCurrentAddress(address);
+    }
+  }, [currentAddress]);
 
+  // Auto select wallet account by current address
   useEffect(() => {
     const walletAccounts = walletContext.accounts;
-    let currentAccount: WalletAccount | undefined;
+    let walletAccount: WalletAccount | undefined;
 
     // Check currentAddress with wallet accounts list
     if (currentAddress) {
-      currentAccount = walletAccounts.find((a) => (a.address === currentAddress))
-      if (currentAccount) {
-        setCurrentAccount(currentAccount);
+      walletAccount = walletAccounts.find((a) => (a.address === currentAddress))
+      if (walletAccount) {
+        setWalletAccount(walletAccount);
       }
     }
 
     // Set default account if not found current account
     //Todo: may consider not use this code (only set account if user do it manually)
-    if (!currentAccount && walletAccounts.length > 0 && (!currentAddress || !walletAccounts)) {
-      setCurrentAccount(walletAccounts[0]);
+    if (!walletAccount && walletAccounts.length > 0 && (!currentAddress || !walletAccounts)) {
+      setWalletAccount(walletAccounts[0]);
       setCurrentAddress(walletAccounts[0].address);
     }
-  }, [currentAddress, setCurrentAddress, walletContext.accounts]);
+  }, [currentAddress, walletContext.accounts]);
 
   return (
-    <AppContext2.Provider value={{
+    <AppContext.Provider value={{
       currentAddress,
-      currentAccount,
-      mintedNft,
-      campaignId,
-      signature,
-      userId,
-      mintCheckResult,
-      isMinted,
-      isMinting,
-      recipient,
-      collectionInfo,
-      setIsMinted,
-      setRecipient,
+      currentAccountData,
+      walletAccount,
       setCurrentAddress: _setCurrentAddress,
+      mintedNft,
+      collectionInfo,
       setMintedNft
     }}>
       {children}
-    </AppContext2.Provider>
+    </AppContext.Provider>
   );
 }

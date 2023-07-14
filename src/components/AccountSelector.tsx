@@ -2,7 +2,7 @@ import React, {useCallback, useContext} from "react";
 import styled from "styled-components";
 import {Button, Icon, SelectModal} from "@subwallet/react-ui";
 import {ThemeProps} from "../types";
-import {AppContext2, WalletContext} from '../contexts';
+import {AppContext, WalletContext} from '../contexts';
 import {WalletAccount} from "@subwallet/wallet-connect/types";
 import AccountCard from "@subwallet/react-ui/es/web3-block/account-card";
 import AccountItem from "@subwallet/react-ui/es/web3-block/account-item";
@@ -14,7 +14,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 type AccountSelectorProps = ThemeProps;
 
 export function Component({className}: AccountSelectorProps): React.ReactElement {
-  const appState = useContext(AppContext2);
+  const appState = useContext(AppContext);
   const walletState = useContext(WalletContext);
 
   const renderAccount = useCallback(

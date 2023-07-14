@@ -83,8 +83,7 @@ export function WalletProvider({children}: Props) {
     walletType
   };
 
-  useEffect(
-    () => {
+  useEffect(() => {
       if (walletType === 'substrate') {
         const wallet = getWalletBySource(walletKey);
 
@@ -102,8 +101,7 @@ export function WalletProvider({children}: Props) {
         });
       }
     },
-    [afterSelectEvmWallet, afterSelectWallet, walletKey, walletType]
-  );
+    [afterSelectEvmWallet, afterSelectWallet, walletKey, walletType]);
 
   return <WalletContext.Provider value={walletContext as WalletContextInterface}>
     {children}

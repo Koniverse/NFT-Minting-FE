@@ -7,7 +7,7 @@ function generateResult(result) {
 }
 
 export const APICall = {
-  getUserCode: async (address) => {
+  getUseRandomrCode: async (address) => {
     return generateResult({
       "id": 4,
       "randomCode": "1b29611a-178d-4a71-b045-d88ce0e6c209"

@@ -2,7 +2,7 @@ import React, {useContext, useEffect} from 'react';
 import './App.css';
 import {Header} from './components/Header';
 import {Outlet, useNavigate} from 'react-router';
-import {AppContext2, WalletContext} from './contexts';
+import {AppContext, WalletContext} from './contexts';
 import styled from 'styled-components';
 import {ThemeProps} from './types';
 import {Footer} from './components/Footer';
@@ -11,20 +11,18 @@ type Props = ThemeProps;
 
 function Component({className}: Props) {
   const navigate = useNavigate();
-  const {isMinted, mintCheckResult, currentAddress} = useContext(AppContext2);
+  const {mintedNft, currentAccountData, currentAddress} = useContext(AppContext);
   const walletContext = useContext(WalletContext);
 
   useEffect(() => {
-    if (currentAddress) {
-      if (isMinted) {
-        navigate('/congratulation');
-      } else {
-        if (!mintCheckResult?.requestId) {
-          navigate('/eligibility-check');
-        }
-      }
+    if (!currentAddress || !walletContext.wallet) {
+      navigate('/select-account-type');
+    } else if (mintedNft) {
+      navigate('/congratulation');
+    } else {
+      navigate('/mint-nft')
     }
-  }, [currentAddress, navigate, isMinted, mintCheckResult?.requestId]);
+  }, [currentAddress, mintedNft, navigate, walletContext.wallet]);
 
   return (
     <div className={className}>
