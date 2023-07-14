@@ -48,6 +48,7 @@ export const EventTitles = styled(Component)<Props>(({theme: {extendToken}}: Pro
       span: {
         position: 'absolute',
         left: 0,
+        top: 0,
         '-webkit-text-stroke': 0,
         pointerEvents: 'none',
       }

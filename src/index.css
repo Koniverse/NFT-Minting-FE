@@ -479,15 +479,18 @@ div#popup-container {
   display: none;
 }
 
-.ant-sw-modal {
-  max-width: 100vw!important;
-}
-
 #root {
   width: 100%;
   height: 100%;
+  background-size: cover;
 }
 
-.ant-btn {
+.ant-btn,
+.ant-sw-modal-root,
+.ant-sw-sub-header,
+.ant-typography,
+.ant-sw-header,
+[class*=" ant-sw-sub-header"],
+.ant-sw-modal {
   font-family: inherit !important;
 }

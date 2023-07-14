@@ -158,7 +158,58 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
     },
     '.mb-lg': {
       marginBottom: token.marginLG
-    }
+    },
+
+    '.general-button-width': {
+      maxWidth: 396,
+      width: '100%'
+    },
+
+    '.general-bordered-button.general-bordered-button': {
+      height: 72,
+      lineHeight: '68px',
+      color: token['colorSuccess'],
+      backgroundColor: 'transparent',
+      border: '2px solid',
+
+      '.ant-btn-content-wrapper': {
+        fontSize: 20,
+        textTransform: 'uppercase',
+      },
+
+      ':hover': {
+        color: token['colorSuccess-5'],
+        backgroundColor: 'transparent',
+      },
+
+      '&:active, &:disabled': {
+        color: token['colorSuccess-4'],
+        backgroundColor: 'transparent',
+      },
+    },
+
+    '.general-button.general-button': {
+      height: 72,
+      lineHeight: '72px',
+      backgroundColor: token['colorSuccess'],
+      color: token['geekblue-1'],
+
+
+      '.ant-btn-content-wrapper': {
+        fontSize: 20,
+        textTransform: 'uppercase',
+      },
+
+      ':hover': {
+        backgroundColor: token['colorSuccess-5'],
+        color: token['geekblue-1'],
+      },
+
+      '&:active, &:disabled': {
+        backgroundColor: token['colorSuccess-4'],
+        color: token['geekblue-1'],
+      },
+    },
   });
 });
 

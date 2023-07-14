@@ -62,7 +62,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
         ))}
       </div>
       <div className={'__right-part'}>
-        <Image className={'__logo'} width={'auto'} height={24} src={logo}/>
+        <Image className={'__logo'} width={'auto'} shape={'square'} height={24} src={logo}/>
         <div className={'__divider'}></div>
         <div className={'__copy-right'}>
           @2023 subwallet.app All rights reserved
@@ -75,6 +75,9 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
 export const Footer = styled(Component)<Props>(({theme: {token}}: Props) => {
   return {
     display: 'flex',
+    paddingTop: 30,
+    paddingBottom: 30,
+
     '.__social-button': {
       color: token.colorTextLight1,
 

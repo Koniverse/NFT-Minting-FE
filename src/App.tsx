@@ -16,7 +16,7 @@ function Component({className}: Props) {
 
   useEffect(() => {
     if (!currentAddress || !walletContext.wallet) {
-      navigate('/select-account-type');
+      navigate('/connect-wallet');
     } else if (mintedNft) {
       navigate('/congratulation');
     } else {
@@ -39,7 +39,6 @@ function Component({className}: Props) {
 
 const App = styled(Component)<Props>(({theme: {token}}: ThemeProps) => {
   return {
-    backgroundColor: token.colorBgDefault,
     height: '100%',
     overflow: 'auto',
 
@@ -53,6 +52,9 @@ const App = styled(Component)<Props>(({theme: {token}}: ThemeProps) => {
     },
     '.app-body': {
       flex: 1,
+      display: 'flex',
+      justifyContent: 'center',
+      flexDirection: 'column',
     },
   };
 });
