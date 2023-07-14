@@ -45,6 +45,8 @@ type FetchMintedNftResponse = MintedNftResponse[];
 export function AppStateProvider({children}: AppContextProps): React.ReactElement<AppContextProps> {
   const walletContext = useContext(WalletContext);
 
+  const [isAppReady, setIsAppReady] = useState(false);
+
   // Account data
   const [currentAddress, setCurrentAddress] = useLocalStorage<string|undefined>('currentAddress');
   const [currentAccountData, setCurrentAccountData] = useLocalStorage<CurrentAccountData>('currentAccountData', {});
@@ -98,7 +100,11 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
         } else {
           setMintedNft(undefined);
         }
+      }).finally(() => {
+        setIsAppReady(true);
       });
+    } else {
+      setIsAppReady(!!collectionInfo?.currentCampaignId);
     }
 
     return () => {
@@ -185,6 +191,7 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
 
   return (
     <AppContext.Provider value={{
+      isAppReady,
       currentAddress,
       currentAccountData,
       walletAccount,

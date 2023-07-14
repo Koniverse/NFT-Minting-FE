@@ -17,10 +17,12 @@ interface RecipientAddressInput {
 
 function Component({className}: ThemeProps): React.ReactElement<Props> {
   const {
+    isAppReady,
     collectionInfo,
     currentAddress,
     currentAccountData,
     setCurrentAccountData,
+    mintedNft,
     setMintedNft,
   } = useContext(AppContext);
   const [loading, setLoading] = useState(false);
@@ -29,11 +31,14 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
 
   // Mint Data
   const [mintCheckResult, setMintCheckResult] = useState<Partial<MintCheckResult>>({});
-  const [recipient, setRecipient] = useState<string | undefined>(undefined);
   const [form] = Form.useForm<RecipientAddressInput>();
+  const isSubstrateAddress = currentAddress && !isEthereumAddress(currentAddress);
 
   const accountAddressValidator = useCallback(
     (rule: RuleObject, value: string) => {
+      if (isSubstrateAddress) {
+        return Promise.resolve();
+      }
 
       if (!value) {
         return Promise.reject('Address is required');
@@ -55,8 +60,8 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
       let cancel = false;
       const {userId, signature, randomCode} = currentAccountData;
       const campaignId = collectionInfo?.currentCampaignId;
-      const needSign = currentAddress! && userId && randomCode && !signature;
-      const canCheck = currentAddress && userId && signature && campaignId;
+      const needSign = isAppReady && !mintedNft && currentAddress! && userId && randomCode && !signature;
+      const canCheck = isAppReady && !mintedNft && currentAddress && userId && signature && campaignId;
 
       // Sign message
       if (needSign) {
@@ -95,7 +100,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
         cancel = true;
       }
     },
-    [collectionInfo?.currentCampaignId, currentAccountData, currentAddress, walletContext],
+    [collectionInfo?.currentCampaignId, currentAccountData, currentAddress, isAppReady, mintedNft, walletContext],
   );
 
   const nextStep = useCallback(() => {
@@ -111,6 +116,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
   }, [mintCheck])
 
   const mintSubmit = () => {
+    const recipient = isEthereumAddress(currentAddress) ? form.getFieldValue('address') : undefined;
     if (mintCheckResult?.requestId && currentAddress && (!recipient || isEthereumAddress(currentAddress))) {
       setLoading(true);
       APICall.mintSubmit(
@@ -207,8 +213,9 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
             </div>
           </div>
 
-          <Form form={form}>
+          <Form form={form} onFinish={mintSubmit} className={'mint-form'}>
             <Form.Item
+              hidden={!isSubstrateAddress}
               name={'address'}
               rules={[
                 {
@@ -224,14 +231,13 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
               />
             </Form.Item>
 
-          </Form>
-
-          <Button block
-                  onClick={mintSubmit}
+            <Button block
+                  onClick={form.submit}
                   schema="primary"
                   className={'__button'} loading={loading}>
             Mint NFT
           </Button>
+          </Form>
 
         </div>
       </div>)}

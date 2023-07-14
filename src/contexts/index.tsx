@@ -43,6 +43,7 @@ export const OpenSelectWallet = React.createContext<OpenSelectWalletInterface>({
 });
 
 export interface AppContextType {
+  isAppReady: boolean,
   currentAccountData: CurrentAccountData,
   currentAddress?: string,
   walletAccount?: WalletAccount,
@@ -56,6 +57,7 @@ export interface AppContextType {
 }
 
 export const AppContext = createContext<AppContextType>({
+  isAppReady: false,
   currentAccountData: {},
   setCurrentAddress: (account: string) => {},
   setCurrentAccountData: (accountData: CurrentAccountData) => {},
