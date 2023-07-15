@@ -214,7 +214,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
 
           <Form form={form} onFinish={mintSubmit} className={'mint-form'}>
             <Form.Item
-              hidden={!isSubstrateAddress}
+              hidden={!!isSubstrateAddress}
               name={'address'}
               rules={[
                 {
@@ -231,9 +231,9 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
             </Form.Item>
 
             <Button block
-                  onClick={form.submit}
-                  schema="primary"
-                  className={'__button'} loading={loading}>
+                    onClick={form.submit}
+                    schema="primary"
+                    className={'__button'} loading={loading}>
             Mint NFT
           </Button>
           </Form>
