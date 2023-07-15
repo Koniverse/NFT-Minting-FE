@@ -272,7 +272,7 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
   );
 }
 
-export const MintNft = styled(Component)<Props>(({theme: {token}}: Props) => {
+export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: Props) => {
   return {
     '.__box': {
       marginLeft: 'auto',
@@ -281,6 +281,14 @@ export const MintNft = styled(Component)<Props>(({theme: {token}}: Props) => {
       boxShadow: '4px 4px 32px 0px rgba(34, 84, 215, 0.30)',
       display: 'flex',
       position: 'relative',
+      borderRadius: token.size,
+      flexDirection: 'row',
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        flexDirection: 'column',
+        marginLeft: token.margin,
+        marginRight: token.margin,
+      },
     },
 
     '.__checklist': {
@@ -310,9 +318,18 @@ export const MintNft = styled(Component)<Props>(({theme: {token}}: Props) => {
       justifyContent: 'flex-end',
       minHeight: 600,
 
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        alignItems: 'center',
+        justifyContent: 'start',
+      },
+
       '.__title': {
         fontSize: 44,
         marginBottom: 56,
+
+        [`@media(max-width:${extendToken.mobileSize})`]: {
+          fontSize: 22,
+        },
       },
 
       '.__box-left-part': {
@@ -325,6 +342,12 @@ export const MintNft = styled(Component)<Props>(({theme: {token}}: Props) => {
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'left bottom',
           backgroundSize: 'auto auto',
+
+          [`@media(max-width:${extendToken.mobileSize})`]: {
+            backgroundPosition: 'bottom',
+            backgroundSize: 'contain',
+            opacity: 0.4,
+          },
         },
       },
 
@@ -333,6 +356,11 @@ export const MintNft = styled(Component)<Props>(({theme: {token}}: Props) => {
         marginRight: 90,
         paddingTop: 148,
         position: 'relative',
+
+        [`@media(max-width:${extendToken.mobileSize})`]: {
+          paddingTop: 56,
+          marginRight: 0,
+        },
       },
     },
 
@@ -376,17 +404,29 @@ export const MintNft = styled(Component)<Props>(({theme: {token}}: Props) => {
     },
 
     '.__box.-step-confirm': {
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        justifyContent: 'start',
+      },
+
       '.__box-left-part': {
         flex: 1,
         display: 'flex',
         alignItems: 'center',
         paddingLeft: 120,
+
+        [`@media(max-width:${extendToken.mobileSize})`]: {
+          display: 'none',
+        },
       },
 
       '.__title': {
         fontSize: 52,
         lineHeight: '40px',
         marginBottom: 24,
+
+        [`@media(max-width:${extendToken.mobileSize})`]: {
+          fontSize: 28,
+        },
       },
 
       '.__sub-title': {
@@ -403,6 +443,10 @@ export const MintNft = styled(Component)<Props>(({theme: {token}}: Props) => {
         paddingTop: 80,
         paddingBottom: 100,
         position: 'relative',
+
+        [`@media(max-width:${extendToken.mobileSize})`]: {
+          paddingTop: 56,
+        },
       },
 
       '.__table': {
