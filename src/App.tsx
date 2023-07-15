@@ -60,6 +60,8 @@ const App = styled(Component)<Props>(({theme: {token, extendToken}}: ThemeProps)
     height: '100%',
     overflow: 'auto',
     overflowX: 'hidden',
+    paddingLeft: 16,
+    paddingRight: 16,
 
     '.app-layout': {
       maxWidth: '1440px',

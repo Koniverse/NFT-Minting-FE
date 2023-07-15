@@ -148,7 +148,6 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
               <div className={'__checklist-item'}>
                 {loading && <LoadingIcon loading existIcon prefixCls={'ant'}/>}
                 {!loading && <Icon
-                  customSize={'28px'}
                   iconColor={(mintCheckResult.isOwner && currentAccountData.signature) ? token.colorSuccess : token.colorError}
                   phosphorIcon={(mintCheckResult.isOwner && currentAccountData.signature) ? CheckCircle : XCircle}
                   weight={'fill'}/>}
@@ -156,7 +155,7 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
               </div>
               <div className={'__checklist-item'}>
                 {loading && <LoadingIcon loading existIcon prefixCls={'ant'}/>}
-                {!loading && <Icon customSize={'28px'} phosphorIcon={mintCheckResult.hasBalance ? CheckCircle : XCircle}
+                {!loading && <Icon phosphorIcon={mintCheckResult.hasBalance ? CheckCircle : XCircle}
                                    iconColor={mintCheckResult.hasBalance ? token.colorSuccess : token.colorError}
                                    weight={'fill'}/>}
                 <div className={'__checklist-item-text'}>Has balance</div>
@@ -164,7 +163,7 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
               <div className={'__checklist-item'}>
                 {loading && <LoadingIcon loading existIcon prefixCls={'ant'}/>}
                 {!loading &&
-                  <Icon customSize={'28px'} phosphorIcon={mintCheckResult.notDuplicated ? CheckCircle : XCircle}
+                  <Icon phosphorIcon={mintCheckResult.notDuplicated ? CheckCircle : XCircle}
                         iconColor={mintCheckResult.notDuplicated ? token.colorSuccess : token.colorError}
                         weight={'fill'}/>}
                 <div className={'__checklist-item-text'}>Minted before</div>
@@ -286,8 +285,6 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         flexDirection: 'column',
-        marginLeft: token.margin,
-        marginRight: token.margin,
       },
     },
 
@@ -306,12 +303,22 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
         fontSize: 28,
         width: 28,
         height: 28,
+
+        [`@media(max-width:${extendToken.mobileSize})`]: {
+          fontSize: 24,
+          width: 24,
+          height: 24,
+        },
       },
     },
 
     '.__checklist-item-text': {
       fontSize: 20,
       lineHeight: 1.5,
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        fontSize: 16,
+      },
     },
 
     '.__box.-step-check': {
@@ -321,6 +328,7 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         alignItems: 'center',
         justifyContent: 'start',
+        maxWidth: 500,
       },
 
       '.__title': {
@@ -329,6 +337,7 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
 
         [`@media(max-width:${extendToken.mobileSize})`]: {
           fontSize: 22,
+          marginBottom: 24,
         },
       },
 
@@ -343,10 +352,13 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
           backgroundPosition: 'left bottom',
           backgroundSize: 'auto auto',
 
-          [`@media(max-width:${extendToken.mobileSize})`]: {
-            backgroundPosition: 'bottom',
-            backgroundSize: 'contain',
+          [`@media(min-width:992px) and (max-width: 1300px)`]: {
             opacity: 0.4,
+          },
+
+          [`@media(max-width:${extendToken.mobileSize})`]: {
+            backgroundSize: 'auto 242px',
+            opacity: 1,
           },
         },
       },
@@ -360,6 +372,12 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
         [`@media(max-width:${extendToken.mobileSize})`]: {
           paddingTop: 56,
           marginRight: 0,
+          alignSelf: 'stretch',
+          paddingLeft: 16,
+          paddingRight: 16,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
         },
       },
     },
