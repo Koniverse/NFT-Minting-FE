@@ -206,6 +206,18 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
             Please confirm the following information
           </div>
 
+          {
+            collectionInfo && (
+              <div className="__nft-image-wrapper -show-on-mobile">
+                <Image className={'nft-image'}
+                       width={'100%'}
+                       height={'100%'}
+                       src={collectionInfo.image}
+                       shape={'default'}/>
+              </div>
+            )
+          }
+
           <div className={'__table'}>
             <div className={'__table-row'}>
               <div className={'__table-row-title'}>NFT:</div>
@@ -386,6 +398,11 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
       display: 'flex',
       flexDirection: 'column',
       gap: 24,
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        gap: 12,
+        alignSelf: 'stretch',
+      },
     },
 
     '.__table-row': {
@@ -393,6 +410,12 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
       justifyContent: 'space-between',
       fontSize: 16,
       lineHeight: '24px',
+      gap: 16,
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        fontSize: 14,
+        lineHeight: '22px',
+      },
     },
 
     '.__table-footer': {
@@ -402,15 +425,55 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
       fontSize: 20,
       paddingTop: 22,
       paddingBottom: 22,
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        borderTopWidth: 2,
+        fontSize: 16,
+        paddingTop: 12,
+        paddingBottom: 12,
+
+        '.ant-typography': {
+          fontSize: 'inherit !important',
+        }
+      },
     },
 
     '.__nft-image-wrapper': {
-      width: 448,
-      height: 446,
+      maxWidth: 448,
+      position: 'relative',
+      width: '100%',
+
+      '&.-show-on-mobile': {
+        [`@media(min-width:992px)`]: {
+          display: 'none'
+        },
+      },
+
+      '&:before': {
+        content: '\'\'',
+        display: 'block',
+        paddingTop: '100%',
+      },
+
+      '.ant-image': {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      },
 
       img: {
         borderWidth: 10,
-      }
+      },
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        maxWidth: 192,
+
+        img: {
+          borderWidth: 4,
+        },
+      },
     },
 
     '.__table-row-title': {
@@ -422,8 +485,27 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
     },
 
     '.__box.-step-confirm': {
+      '.__table': {
+        marginBottom: 18,
+      },
+
+      '.__button': {
+        marginTop: 18,
+      },
+
       [`@media(max-width:${extendToken.mobileSize})`]: {
         justifyContent: 'start',
+        maxWidth: 500,
+
+        '.ant-form': {
+          alignSelf: 'stretch'
+        },
+
+        '.__button': {
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          display: 'flex'
+        },
       },
 
       '.__box-left-part': {
@@ -431,6 +513,14 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
         display: 'flex',
         alignItems: 'center',
         paddingLeft: 120,
+
+        [`@media(min-width:1100px) and (max-width:1599px)`]: {
+          paddingLeft: 60,
+        },
+
+        [`@media(min-width:992px) and (max-width:1099px)`]: {
+          paddingLeft: 32,
+        },
 
         [`@media(max-width:${extendToken.mobileSize})`]: {
           display: 'none',
@@ -444,6 +534,8 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
 
         [`@media(max-width:${extendToken.mobileSize})`]: {
           fontSize: 28,
+          lineHeight: '1.3',
+          marginBottom: 4,
         },
       },
 
@@ -452,23 +544,45 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
         lineHeight: 1.5,
         marginBottom: 64,
         color: token.colorTextLight3,
+
+        [`@media(max-width:${extendToken.mobileSize})`]: {
+          fontSize: 14,
+          marginBottom: 24,
+        },
       },
 
       '.__box-right-part': {
         flex: 10,
         maxWidth: 580,
         marginRight: 124,
+        marginLeft: 124,
         paddingTop: 80,
         paddingBottom: 100,
         position: 'relative',
 
-        [`@media(max-width:${extendToken.mobileSize})`]: {
-          paddingTop: 56,
+        [`@media(min-width:1100px) and (max-width:1599px)`]: {
+          marginRight: 60,
+          marginLeft: 60,
         },
-      },
 
-      '.__table': {
-        marginBottom: 36,
+        [`@media(min-width:992px) and (max-width:1099px)`]: {
+          marginRight: 32,
+          marginLeft: 32,
+        },
+
+        [`@media(max-width:${extendToken.mobileSize})`]: {
+          marginRight: 16,
+          marginLeft: 16,
+          paddingTop: 56,
+          paddingBottom: 44,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+
+          '.__nft-image-wrapper': {
+            marginBottom: 24,
+          },
+        },
       },
     },
   };
