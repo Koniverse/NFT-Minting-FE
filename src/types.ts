@@ -100,6 +100,7 @@ export interface CollectionItem {
   networkType: NetworkType,
   networkName: string,
   currentCampaignId: number,
+  minted: number
 }
 
 export interface MintedNFTItem {

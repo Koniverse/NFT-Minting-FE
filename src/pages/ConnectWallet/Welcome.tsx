@@ -1,14 +1,17 @@
 import {ThemeProps} from '../../types';
 import styled from 'styled-components';
-import React from 'react';
+import React, {useContext} from 'react';
 import {Button} from '@subwallet/react-ui';
 import {EventTitles} from './EventTitles';
+import {AppContext} from '../../contexts';
 
 type Props = ThemeProps & {
   onClickButton: () => void
 };
 
 function Component({className, onClickButton}: Props): React.ReactElement<Props> {
+  const {collectionInfo} = useContext(AppContext);
+
   return (
     <div className={className}>
       <EventTitles className={'__event-titles'}/>
@@ -19,7 +22,7 @@ function Component({className, onClickButton}: Props): React.ReactElement<Props>
       </div>
 
       <div className={'__mint-count'}>
-        Already minted: 300
+        Already minted: {collectionInfo?.minted}
       </div>
 
       <Button shape={'circle'} className={'general-bordered-button general-button-width'} onClick={onClickButton}>

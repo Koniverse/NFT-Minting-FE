@@ -61,6 +61,7 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
             networkType: collection.networkType,
             networkName: collection.networkName,
             currentCampaignId: collection.campaigns[0].id,
+            minted: collection.minted
           });
         }
       })
