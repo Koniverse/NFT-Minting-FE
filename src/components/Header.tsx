@@ -9,6 +9,7 @@ import {Footer} from "./Footer";
 import {X} from "phosphor-react";
 import {HEADER_MENU_MODAL} from "../constants";
 import {AccountSelectorInput} from "./AccountSelectorInput";
+import {useNavigate} from "react-router";
 
 
 type HeaderProps = ThemeProps;
@@ -18,6 +19,11 @@ const modalId = HEADER_MENU_MODAL;
 export function Component({className}: HeaderProps): React.ReactElement {
   const walletContext = useContext(WalletContext);
   const { activeModal, inactiveModal, addExclude, removeExclude } = useContext(ModalContext);
+  const navigate = useNavigate();
+
+  const goRoot = useCallback(() => {
+    navigate('/')
+  }, [activeModal]);
 
   const openModal = useCallback(() => {
     activeModal(modalId);
@@ -37,23 +43,23 @@ export function Component({className}: HeaderProps): React.ReactElement {
 
   return (
     <div className={CN(className, '__container')}>
-      <Image className={'__left-part logo'} width={88} height={88} src={logo}/>
+      <Image className={'__left-part logo'} width={88} height={88} src={logo} onClick={goRoot}/>
       <Image className={'__left-part logo __mobile'} width={88} height={88} src={logo} onClick={openModal}/>
       <div className={'__right-part'}>
 
         <div className="__menu">
           <div className="__menu-item">
-            <a className="__link-button -highlight">
+            <a className="__link-button -highlight" onClick={goRoot}>
               Home
             </a>
           </div>
           <div className="__menu-item">
-            <a className="__link-button">
+            <a className="__link-button" href='https://dotinvietnam.com/'>
               DOTinVietNam
             </a>
           </div>
 
-          {!!(walletContext.wallet || walletContext.evmWallet) && <AccountSelectorInput/>}
+          {!!(walletContext.wallet || walletContext.evmWallet) && walletContext.accounts.length && <AccountSelectorInput/>}
         </div>
       </div>
       <SwModal
@@ -85,7 +91,7 @@ export function Component({className}: HeaderProps): React.ReactElement {
               </a>
             </div>
             <div className="__menu-item">
-              <a className="__link-button">
+              <a className="__link-button" href='https://dotinvietnam.com/'>
                 DOTinVietNam
               </a>
             </div>
@@ -110,11 +116,11 @@ export const Header = styled(Component)<HeaderProps>(({theme: {token, extendToke
         marginBottom: 72
       },
 
-      '.__left-part': {
-        '&.__mobile': {
-          cursor: 'pointer'
-        },
+      '.logo': {
+        cursor: 'pointer'
+      },
 
+      '.__left-part': {
         [`@media(max-width:${extendToken.mobileSize})`]: {
           display: "none",
 

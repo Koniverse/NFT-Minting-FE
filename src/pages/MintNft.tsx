@@ -1,4 +1,4 @@
-import {MintCheckResult, MintedNFTItem, MintedNftResponse, Theme, ThemeProps} from '../types';
+import {MintCheckResult, MintedNftResponse, Theme, ThemeProps} from '../types';
 import styled, {ThemeContext} from 'styled-components';
 import React, {Context, useCallback, useContext, useEffect, useState} from 'react';
 import {AppContext, WalletContext} from '../contexts';

@@ -1,7 +1,7 @@
 import React, {useContext, useEffect} from 'react';
 import './App.css';
 import {Header} from './components/Header';
-import {Outlet, useNavigate} from 'react-router';
+import {Outlet, useLocation, useNavigate} from 'react-router';
 import {AppContext, WalletContext} from './contexts';
 import styled from 'styled-components';
 import {ThemeProps} from './types';
@@ -13,17 +13,22 @@ type Props = ThemeProps;
 
 function Component({className}: Props) {
   const navigate = useNavigate();
+  const location = useLocation();
   const {mintedNft, currentAccountData, currentAddress, isAppReady} = useContext(AppContext);
   const walletContext = useContext(WalletContext);
 
   useEffect(() => {
     if (isAppReady) {
-      if (!currentAddress || !(walletContext.wallet || walletContext.evmWallet)) {
-        navigate('/connect-wallet');
-      } else if (mintedNft) {
-        navigate('/congratulation');
+      if (location.pathname !== '/' && location.pathname !== '/welcome') {
+        if (!currentAddress || !(walletContext.wallet || walletContext.evmWallet)) {
+          navigate('/connect-wallet');
+        } else if (mintedNft) {
+          navigate('/congratulation');
+        } else {
+          navigate('/mint-nft');
+        }
       } else {
-        navigate('/mint-nft');
+        navigate('/welcome');
       }
     }
   }, [currentAddress, mintedNft, navigate, walletContext.wallet, walletContext.evmWallet, isAppReady]);

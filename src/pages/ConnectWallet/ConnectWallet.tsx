@@ -1,6 +1,6 @@
 import {ThemeProps} from '../../types';
 import styled from 'styled-components';
-import React, {useContext, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {Button, Image, ModalContext} from '@subwallet/react-ui';
 import {SelectAccountTypeModal, SelectAccountTypeModalId} from './SelectAccountTypeModal';
 import logo from '../../assets/squircle-logo.svg';
@@ -13,9 +13,16 @@ type Props = ThemeProps;
 function Component({className}: ThemeProps): React.ReactElement<Props> {
   const [isSubWalletInstalled] = useState(isWalletInstalled('subwallet-js'));
   const {activeModal, inactiveModal} = useContext(ModalContext);
-  const onConnectWallet = () => {
+  const onConnectWallet = useCallback(() => {
     activeModal(SelectAccountTypeModalId);
-  };
+  }, [activeModal])
+
+  useEffect(() => {
+    if (isSubWalletInstalled) {
+      onConnectWallet();
+    }
+  }, [isSubWalletInstalled, onConnectWallet]);
+
   const onInstallWallet = () => {
     openInNewTab('https://chrome.google.com/webstore/detail/subwallet-polkadot-wallet/onhogfjeacnfoofkfgppdlbmlmnplgbn')();
   };
@@ -41,7 +48,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
   );
 }
 
-export const ConnectWalletStep = styled(Component)<Props>(({theme: { extendToken }}: Props) => {
+export const ConnectWallet = styled(Component)<Props>(({theme: { extendToken }}: Props) => {
   return {
     display: 'flex',
     flexDirection: 'column',
