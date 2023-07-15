@@ -41,6 +41,31 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
       }
     },
 
+    '.ant-sw-modal': {
+      '.ant-sw-modal-content': {
+        borderRadius: token.sizeXL,
+
+        [`@media(max-width:${extendToken.mobileSize})`]: {
+          marginLeft: token.margin,
+          marginRight: token.margin,
+        }
+      },
+
+      '&.modal-full': {
+        '.ant-sw-modal-content': {
+          borderRadius: 0,
+          '.ant-sw-modal-header': {
+            borderRadius: 0
+          },
+
+          [`@media(max-width:${extendToken.mobileSize})`]: {
+            marginLeft: 0,
+            marginRight: 0,
+          }
+        }
+      }
+    },
+
     '.text-secondary': {
       color: token.colorTextSecondary
     },
@@ -162,7 +187,11 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
 
     '.general-button-width': {
       maxWidth: 396,
-      width: '100%'
+      width: '100%',
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        maxWidth: 300,
+      }
     },
 
     '.title': {
@@ -178,9 +207,18 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
       backgroundColor: 'transparent',
       border: '2px solid',
 
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        height: 52,
+        lineHeight: '52px',
+      },
+
       '.ant-btn-content-wrapper': {
-        fontSize: 20,
+        fontSize: token.sizeMD,
         textTransform: 'uppercase',
+
+        [`@media(max-width:${extendToken.mobileSize})`]: {
+          fontSize: token.size,
+        }
       },
 
       ':hover': {
@@ -200,10 +238,18 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
       backgroundColor: token['colorSuccess'],
       color: token['geekblue-1'],
 
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        height: 52,
+        lineHeight: '52px',
+      },
 
       '.ant-btn-content-wrapper': {
-        fontSize: 20,
+        fontSize: token.sizeMD,
         textTransform: 'uppercase',
+
+        [`@media(max-width:${extendToken.mobileSize})`]: {
+          fontSize: token.size,
+        }
       },
 
       ':hover': {

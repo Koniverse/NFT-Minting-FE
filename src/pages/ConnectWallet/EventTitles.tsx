@@ -18,7 +18,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
   );
 }
 
-export const EventTitles = styled(Component)<Props>(({theme: {extendToken}}: Props) => {
+export const EventTitles = styled(Component)<Props>(({theme: {extendToken, token}}: Props) => {
 
   return {
     display: 'flex',
@@ -28,11 +28,17 @@ export const EventTitles = styled(Component)<Props>(({theme: {extendToken}}: Pro
     '.__first-title': {
       color: extendToken.colorTitle,
       fontSize: 112,
-      lineHeight: '84px',
+      lineHeight: 0.75,
       fontWeight: '900',
       marginBottom: 28,
       letterSpacing: 5.6,
       textTransform: 'uppercase',
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        fontSize: 44,
+        marginBottom: 21,
+        padding: `0 ${token.paddingXL}px`
+      },
     },
     '.__second-title': {
       lineHeight: '84px',
@@ -40,10 +46,17 @@ export const EventTitles = styled(Component)<Props>(({theme: {extendToken}}: Pro
       position: 'relative',
       color: '#39384d',
       fontWeight: '900',
-      fontSize: 109.16,
+      fontSize: 112,
       textTransform: 'uppercase',
       marginBottom: 0,
       '-webkit-text-stroke': '5.68px #fff',
+      textAlign: 'center',
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        fontSize: 44,
+        lineHeight: '43px',
+        padding: `0 ${token.paddingXL}px`
+      },
 
       span: {
         position: 'absolute',
@@ -51,6 +64,10 @@ export const EventTitles = styled(Component)<Props>(({theme: {extendToken}}: Pro
         top: 0,
         '-webkit-text-stroke': 0,
         pointerEvents: 'none',
+
+        [`@media(max-width:${extendToken.mobileSize})`]: {
+          padding: `0 ${token.paddingXL}px`
+        },
       }
     },
   };

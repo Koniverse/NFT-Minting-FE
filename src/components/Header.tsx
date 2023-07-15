@@ -1,21 +1,35 @@
-import React, {useContext} from 'react';
+import React, {useCallback, useContext, useMemo} from 'react';
 import styled from 'styled-components';
 import CN from 'classnames';
-import {Image} from '@subwallet/react-ui';
+import {Button, Icon, Image, ModalContext, SwModal} from '@subwallet/react-ui';
 import logo from '../assets/logo.svg';
 import {AccountSelector} from './AccountSelector';
 import {ThemeProps} from '../types';
 import {WalletContext} from '../contexts';
+import {Footer} from "./Footer";
+import {X} from "phosphor-react";
 
 
 type HeaderProps = ThemeProps;
 
+const modalId = 'menu-modal';
+
 export function Component({className}: HeaderProps): React.ReactElement {
   const walletContext = useContext(WalletContext);
+  const { activeModal, inactiveModal } = useContext(ModalContext);
+
+  const openModal = useCallback(() => {
+    activeModal(modalId);
+  }, [activeModal]);
+
+  const closeModal = useCallback(() => {
+    inactiveModal(modalId);
+  }, [inactiveModal]);
 
   return (
-    <div className={CN(className)}>
+    <div className={CN(className, '__container')}>
       <Image className={'__left-part logo'} width={88} height={88} src={logo}/>
+      <Image className={'__left-part logo __mobile'} width={88} height={88} src={logo} onClick={openModal}/>
       <div className={'__right-part'}>
 
         <div className="__menu">
@@ -33,20 +47,91 @@ export function Component({className}: HeaderProps): React.ReactElement {
           {!!(walletContext.wallet || walletContext.evmWallet) && <AccountSelector/>}
         </div>
       </div>
+      <SwModal
+        className={CN(className, 'modal-full')}
+        id={modalId}
+        onCancel={closeModal}
+        closable={false}
+        width='100%'
+        transitionName='fade'
+      >
+        <div className="__modal-container">
+          <div className="__closer">
+            <Button
+              icon={(
+                <Icon
+                  phosphorIcon={X}
+                  iconColor='#E7087B'
+                  weight='bold'
+                />
+              )}
+              type="ghost"
+              onClick={closeModal}
+            />
+          </div>
+          <div className="__menu">
+            <div className="__menu-item">
+              <a className="__link-button -highlight">
+                Home
+              </a>
+            </div>
+            <div className="__menu-item">
+              <a className="__link-button">
+                DOTinVietNam
+              </a>
+            </div>
+
+            {!!(walletContext.wallet || walletContext.evmWallet) && <AccountSelector/>}
+          </div>
+          <Footer className='__footer' />
+        </div>
+      </SwModal>
     </div>
   );
 }
 
-export const Header = styled(Component)<HeaderProps>(({theme: {token}}: HeaderProps) => {
+export const Header = styled(Component)<HeaderProps>(({theme: {token, extendToken}}: HeaderProps) => {
   return {
-    display: 'flex',
-    alignItems: 'center',
-
-    '.__right-part': {
+    '&.__container': {
       display: 'flex',
-      justifyContent: 'flex-end',
-      flex: 1,
-      paddingBottom: 8,
+      alignItems: 'center',
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        justifyContent: 'center',
+        marginBottom: 72
+      },
+
+      '.__left-part': {
+        '&.__mobile': {
+          cursor: 'pointer'
+        },
+
+        [`@media(max-width:${extendToken.mobileSize})`]: {
+          display: "none",
+
+          '&.__mobile': {
+            display: "unset",
+          }
+        },
+        [`@media(min-width:${extendToken.mobileSize})`]: {
+          display: "unset",
+
+          '&.__mobile': {
+            display: "none",
+          }
+        }
+      },
+
+      '.__right-part': {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        flex: 1,
+        paddingBottom: 8,
+
+        '@media(max-width:1007px)': {
+          display: "none"
+        }
+      },
     },
 
     '.__menu': {
@@ -84,5 +169,30 @@ export const Header = styled(Component)<HeaderProps>(({theme: {token}}: HeaderPr
         },
       },
     },
+
+    '.__modal-container': {
+      display: "flex",
+      flexDirection: "column",
+      height: '100%',
+      gap: 80,
+      paddingBottom: 40,
+      paddingTop: 44,
+
+      '.__menu': {
+        gap: 80,
+        flexDirection: 'column',
+        alignItems: "center",
+        flex: 1
+      },
+
+      '.__closer': {
+        alignSelf: 'center'
+      },
+
+      '.__footer': {
+        fontWeight: 400,
+        lineHeight: 1.15
+      }
+    }
   };
 });

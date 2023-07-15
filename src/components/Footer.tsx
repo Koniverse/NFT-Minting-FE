@@ -64,7 +64,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
         ))}
       </div>
       <div className={'__right-part'}>
-        <Image className={'__logo'} width={'auto'} shape={'square'} height={24} src={logo}/>
+        <Image className={'__logo'} width={'auto'} shape={'square'} height='var(--logo-height)' src={logo}/>
         <div className={'__divider'}></div>
         <div className={'__copy-right'}>
           @2023 subwallet.app All rights reserved
@@ -74,9 +74,14 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
   )
 }
 
-export const Footer = styled(Component)<Props>(({theme: {token}}: Props) => {
+export const Footer = styled(Component)<Props>(({theme: {token, extendToken}}: Props) => {
   return {
     display: 'flex',
+
+    [`@media(max-width:${extendToken.mobileSize})`]: {
+      flexDirection: 'column',
+      alignItems: 'center'
+    },
 
     '.__social-button': {
       color: token.colorTextLight1,
@@ -87,23 +92,46 @@ export const Footer = styled(Component)<Props>(({theme: {token}}: Props) => {
     },
     '.__left-part': {
       flex: 1,
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        marginBottom: 2,
+      },
     },
     '.__right-part': {
       display: 'flex',
       gap: token.sizeSM,
-      alignItems: 'center'
-    },
-    '.__logo': {
+      alignItems: 'center',
 
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        flexDirection: 'column-reverse',
+        alignItems: 'center'
+      },
     },
+
+    '.__logo': {
+      '--logo-height': token.sizeLG,
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        '--logo-height': token.sizeMD
+      }
+    },
+
     '.__divider': {
       height: 24,
       width: 1,
       backgroundColor: token.colorWhite,
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        display: 'none'
+      }
     },
     '.__copy-right': {
       fontSize: token.fontSizeLG,
       lineHeight: token.lineHeightLG,
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        fontSize: 10.83
+      }
     },
   }
 });

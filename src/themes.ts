@@ -14,6 +14,9 @@ const defaultLogoMap: Web3LogoMap = {
 function genDefaultExtraTokens (token: AliasToken): ExtraToken {
   return {
     colorTitle: '#E7087B',
+    mobileSize: '992px',
+    mediumSize: '1200px',
+    largeSize: '1600px',
   };
 }
 

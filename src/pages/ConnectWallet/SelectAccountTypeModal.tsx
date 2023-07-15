@@ -42,9 +42,10 @@ function Component({className = '', onCancel}: Props): React.ReactElement<Props>
     <SwModal
       className={className}
       width={'auto'}
-      title={'Select account type'}
+      closable={false}
       id={SelectAccountTypeModalId}
       onCancel={onCancel}
+      transitionName='fade'
     >
       <div className={'__content-container'}>
         <div className={'__image-wrapper'}>

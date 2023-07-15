@@ -11,6 +11,9 @@ export type GlobalToken = _GlobalToken;
 
 export interface ExtraToken {
   colorTitle: string,
+  mobileSize: string,
+  mediumSize: string,
+  largeSize: string,
 }
 
 export type Theme = {

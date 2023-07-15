@@ -50,10 +50,11 @@ function Component({className}: Props) {
   );
 }
 
-const App = styled(Component)<Props>(({theme: {token}}: ThemeProps) => {
+const App = styled(Component)<Props>(({theme: {token, extendToken}}: ThemeProps) => {
   return {
     height: '100%',
     overflow: 'auto',
+    overflowX: 'hidden',
 
     '.app-layout': {
       maxWidth: '1440px',
@@ -73,11 +74,20 @@ const App = styled(Component)<Props>(({theme: {token}}: ThemeProps) => {
       display: 'flex',
       justifyContent: 'center',
       flexDirection: 'column',
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        justifyContent: 'start',
+      }
     },
 
     '.app-footer': {
       paddingTop: 30,
       paddingBottom: 30,
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        paddingTop: 40,
+        paddingBottom: 40,
+      }
     },
 
     '.__loading': {

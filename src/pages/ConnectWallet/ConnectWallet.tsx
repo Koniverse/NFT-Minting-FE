@@ -25,7 +25,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
       <EventTitles className={'__event-titles'}/>
 
       <div className={'__logo-wrapper'}>
-        <Image className={'__logo'} width={214} height={214} src={logo}/>
+        <Image className={'__logo'} width='var(--logo-size)' height='var(--logo-size)' src={logo}/>
       </div>
 
       <Button className={'general-button general-button-width'} shape={'circle'}
@@ -41,7 +41,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
   );
 }
 
-export const ConnectWalletStep = styled(Component)<Props>(({theme}) => {
+export const ConnectWalletStep = styled(Component)<Props>(({theme: { extendToken }}: Props) => {
   return {
     display: 'flex',
     flexDirection: 'column',
@@ -54,5 +54,13 @@ export const ConnectWalletStep = styled(Component)<Props>(({theme}) => {
     '.__logo-wrapper': {
       marginBottom: 48
     },
+
+    '.__logo': {
+      '--logo-size': 214,
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        '--logo-size': 144,
+      }
+    }
   };
 });

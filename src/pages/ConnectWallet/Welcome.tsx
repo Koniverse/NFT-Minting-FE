@@ -17,8 +17,9 @@ function Component({className, onClickButton}: Props): React.ReactElement<Props>
       <EventTitles className={'__event-titles'}/>
 
       <div className={'__subtitle'}>
-        Exclusive for holders of Polkadot ecosystem’s relaychain
-        and parachain projects
+        <span>Exclusive for holders of</span>
+        <span> Polkadot ecosystem’s relaychain </span>
+        <span>and parachain projects</span>
       </div>
 
       <div className={'__mint-count'}>
@@ -32,7 +33,7 @@ function Component({className, onClickButton}: Props): React.ReactElement<Props>
   );
 }
 
-export const Welcome = styled(Component)<Props>(({theme: {token}}: Props) => {
+export const Welcome = styled(Component)<Props>(({theme: {token, extendToken}}: Props) => {
   return {
     display: 'flex',
     flexDirection: 'column',
@@ -48,6 +49,13 @@ export const Welcome = styled(Component)<Props>(({theme: {token}}: Props) => {
       maxWidth: 1090,
       textAlign: 'center',
       marginBottom: 32,
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        display: 'flex',
+        flexDirection: 'column',
+        fontSize: 16,
+        padding: `0 ${token.paddingXL}px`
+      }
     },
     '.__mint-count': {
       fontSize: 48,
@@ -55,6 +63,11 @@ export const Welcome = styled(Component)<Props>(({theme: {token}}: Props) => {
       fontWeight: '700',
       color: token.colorSecondary,
       marginBottom: 60,
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        fontSize: 24,
+        marginBottom: 48,
+      }
     },
   };
 });
