@@ -72,9 +72,6 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
 
 export const Congratulation = styled(Component)<Props>(({theme: {token}}: Props) => {
   return {
-    paddingLeft: 16,
-    paddingRight: 16,
-
     '.__box': {
       maxWidth: '950px',
       marginLeft: 'auto',
