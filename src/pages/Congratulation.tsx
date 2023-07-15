@@ -145,5 +145,27 @@ export const Congratulation = styled(Component)<Props>(({theme: {token}}: Props)
       flexDirection: 'column',
       gap: 24
     },
+
+    '@media(max-width: 991px)': {
+      '.__image-wrapper': {
+        width: 124,
+        height: 124,
+        marginBottom: 36,
+      },
+
+      '.__text-container': {
+        gap: 20,
+      },
+
+      '.__title': {
+        fontSize: 40,
+        lineHeight: '30px',
+        marginBottom: 32,
+      },
+
+      '.__text': {
+        fontSize: 14,
+      },
+    }
   };
 });

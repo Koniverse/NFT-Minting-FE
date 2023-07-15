@@ -10,6 +10,7 @@ import {WalletContext, WalletContextInterface} from '../contexts';
 import {useLocalStorage} from "../hooks/useLocalStorage";
 import {windowReload} from "../utils/window";
 import {toShort} from '@subwallet/react-ui/es/_util/address';
+import {NO_ACCOUNT} from '../constants';
 
 interface Props {
   children: React.ReactElement;
@@ -24,6 +25,10 @@ export function WalletProvider({children}: Props) {
   const afterSelectWallet = useCallback(
     async (wallet: Wallet) => {
       const infos = await wallet.getAccounts();
+
+      if (!infos || !infos.length) {
+        throw Error(NO_ACCOUNT);
+      }
 
       infos && setAccounts(infos);
     },
@@ -47,8 +52,10 @@ export function WalletProvider({children}: Props) {
       await wallet?.enable(); // Quick call extension?.request({ method: 'eth_requestAccounts' });
       const _accounts = await wallet?.request({ method: 'eth_accounts' }) as string[];
 
-      if (_accounts) {
+      if (_accounts && _accounts.length) {
         setAccounts(_accounts.map(a => ({address: a, name: toShort(a, 8, 8), source: walletKey})));
+      } else {
+        throw Error(NO_ACCOUNT);
       }
     },
     []
@@ -61,9 +68,6 @@ export function WalletProvider({children}: Props) {
       setCurrentWallet(currentWallet);
 
       setWalletKey(wallet.extensionName);
-
-      //todo: do need reload ?
-      // windowReload();
     },
     [afterSelectEvmWallet, currentWallet, setWalletKey]
   );
@@ -103,11 +107,11 @@ export function WalletProvider({children}: Props) {
     evmWallet: getEvmWalletBySource(walletKey),
     signMessage,
     accounts,
-    setWallet: (wallet: Wallet | EvmWallet | undefined, walletType: 'substrate' | 'evm') => {
+    setWallet: async (wallet: Wallet | EvmWallet | undefined, walletType: 'substrate' | 'evm') => {
       if (walletType === 'substrate') {
-        wallet && selectWallet(wallet as Wallet);
+        wallet && await selectWallet(wallet as Wallet);
       } else {
-        wallet && selectEvmWallet(wallet as EvmWallet);
+        wallet && await selectEvmWallet(wallet as EvmWallet);
       }
 
       wallet && setWalletType(walletType);

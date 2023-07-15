@@ -1,5 +1,5 @@
 import {Button, Image, SwIconProps, SwModal} from '@subwallet/react-ui';
-import React, {useCallback, useContext} from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import styled from 'styled-components';
 import {ThemeProps} from '../../types';
 import {WalletContext} from '../../contexts';
@@ -25,17 +25,26 @@ export const SelectAccountTypeModalId = 'SelectAccountTypeModalId';
 
 function Component({className = '', onCancel}: Props): React.ReactElement<Props> {
   const walletContext = useContext(WalletContext);
+  const [loadingKey, setLoadingKey] = useState<'substrate' | 'evm' | null>(null);
 
   const onConnectSubstrateWallet = useCallback(() => {
+    setLoadingKey('substrate')
     const wallet = getWalletBySource('subwallet-js');
-    walletContext.setWallet(wallet, 'substrate');
-    onCancel();
+    walletContext.setWallet(wallet, 'substrate').then(() => {
+      onCancel();
+    }).finally(() => {
+      setLoadingKey(null);
+    });
   }, [walletContext]);
 
   const onConnectEvmWallet = useCallback(() => {
+    setLoadingKey('evm')
     const wallet = getEvmWalletBySource('SubWallet');
-    walletContext.setWallet(wallet, 'evm');
-    onCancel();
+    walletContext.setWallet(wallet, 'evm').then(() => {
+      onCancel();
+    }).finally(() => {
+      setLoadingKey(null);
+    });
   }, [walletContext]);
 
   return (
@@ -44,7 +53,7 @@ function Component({className = '', onCancel}: Props): React.ReactElement<Props>
       width={'auto'}
       closable={false}
       id={SelectAccountTypeModalId}
-      onCancel={onCancel}
+      onCancel={!loadingKey ? onCancel : undefined}
       transitionName='fade'
     >
       <div className={'__content-container'}>
@@ -52,6 +61,8 @@ function Component({className = '', onCancel}: Props): React.ReactElement<Props>
           <Image className={'__logo'} width={180} height={180} src={logo}/>
         </div>
         <Button
+          loading={loadingKey === 'substrate'}
+          disabled={!!loadingKey}
           icon={
             <Image
               src={polkadotLogo}
@@ -65,6 +76,8 @@ function Component({className = '', onCancel}: Props): React.ReactElement<Props>
           Subtrate Account
         </Button>
         <Button
+          loading={loadingKey === 'evm'}
+          disabled={!!loadingKey}
           icon={
             <Image
               src={ethereumLogo}

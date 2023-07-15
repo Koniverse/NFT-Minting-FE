@@ -3,15 +3,14 @@
 
 import {EvmWallet, Wallet, WalletAccount} from '@subwallet/wallet-connect/types';
 import React, {createContext} from 'react';
-import {ApiPromise} from '@polkadot/api';
-import {CollectionItem, CurrentAccountData, MintCheckResult, MintedNFTItem, NFTCollection, NFTItem} from '../types';
+import {CollectionItem, CurrentAccountData, MintedNFTItem} from '../types';
 import {NotificationInstance} from '@subwallet/react-ui/es/notification/interface';
 
 export interface WalletContextInterface {
   wallet?: Wallet,
   evmWallet?: EvmWallet,
   accounts: WalletAccount[],
-  setWallet: (wallet: Wallet | EvmWallet | undefined, walletType: 'substrate'|'evm') => void
+  setWallet: (wallet: Wallet | EvmWallet | undefined, walletType: 'substrate'|'evm') => Promise<void>
   walletType: 'substrate'|'evm';
   signMessage: (address: string, message: string) => Promise<string | null>
   disconnectAccount: () => void,
@@ -20,7 +19,7 @@ export interface WalletContextInterface {
 export const WalletContext = React.createContext<WalletContextInterface>({
   accounts: [],
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setWallet: (wallet, walletType: 'substrate'|'evm') => {},
+  setWallet: (wallet, walletType: 'substrate'|'evm') => Promise.resolve(),
   walletType: 'substrate',
   signMessage: async (address: string, message: string) => {
     return null;
