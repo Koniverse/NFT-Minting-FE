@@ -49,7 +49,7 @@ export function Component({className}: HeaderProps): React.ReactElement {
         <Image className={'logo'} width={88} height={88} src={logo} onClick={goRoot}/>
       </div>
       <div className="__left-part __mobile">
-        <Image className={'__mobile'} width={88} height={88} src={logo} onClick={openModal}/>
+        <Image className={'__mobile'} width={72} height={72} src={logo} onClick={openModal}/>
       </div>
       <div className={'__right-part'}>
         <div className="__menu">
