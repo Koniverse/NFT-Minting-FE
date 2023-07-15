@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useRef, useState} from 'react';
 import {AppContext, WalletContext} from '../contexts';
 import {useLocalStorage} from '../hooks/useLocalStorage';
 import {WalletAccount} from '@subwallet/wallet-connect/types';
@@ -36,6 +36,7 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
 
   // Account data
   const [currentAddress, setCurrentAddress] = useLocalStorage<string|undefined>('currentAddress');
+  const prevAddress = useRef<string|undefined>(currentAddress);
   const [currentAccountData, setCurrentAccountData] = useLocalStorage<CurrentAccountData>('currentAccountData', {});
   const [walletAccount, setWalletAccount] = useState<WalletAccount | undefined>(undefined);
 
@@ -164,12 +165,20 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
     }
 
     // Set default account if not found current account
-    //Todo: may consider not use this code (only set account if user do it manually)
     if (!walletAccount && walletAccounts.length > 0 && (!currentAddress || !walletAccounts)) {
       setWalletAccount(walletAccounts[0]);
       setCurrentAddress(walletAccounts[0].address);
     }
   }, [currentAddress, walletContext.accounts]);
+
+  // Reset data when change current address
+  useEffect(() => {
+    if (prevAddress.current !== currentAddress) {
+      setCurrentAccountData({});
+      setMintedNft(undefined);
+      prevAddress.current = currentAddress;
+    }
+  }, [currentAddress]);
 
   return (
     <AppContext.Provider value={{

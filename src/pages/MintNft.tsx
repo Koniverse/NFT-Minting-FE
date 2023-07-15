@@ -6,13 +6,72 @@ import {Button, Form, Icon, Image, Input, Number} from '@subwallet/react-ui';
 import {APICall} from '../api/nft';
 import {isAddress, isEthereumAddress} from '@polkadot/util-crypto';
 import {RuleObject} from '@subwallet/react-ui/es/form';
-import {CheckCircle, Wallet, XCircle} from 'phosphor-react';
+import {CheckCircle, Question, Wallet, XCircle} from 'phosphor-react';
 import LoadingIcon from '@subwallet/react-ui/es/button/LoadingIcon';
 
 type Props = ThemeProps;
 
 interface RecipientAddressInput {
   address?: string;
+}
+
+interface SIProps {
+  isLoading: boolean;
+  checked: boolean;
+  checkResult?: boolean;
+}
+
+
+interface NBProps {
+  isLoading: boolean;
+  needSign: boolean;
+  needRecheck: boolean;
+  signAction: () => void;
+  nextAction: () => void;
+}
+
+function StatusIcon({isLoading, checked, checkResult}: SIProps) {
+  const token = useContext<Theme>(ThemeContext as Context<Theme>).token;
+  if (isLoading) {
+    return <LoadingIcon loading existIcon prefixCls={'ant'}/>;
+  }
+
+  if (checked) {
+    return <Icon
+      iconColor={checkResult ? token.colorSuccess : token.colorError}
+      phosphorIcon={checkResult ? CheckCircle : XCircle}
+      weight={'fill'}/>;
+  } else {
+    return <Icon
+      iconColor={token.colorBorder}
+      phosphorIcon={Question}
+      weight={'fill'}/>;
+  }
+}
+
+function NextButton({isLoading, needSign, needRecheck, signAction, nextAction}: NBProps) {
+  let label = 'Mint for free';
+  if (isLoading) {
+    label = 'Checking...';
+  } else if (needSign) {
+    label = 'Check Eligibility'
+  } else if (needRecheck) {
+    label = 'Check Again'
+  }
+
+  let onClick: (() => void) | undefined = needSign ? signAction : nextAction;
+  if (isLoading) {
+    onClick = undefined
+  }
+
+  return <Button
+    onClick={onClick}
+    shape={'circle'}
+    schema="primary"
+    className={'__button general-bordered-button general-button-width'}
+    loading={isLoading}>
+    {label}
+  </Button>
 }
 
 function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
@@ -25,10 +84,9 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
     mintedNft,
     setMintedNft,
   } = useContext(AppContext);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<'check' | 'confirm'>('check');
   const walletContext = useContext(WalletContext);
-  const token = useContext<Theme>(ThemeContext as Context<Theme>).token;
 
   // Mint Data
   const [mintCheckResult, setMintCheckResult] = useState<Partial<MintCheckResult>>({});
@@ -56,6 +114,30 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
     []
   );
 
+  const signToCheck = useCallback(() => {
+    const {userId, signature, randomCode} = currentAccountData;
+    const needSign = isAppReady && !mintedNft && currentAddress! && userId && randomCode && !signature;
+    if (needSign) {
+      setLoading(true);
+      walletContext.signMessage(currentAddress, randomCode)
+        .then((signature) => {
+          if (signature) {
+            setMintCheckResult({isOwner: true});
+            setCurrentAccountData({
+              ...currentAccountData,
+              signature,
+            });
+          }
+        })
+        .catch(() => {
+          setMintCheckResult({isOwner: false});
+        })
+        .finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [currentAccountData, currentAddress, isAppReady, mintedNft, setCurrentAccountData, walletContext]);
+
   const mintCheck = useCallback(
     () => {
       let cancel = false;
@@ -66,19 +148,9 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
 
       // Sign message
       if (needSign) {
-        setLoading(true);
-        walletContext.signMessage(currentAddress, randomCode)
-        .then((signature) => {
-          if (!cancel && signature) {
-            setCurrentAccountData({
-              ...currentAccountData,
-              signature,
-            });
-          }
-        }).catch(console.error).finally(() => {
-          setLoading(false);
-        });
+        setMintCheckResult({});
       } else if (canCheck) {
+        setLoading(true);
         // Ready to check mint
         if (currentAddress && userId && signature && campaignId) {
           APICall.mintCheck({
@@ -94,6 +166,9 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
             setLoading(false);
           });
         }
+      } else {
+        setStep('check');
+        setMintCheckResult({});
       }
 
       return () => {
@@ -101,7 +176,7 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
         cancel = true;
       };
     },
-    [collectionInfo?.currentCampaignId, currentAccountData, currentAddress, isAppReady, mintedNft, walletContext],
+    [collectionInfo?.currentCampaignId, currentAccountData, currentAddress, isAppReady, mintedNft, signToCheck],
   );
 
   const nextStep = useCallback(() => {
@@ -146,38 +221,27 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
             </div>
             <div className={'__checklist'}>
               <div className={'__checklist-item'}>
-                {loading && <LoadingIcon loading existIcon prefixCls={'ant'}/>}
-                {!loading && <Icon
-                  iconColor={(mintCheckResult.isOwner && currentAccountData.signature) ? token.colorSuccess : token.colorError}
-                  phosphorIcon={(mintCheckResult.isOwner && currentAccountData.signature) ? CheckCircle : XCircle}
-                  weight={'fill'}/>}
+                <StatusIcon isLoading={loading} checked={!!currentAccountData.signature}
+                            checkResult={!!(mintCheckResult.isOwner && currentAccountData.signature)}/>
                 <div className={'__checklist-item-text'}>Own this wallet</div>
               </div>
               <div className={'__checklist-item'}>
-                {loading && <LoadingIcon loading existIcon prefixCls={'ant'}/>}
-                {!loading && <Icon phosphorIcon={mintCheckResult.hasBalance ? CheckCircle : XCircle}
-                                   iconColor={mintCheckResult.hasBalance ? token.colorSuccess : token.colorError}
-                                   weight={'fill'}/>}
+                <StatusIcon isLoading={loading} checked={mintCheckResult.hasBalance !== undefined}
+                            checkResult={mintCheckResult.hasBalance}/>
                 <div className={'__checklist-item-text'}>Has balance</div>
               </div>
               <div className={'__checklist-item'}>
-                {loading && <LoadingIcon loading existIcon prefixCls={'ant'}/>}
-                {!loading &&
-                  <Icon phosphorIcon={mintCheckResult.notDuplicated ? CheckCircle : XCircle}
-                        iconColor={mintCheckResult.notDuplicated ? token.colorSuccess : token.colorError}
-                        weight={'fill'}/>}
-                <div className={'__checklist-item-text'}>Minted before</div>
+                <StatusIcon isLoading={loading} checked={mintCheckResult.notDuplicated !== undefined}
+                            checkResult={mintCheckResult.notDuplicated}/>
+                <div className={'__checklist-item-text'}>Can mint this collection</div>
               </div>
             </div>
 
-            <Button
-              shape={'circle'}
-              onClick={mintCheckResult.requestId ? nextStep : mintCheck}
-              schema="primary"
-              className={'__button general-bordered-button general-button-width'}
-              loading={loading}>
-              {loading ? 'Checking...' : mintCheckResult.requestId ? 'Mint for free' : 'Check Again'}
-            </Button>
+            <NextButton isLoading={loading}
+                        needSign={!currentAccountData.signature}
+                        needRecheck={!mintCheckResult.hasBalance || !mintCheckResult.notDuplicated}
+                        signAction={signToCheck}
+                        nextAction={nextStep}/>
           </div>
         </div>
 
