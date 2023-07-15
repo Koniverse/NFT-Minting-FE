@@ -29,7 +29,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
           <Image className={'__logo'} width={180} height={180} src={logo}/>
         </div>
         <Button onClick={onConnectSubstrateWallet} className={'__button __button-1'}>
-          Subtrate Account
+          Substrate Account
         </Button>
         <Button onClick={onConnectEvmWallet} className={'__button __button-2'}>
           EVM Account

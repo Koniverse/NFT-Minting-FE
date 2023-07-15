@@ -61,7 +61,7 @@ function Component({className = '', onCancel}: Props): React.ReactElement<Props>
           }
           shape={'circle'} onClick={onConnectSubstrateWallet}
           className={'general-bordered-button general-button-width __button __button-1'}>
-          Subtrate Account
+          Substrate Account
         </Button>
         <Button
           icon={
