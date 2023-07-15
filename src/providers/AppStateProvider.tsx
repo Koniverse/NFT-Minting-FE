@@ -36,6 +36,7 @@ type MintedNftResponse = {
   nftName: string,
   nftImage: string,
   receiver: string,
+  rmrkNftId: string,
 }
 
 type FetchALlCollectionResponse = FetchALlCollectionResponseItem[];
@@ -96,6 +97,7 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
             image: _mintedNft.nftImage,
             campaignId: _mintedNft.campaignId,
             collectionId: _mintedNft.collectionId,
+            rmrkNftId: _mintedNft.rmrkNftId,
           });
         } else {
           setMintedNft(undefined);

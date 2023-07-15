@@ -9,7 +9,11 @@ import {FacebookLogo, TwitterLogo} from 'phosphor-react';
 type Props = ThemeProps;
 
 function Component({className}: ThemeProps): React.ReactElement<Props> {
-  const {mintedNft} = useContext(AppContext);
+  const {mintedNft, collectionInfo} = useContext(AppContext);
+
+  const singularLink = collectionInfo && mintedNft
+    ? `https://singular.app/collectibles/${collectionInfo?.network}/${collectionInfo?.rmrkCollectionId}/${mintedNft?.rmrkNftId}`
+    : 'https://singular.app';
 
   return (
     <div className={className}>
@@ -30,12 +34,12 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
 
           <div className="__text-container">
             <div className={'__text'}>
-              Open your <span className={'__highlight'}>SubWallet extension</span> or mobile app to view your Polkadot Power
+              Open your <span className={'__highlight'}>SubWallet extension</span> or mobile app to view your Polkadot
+              Power
               Passport. There may be occasional delays due to network stability.
             </div>
             <div className={'__text'}>
-              {/* todo: change this to accurate link */}
-              View NFT on <a className={'__highlight'} href={'https://singular.app/'} target={'_blank'}>Singular</a>
+              View NFT on <a className={'__highlight'} href={singularLink} target={'_blank'}>Singular</a>
             </div>
             <div className={'__text -with-complex-content'}>
             <span>
@@ -43,17 +47,18 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
             </span>
 
               <a target={'_blank'} className={'__button-link'}>
-                <Icon phosphorIcon={TwitterLogo} weight={'fill'} iconColor={'#2595E6'} customSize={'28px'} />
+                <Icon phosphorIcon={TwitterLogo} weight={'fill'} iconColor={'#2595E6'} customSize={'28px'}/>
                 Twitter
               </a>
 
               <a target={'_blank'} className={'__button-link'}>
-                <Icon phosphorIcon={FacebookLogo} weight={'fill'} iconColor={'#2565E6'} customSize={'28px'} />
+                <Icon phosphorIcon={FacebookLogo} weight={'fill'} iconColor={'#2565E6'} customSize={'28px'}/>
                 Facebook
               </a>
             </div>
             <div className={'__text'}>
-              Join <a className={'__highlight'} href={DISCORD_URL} target={'_blank'}>SubWallet Discord</a> to track Polkadot
+              Join <a className={'__highlight'} href={DISCORD_URL} target={'_blank'}>SubWallet Discord</a> to track
+              Polkadot
               ecosystem retroactive & aridrop campaigns
             </div>
           </div>

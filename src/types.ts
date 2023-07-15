@@ -108,6 +108,7 @@ export interface MintedNFTItem {
   image: string;
   campaignId: number,
   collectionId: number,
+  rmrkNftId: string,
 }
 
 export type MintCheckResult = {

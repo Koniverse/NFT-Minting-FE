@@ -97,7 +97,7 @@ export function WalletProvider({children}: Props) {
   }, [currentWallet, walletType]);
 
 
-  const walletContext = {
+  const walletContext: WalletContextInterface = {
     wallet: getWalletBySource(walletKey),
     evmWallet: getEvmWalletBySource(walletKey),
     signMessage,
