@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.a369a1e3.css",
-    "main.js": "/static/js/main.1e213a29.js",
+    "main.js": "/static/js/main.fcfbefdb.js",
     "static/media/squircle-logo.svg": "/static/media/squircle-logo.5f367bf94c1aeaf3cda43ea892435014.svg",
     "static/media/polkadot.png": "/static/media/polkadot.6384db5e1ffac799b521.png",
     "static/media/3.Default.png": "/static/media/3.Default.88315a37f872bfe09093.png",
@@ -18,6 +18,6 @@
   },
   "entrypoints": [
     "static/css/main.a369a1e3.css",
-    "static/js/main.1e213a29.js"
+    "static/js/main.fcfbefdb.js"
   ]
 }
