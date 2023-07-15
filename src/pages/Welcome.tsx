@@ -1,16 +1,24 @@
-import {ThemeProps} from '../../types';
+import {ThemeProps} from '../types';
 import styled from 'styled-components';
-import React, {useContext} from 'react';
+import React, {useCallback, useContext} from 'react';
 import {Button} from '@subwallet/react-ui';
-import {EventTitles} from './EventTitles';
-import {AppContext} from '../../contexts';
+import {EventTitles} from './ConnectWallet/EventTitles';
+import {AppContext} from '../contexts';
+import {useNavigate} from "react-router";
 
-type Props = ThemeProps & {
-  onClickButton: () => void
-};
+type Props = ThemeProps;
 
-function Component({className, onClickButton}: Props): React.ReactElement<Props> {
+function Component({className}: Props): React.ReactElement<Props> {
   const {collectionInfo} = useContext(AppContext);
+  const navigate = useNavigate();
+
+  const goConnect = useCallback(
+    () => {
+      navigate('/connect-wallet')
+    },
+    [navigate],
+  );
+
 
   return (
     <div className={className}>
@@ -26,7 +34,7 @@ function Component({className, onClickButton}: Props): React.ReactElement<Props>
         Already minted: {collectionInfo?.minted}
       </div>
 
-      <Button shape={'circle'} className={'general-bordered-button general-button-width'} onClick={onClickButton}>
+      <Button shape={'circle'} className={'general-bordered-button general-button-width'} onClick={goConnect}>
         Mint for Free
       </Button>
     </div>

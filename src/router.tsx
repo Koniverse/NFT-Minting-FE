@@ -1,12 +1,13 @@
 // Copyright 2019-2023 @subwallet/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import React from 'react';
 import {createHashRouter} from 'react-router-dom';
 import App from './App';
-import React from 'react';
 import {ConnectWallet} from './pages/ConnectWallet';
 import {MintNft} from './pages/MintNft';
 import {Congratulation} from './pages/Congratulation';
+import {Welcome} from "./pages/Welcome";
 
 const timeLoader = () => {
   return new Promise((resolve) => {
@@ -29,6 +30,10 @@ export const router = createHashRouter([
     loader: timeLoader,
     element: <App/>,
     children: [
+      {
+        path: 'welcome',
+        element: <Welcome />
+      },
       {
         path: 'connect-wallet',
         element: <ConnectWallet />

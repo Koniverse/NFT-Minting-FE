@@ -8,7 +8,8 @@ import {ThemeProps} from '../types';
 import {WalletContext} from '../contexts';
 import {Footer} from "./Footer";
 import {X} from "phosphor-react";
-import {HEADER_MENU_MODAL, SELECT_ACCOUNT_MODAL} from "../constants";
+import {HEADER_MENU_MODAL} from "../constants";
+import {useNavigate} from "react-router";
 
 
 type HeaderProps = ThemeProps;
@@ -18,6 +19,11 @@ const modalId = HEADER_MENU_MODAL;
 export function Component({className}: HeaderProps): React.ReactElement {
   const walletContext = useContext(WalletContext);
   const { activeModal, inactiveModal } = useContext(ModalContext);
+  const navigate = useNavigate();
+
+  const goRoot = useCallback(() => {
+    navigate('/')
+  }, [activeModal]);
 
   const openModal = useCallback(() => {
     activeModal(modalId);
@@ -29,18 +35,18 @@ export function Component({className}: HeaderProps): React.ReactElement {
 
   return (
     <div className={CN(className, '__container')}>
-      <Image className={'__left-part logo'} width={88} height={88} src={logo}/>
+      <Image className={'__left-part logo'} width={88} height={88} src={logo} onClick={goRoot}/>
       <Image className={'__left-part logo __mobile'} width={88} height={88} src={logo} onClick={openModal}/>
       <div className={'__right-part'}>
 
         <div className="__menu">
           <div className="__menu-item">
-            <a className="__link-button -highlight">
+            <a className="__link-button -highlight" onClick={goRoot}>
               Home
             </a>
           </div>
           <div className="__menu-item">
-            <a className="__link-button">
+            <a className="__link-button" href='https://dotinvietnam.com/'>
               DOTinVietNam
             </a>
           </div>
@@ -77,7 +83,7 @@ export function Component({className}: HeaderProps): React.ReactElement {
               </a>
             </div>
             <div className="__menu-item">
-              <a className="__link-button">
+              <a className="__link-button" href='https://dotinvietnam.com/'>
                 DOTinVietNam
               </a>
             </div>
@@ -100,6 +106,10 @@ export const Header = styled(Component)<HeaderProps>(({theme: {token, extendToke
       [`@media(max-width:${extendToken.mobileSize})`]: {
         justifyContent: 'center',
         marginBottom: 72
+      },
+
+      '.logo': {
+        cursor: 'pointer'
       },
 
       '.__left-part': {
