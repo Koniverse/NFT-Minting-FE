@@ -46,15 +46,17 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
               Share the good news on
             </span>
 
-              <a target={'_blank'} className={'__button-link'}>
-                <Icon phosphorIcon={TwitterLogo} weight={'fill'} iconColor={'#2595E6'} customSize={'28px'}/>
-                Twitter
-              </a>
+              <div className={'__share-container'}>
+                <a target={'_blank'} className={'__button-link'}>
+                  <Icon phosphorIcon={TwitterLogo} weight={'fill'} iconColor={'#2595E6'}/>
+                  Twitter
+                </a>
 
-              <a target={'_blank'} className={'__button-link'}>
-                <Icon phosphorIcon={FacebookLogo} weight={'fill'} iconColor={'#2565E6'} customSize={'28px'}/>
-                Facebook
-              </a>
+                <a target={'_blank'} className={'__button-link'}>
+                  <Icon phosphorIcon={FacebookLogo} weight={'fill'} iconColor={'#2565E6'}/>
+                  Facebook
+                </a>
+              </div>
             </div>
             <div className={'__text'}>
               Join <a className={'__highlight'} href={DISCORD_URL} target={'_blank'}>SubWallet Discord</a> to track
@@ -80,7 +82,8 @@ export const Congratulation = styled(Component)<Props>(({theme: {token}}: Props)
       backgroundColor: token.colorBgDefault,
       boxShadow: '4px 4px 32px 0px rgba(34, 84, 215, 0.30)',
       borderRadius: 16,
-      padding: 16,
+      paddingLeft: 16,
+      paddingRight: 16,
     },
 
     '.__box-inner': {
@@ -89,8 +92,8 @@ export const Congratulation = styled(Component)<Props>(({theme: {token}}: Props)
       alignItems: 'center',
       textAlign: 'center',
       maxWidth: 704,
-      paddingBottom: 56,
-      paddingTop: 48,
+      paddingTop: 64,
+      paddingBottom: 72,
       margin: 'auto',
     },
 
@@ -119,6 +122,7 @@ export const Congratulation = styled(Component)<Props>(({theme: {token}}: Props)
     '.__text.-with-complex-content': {
       display: 'flex',
       flexWrap: 'wrap',
+      justifyContent: 'center'
     },
 
     '.__highlight': {
@@ -134,6 +138,10 @@ export const Congratulation = styled(Component)<Props>(({theme: {token}}: Props)
       gap: 8,
       paddingLeft: 8,
       paddingRight: 8,
+
+      '.anticon': {
+        fontSize: 28
+      },
     },
 
     '.__button-link + .__button-link': {
@@ -153,6 +161,11 @@ export const Congratulation = styled(Component)<Props>(({theme: {token}}: Props)
         marginBottom: 36,
       },
 
+      '.__box-inner': {
+        paddingTop: 56,
+        paddingBottom: 44,
+      },
+
       '.__text-container': {
         gap: 20,
       },
@@ -165,6 +178,17 @@ export const Congratulation = styled(Component)<Props>(({theme: {token}}: Props)
 
       '.__text': {
         fontSize: 14,
+      },
+
+      '.__share-container': {
+        marginTop: 8,
+        flexBasis: '100%',
+      },
+
+      '.__button-link': {
+        '.anticon': {
+          fontSize: 20
+        },
       },
     }
   };
