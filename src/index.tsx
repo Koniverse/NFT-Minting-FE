@@ -8,6 +8,7 @@ import {WalletProvider} from "./providers/WalletProvider";
 import NotificationProvider from './providers/NotificationProvider';
 import {ScreenContextProvider} from "./providers/ScreenProvider";
 import {AppStateProvider} from './providers/AppStateProvider';
+import {ModalProvider} from "./providers/ModalProvider";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -19,7 +20,9 @@ root.render(
         <WalletProvider>
           <AppStateProvider>
             <ScreenContextProvider>
-              <RouterProvider router={router}/>
+              <ModalProvider>
+                <RouterProvider router={router}/>
+              </ModalProvider>
             </ScreenContextProvider>
           </AppStateProvider>
         </WalletProvider>

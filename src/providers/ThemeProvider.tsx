@@ -3,7 +3,7 @@
 
 
 import {generateTheme, SW_THEME_CONFIGS} from '../themes';
-import {ConfigProvider, ModalContextProvider, theme as reactUiTheme} from '@subwallet/react-ui';
+import {ConfigProvider, theme as reactUiTheme} from '@subwallet/react-ui';
 import React, { useMemo } from 'react';
 import styled, { createGlobalStyle, ThemeProvider as StyledComponentThemeProvider } from 'styled-components';
 import {SwThemeConfig, Theme, ThemeProps} from "../types";
@@ -308,9 +308,7 @@ export function ThemeProvider ({ children }: ThemeProviderProps): React.ReactEle
     >
       <ThemeGenerator themeConfig={themeConfig}>
         <TooltipContainer id='tooltip-container' />
-        <ModalContextProvider>
           {children}
-        </ModalContextProvider>
       </ThemeGenerator>
     </ConfigProvider>
   );

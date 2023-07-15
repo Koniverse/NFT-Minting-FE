@@ -8,11 +8,12 @@ import {ThemeProps} from '../types';
 import {WalletContext} from '../contexts';
 import {Footer} from "./Footer";
 import {X} from "phosphor-react";
+import {HEADER_MENU_MODAL, SELECT_ACCOUNT_MODAL} from "../constants";
 
 
 type HeaderProps = ThemeProps;
 
-const modalId = 'menu-modal';
+const modalId = HEADER_MENU_MODAL;
 
 export function Component({className}: HeaderProps): React.ReactElement {
   const walletContext = useContext(WalletContext);
