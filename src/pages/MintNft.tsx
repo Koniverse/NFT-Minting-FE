@@ -28,11 +28,12 @@ interface NBProps {
   needRecheck: boolean;
   signAction: () => void;
   nextAction: () => void;
+  recheckAction: () => void;
 }
 
 function StatusIcon({isLoading, checked, checkResult}: SIProps) {
   const token = useContext<Theme>(ThemeContext as Context<Theme>).token;
-  if (isLoading) {
+  if (isLoading && !checkResult) {
     return <LoadingIcon loading existIcon prefixCls={'ant'}/>;
   }
 
@@ -49,7 +50,7 @@ function StatusIcon({isLoading, checked, checkResult}: SIProps) {
   }
 }
 
-function NextButton({isLoading, needSign, needRecheck, signAction, nextAction}: NBProps) {
+function NextButton({isLoading, needSign, needRecheck, signAction, recheckAction, nextAction}: NBProps) {
   let label = 'Mint for free';
   if (isLoading) {
     label = 'Checking...';
@@ -62,6 +63,8 @@ function NextButton({isLoading, needSign, needRecheck, signAction, nextAction}: 
   let onClick: (() => void) | undefined = needSign ? signAction : nextAction;
   if (isLoading) {
     onClick = undefined
+  } if (needRecheck) {
+    onClick = recheckAction;
   }
 
   return <Button
@@ -239,7 +242,8 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
 
             <NextButton isLoading={loading}
                         needSign={!currentAccountData.signature}
-                        needRecheck={!mintCheckResult.hasBalance || !mintCheckResult.notDuplicated}
+                        needRecheck={!!currentAccountData.signature && (!mintCheckResult.hasBalance || !mintCheckResult.notDuplicated)}
+                        recheckAction={mintCheck}
                         signAction={signToCheck}
                         nextAction={nextStep}/>
           </div>
