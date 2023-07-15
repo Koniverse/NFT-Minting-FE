@@ -24,7 +24,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
               className={'nft-image'}
               width={'100%'}
               height={'100%'}
-              src={mintedNft?.image}
+              src={mintedNft?.nftImage}
               shape={'default'}/>
           </div>
 

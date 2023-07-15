@@ -77,8 +77,6 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
 export const Footer = styled(Component)<Props>(({theme: {token}}: Props) => {
   return {
     display: 'flex',
-    paddingTop: 30,
-    paddingBottom: 30,
 
     '.__social-button': {
       color: token.colorTextLight1,

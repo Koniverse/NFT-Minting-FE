@@ -1,13 +1,12 @@
-import {MintCheckResult, MintedNFTItem, ThemeProps} from '../types';
+import {MintCheckResult, MintedNFTItem, MintedNftResponse, ThemeProps} from '../types';
 import styled from 'styled-components';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
-import {useNavigate} from 'react-router';
 import {AppContext, WalletContext} from '../contexts';
-import {Button, Form, Icon, Image, Input, List, Typography} from '@subwallet/react-ui';
+import {Button, Form, Icon, Image, Input, Typography} from '@subwallet/react-ui';
 import {APICall} from '../api/nft';
 import {isAddress, isEthereumAddress} from '@polkadot/util-crypto';
-import {RuleObject} from "@subwallet/react-ui/es/form";
-import {Check, CheckCircle, Wallet, XCircle} from "phosphor-react";
+import {RuleObject} from '@subwallet/react-ui/es/form';
+import {CheckCircle, Wallet, XCircle} from 'phosphor-react';
 
 type Props = ThemeProps;
 
@@ -124,7 +123,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
           requestId: mintCheckResult?.requestId,
           recipient: recipient || currentAddress
         }
-      ).then((rs: MintedNFTItem) => {
+      ).then((rs: MintedNftResponse) => {
         setMintedNft(rs);
       }).finally(() => {
         setLoading(false);

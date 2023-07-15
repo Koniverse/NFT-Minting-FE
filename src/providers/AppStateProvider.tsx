@@ -2,7 +2,7 @@ import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {AppContext, WalletContext} from '../contexts';
 import {useLocalStorage} from '../hooks/useLocalStorage';
 import {WalletAccount} from '@subwallet/wallet-connect/types';
-import {CollectionItem, CurrentAccountData, MintedNFTItem} from '../types';
+import {CollectionItem, CurrentAccountData, MintedNFTItem, MintedNftResponse} from '../types';
 import {isEthereumAddress} from '@polkadot/util-crypto';
 import {APICall} from '../api/nft';
 
@@ -24,20 +24,6 @@ type FetchALlCollectionResponseItem = CollectionItem & {
     endTime: string,
   }[]
 };
-
-type MintedNftResponse = {
-  id: number,
-  campaignId: number,
-  collectionId: number,
-  userId: number,
-  address: string,
-  status: 'success' | 'fail' | 'minting' | 'check',
-  nftId: number,
-  nftName: string,
-  nftImage: string,
-  receiver: string,
-  rmrkNftId: string,
-}
 
 type FetchALlCollectionResponse = FetchALlCollectionResponseItem[];
 
@@ -91,14 +77,7 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
 
         const _mintedNft = rs.find(i => i.campaignId === collectionInfo.currentCampaignId);
         if (_mintedNft) {
-          setMintedNft({
-            id: _mintedNft.id,
-            name: _mintedNft.nftName,
-            image: _mintedNft.nftImage,
-            campaignId: _mintedNft.campaignId,
-            collectionId: _mintedNft.collectionId,
-            rmrkNftId: _mintedNft.rmrkNftId,
-          });
+          setMintedNft(_mintedNft);
         } else {
           setMintedNft(undefined);
         }

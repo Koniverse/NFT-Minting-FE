@@ -104,11 +104,21 @@ export interface CollectionItem {
 
 export interface MintedNFTItem {
   id: number;
-  name: string;
-  image: string;
+  nftName: string,
+  nftImage: string,
   campaignId: number,
   collectionId: number,
   rmrkNftId: string,
+}
+
+export interface MintedNftResponse extends MintedNFTItem {
+  userId: number,
+  address: string,
+  status: 'success' | 'fail' | 'minting' | 'check',
+  nftId: number,
+  recipient: string,
+  extrinsicHash: string,
+  blockNumber: number
 }
 
 export type MintCheckResult = {

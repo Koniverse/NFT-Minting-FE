@@ -50,11 +50,21 @@ const App = styled(Component)<Props>(({theme: {token}}: ThemeProps) => {
       display: 'flex',
       flexDirection: 'column',
     },
+
+    '.app-header': {
+      paddingTop: 48,
+    },
+
     '.app-body': {
       flex: 1,
       display: 'flex',
       justifyContent: 'center',
       flexDirection: 'column',
+    },
+
+    '.app-footer': {
+      paddingTop: 30,
+      paddingBottom: 30,
     },
   };
 });
