@@ -9,6 +9,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {WalletContext, WalletContextInterface} from '../contexts';
 import {useLocalStorage} from "../hooks/useLocalStorage";
 import {windowReload} from "../utils/window";
+import {toShort} from '@subwallet/react-ui/es/_util/address';
 
 interface Props {
   children: React.ReactElement;
@@ -47,7 +48,7 @@ export function WalletProvider({children}: Props) {
       const _accounts = await wallet?.request({ method: 'eth_accounts' }) as string[];
 
       if (_accounts) {
-        setAccounts(_accounts.map(a => ({address: a, source: walletKey})));
+        setAccounts(_accounts.map(a => ({address: a, name: toShort(a, 8, 8), source: walletKey})));
       }
     },
     []

@@ -92,7 +92,9 @@ export const SelectAccountTypeModal = styled(Component)<Props>(({theme: {token, 
     justifyContent: 'center',
 
     '.ant-sw-modal-content': {
-      maxHeight: 700
+      maxHeight: 700,
+      borderRadius: 16,
+      boxShadow: '0px 4px 100px 0px rgba(0, 0, 0, 0.40)',
     },
 
     '.__content-container': {

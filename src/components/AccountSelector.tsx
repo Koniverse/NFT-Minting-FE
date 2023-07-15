@@ -9,6 +9,7 @@ import AccountItem from '@subwallet/react-ui/es/web3-block/account-item';
 import {toShort} from '@subwallet/react-ui/es/_util/address';
 import {Copy} from 'phosphor-react';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import CN from 'classnames';
 
 
 type AccountSelectorProps = ThemeProps;
@@ -75,6 +76,8 @@ export function Component({className}: AccountSelectorProps): React.ReactElement
   return (
     <div className={className}>
       <SelectModal
+        width={'auto'}
+        className={CN(className, 'account-selector-modal')}
         id={'account-selector'}
         title={'Select Account'}
         placeholder={'Select Account'}
@@ -85,12 +88,12 @@ export function Component({className}: AccountSelectorProps): React.ReactElement
         renderItem={renderAccount}
         onSelect={appState.setCurrentAddress}
         footer={(
-          <>
+          <div className={'__button-wrapper'}>
             <Button shape={'circle'} className={'general-bordered-button general-button-width'}
                     onClick={walletState.disconnectAccount}>
               Disconnect
             </Button>
-          </>
+          </div>
         )}
       />
     </div>
@@ -100,6 +103,31 @@ export function Component({className}: AccountSelectorProps): React.ReactElement
 export const AccountSelector = styled(Component)<AccountSelectorProps>(({theme}) => {
   const token = theme.token;
   return {
+    '&.account-selector-modal': {
+      top: 0,
+      maxWidth: 704,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+
+      '.ant-sw-modal-content': {
+        maxHeight: 700,
+        borderRadius: 16,
+        boxShadow: '0px 4px 100px 0px rgba(0, 0, 0, 0.40)',
+      },
+
+      '.ant-sw-header-container-center .ant-sw-header-center-part': {
+        width: 'auto',
+        marginLeft: 48,
+        marginRight: 48,
+      },
+
+      '.__button-wrapper': {
+        display: 'flex',
+        justifyContent: 'center'
+      },
+    },
+
     '.ant-select-modal-input-container': {
       borderRadius: '50px'
     },

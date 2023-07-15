@@ -6,30 +6,43 @@ import {AppContext, WalletContext} from './contexts';
 import styled from 'styled-components';
 import {ThemeProps} from './types';
 import {Footer} from './components/Footer';
+import {Image} from '@subwallet/react-ui';
+import loadingImage from './assets/dual-ball.svg';
 
 type Props = ThemeProps;
 
 function Component({className}: Props) {
   const navigate = useNavigate();
-  const {mintedNft, currentAccountData, currentAddress} = useContext(AppContext);
+  const {mintedNft, currentAccountData, currentAddress, isAppReady} = useContext(AppContext);
   const walletContext = useContext(WalletContext);
 
   useEffect(() => {
-    if (!currentAddress || !(walletContext.wallet || walletContext.evmWallet)) {
-      navigate('/connect-wallet');
-    } else if (mintedNft) {
-      navigate('/congratulation');
-    } else {
-      navigate('/mint-nft')
+    if (isAppReady) {
+      if (!currentAddress || !(walletContext.wallet || walletContext.evmWallet)) {
+        navigate('/connect-wallet');
+      } else if (mintedNft) {
+        navigate('/congratulation');
+      } else {
+        navigate('/mint-nft');
+      }
     }
-  }, [currentAddress, mintedNft, navigate, walletContext.wallet, walletContext.evmWallet]);
+  }, [currentAddress, mintedNft, navigate, walletContext.wallet, walletContext.evmWallet, isAppReady]);
 
   return (
     <div className={className}>
       <div className="app-layout">
         <Header className={'app-header'}/>
         <div className={'app-body'}>
-          <Outlet/>
+          {!isAppReady ? (<div className={'__loading'}>
+            <Image
+              src={loadingImage}
+              // shape="none"
+              width={200}
+              height={200}
+            />
+          </div>)
+            : <Outlet/>
+          }
         </div>
         <Footer className={'app-footer'}/>
       </div>
@@ -66,6 +79,10 @@ const App = styled(Component)<Props>(({theme: {token}}: ThemeProps) => {
       paddingTop: 30,
       paddingBottom: 30,
     },
+
+    '.__loading': {
+      textAlign: 'center'
+    }
   };
 });
 
