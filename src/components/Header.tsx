@@ -1,14 +1,14 @@
-import React, {useCallback, useContext, useMemo} from 'react';
+import React, {useCallback, useContext, useEffect} from 'react';
 import styled from 'styled-components';
 import CN from 'classnames';
 import {Button, Icon, Image, ModalContext, SwModal} from '@subwallet/react-ui';
 import logo from '../assets/logo.svg';
-import {AccountSelector} from './AccountSelector';
 import {ThemeProps} from '../types';
 import {WalletContext} from '../contexts';
 import {Footer} from "./Footer";
 import {X} from "phosphor-react";
-import {HEADER_MENU_MODAL, SELECT_ACCOUNT_MODAL} from "../constants";
+import {HEADER_MENU_MODAL} from "../constants";
+import {AccountSelectorInput} from "./AccountSelectorInput";
 
 
 type HeaderProps = ThemeProps;
@@ -17,7 +17,7 @@ const modalId = HEADER_MENU_MODAL;
 
 export function Component({className}: HeaderProps): React.ReactElement {
   const walletContext = useContext(WalletContext);
-  const { activeModal, inactiveModal } = useContext(ModalContext);
+  const { activeModal, inactiveModal, addExclude, removeExclude } = useContext(ModalContext);
 
   const openModal = useCallback(() => {
     activeModal(modalId);
@@ -26,6 +26,14 @@ export function Component({className}: HeaderProps): React.ReactElement {
   const closeModal = useCallback(() => {
     inactiveModal(modalId);
   }, [inactiveModal]);
+
+  useEffect(() => {
+    addExclude(modalId)
+
+    return () => {
+      removeExclude(modalId)
+    }
+  }, [addExclude, removeExclude])
 
   return (
     <div className={CN(className, '__container')}>
@@ -45,7 +53,7 @@ export function Component({className}: HeaderProps): React.ReactElement {
             </a>
           </div>
 
-          {!!(walletContext.wallet || walletContext.evmWallet) && <AccountSelector/>}
+          {!!(walletContext.wallet || walletContext.evmWallet) && <AccountSelectorInput/>}
         </div>
       </div>
       <SwModal
@@ -82,7 +90,7 @@ export function Component({className}: HeaderProps): React.ReactElement {
               </a>
             </div>
 
-            {!!(walletContext.wallet || walletContext.evmWallet) && <AccountSelector/>}
+            {!!(walletContext.wallet || walletContext.evmWallet) && walletContext.accounts.length && <AccountSelectorInput/>}
           </div>
           <Footer className='__footer' />
         </div>

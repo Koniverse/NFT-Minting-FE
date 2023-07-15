@@ -1,127 +1,88 @@
 import React, {useCallback, useContext} from 'react';
 import styled from 'styled-components';
-import {Button, Icon, ModalContext, SelectModal, SwList, SwModal} from '@subwallet/react-ui';
+import {Icon, ModalContext, Typography} from '@subwallet/react-ui';
 import {ThemeProps} from '../types';
-import {AppContext, WalletContext} from '../contexts';
-import {WalletAccount} from '@subwallet/wallet-connect/types';
-import AccountCard from '@subwallet/react-ui/es/web3-block/account-card';
+import {AppContext} from '../contexts';
 import AccountItem from '@subwallet/react-ui/es/web3-block/account-item';
 import {toShort} from '@subwallet/react-ui/es/_util/address';
-import {Copy} from 'phosphor-react';
-import CopyToClipboard from 'react-copy-to-clipboard';
+import {CaretDown} from 'phosphor-react';
 import CN from 'classnames';
 import {SELECT_ACCOUNT_MODAL} from "../constants";
 
 
-type AccountSelectorProps = ThemeProps;
+type AccountSelectorInputProps = ThemeProps;
 
 const modalId = SELECT_ACCOUNT_MODAL;
 
-export const Component = ({className}: AccountSelectorProps): React.ReactElement => {
+export const Component = ({className}: AccountSelectorInputProps): React.ReactElement => {
   const appState = useContext(AppContext);
-  const walletState = useContext(WalletContext);
-  const { inactiveModal } = useContext(ModalContext);
+  const { activeModal } = useContext(ModalContext);
 
-  const renderAccount = useCallback(
-    (account: WalletAccount) => {
-      const isSelected = appState.currentAddress === account.address;
+  const account  = appState.walletAccount;
 
-      return (
-        <AccountCard
-          address={account.address}
-          accountName={account.name || ''} avatarIdentPrefix={42}
-          isSelected={isSelected}
-          addressPreLength={9}
-          addressSufLength={9}
-          renderRightItem={(dItem) => (
-            <>
-              {dItem}
-              <CopyToClipboard text={account.address}>
-                <Button
-                  icon={
-                    <Icon
-                      phosphorIcon={Copy}
-                      weight={'light'}
-                      size="sm"
-                    />
-                  }
-                  size="xs"
-                  type="ghost"
-                />
-              </CopyToClipboard>
-            </>
-          )}
-        />
-      );
-    },
-    [appState.currentAddress],
-  );
-
-  const renderSelectedAccount = useCallback(
-      (account: WalletAccount) => {
-        return (
-          <AccountItem
-            className={'selected-account-item'}
-            address={account.address}
-            renderMiddleItem={() => {
-              return <>
-                <span className={'__name'}>{account.name}</span>
-                <span className={'__address'}>({toShort(account.address, 0, 3)})</span>
-              </>;
-            }}
-            avatarSize={20}
-            avatarIdentPrefix={0}
-          />
-        );
-      },
-      [],
-    )
-  ;
-
-  const onClose = useCallback(() => {
-    inactiveModal(modalId)
-  }, [inactiveModal])
+  const onOpen = useCallback(() => {
+    activeModal(modalId)
+  }, [activeModal])
 
   return (
-    <div className={CN(className)}>
-
+    <div className={CN(className, '__input-container')} onClick={onOpen}>
+      <div className="__input-wrapper">
+        <div className="__input-content">
+          {
+            account ? (
+              <AccountItem
+                className={'selected-account-item'}
+                address={account.address}
+                renderMiddleItem={() => {
+                  return <>
+                    <span className={'__name'}>{account.name}</span>
+                    <span className={'__address'}>({toShort(account.address, 0, 3)})</span>
+                  </>;
+                }}
+                avatarSize={20}
+                avatarIdentPrefix={0}
+              />
+            ) : (
+              <Typography.Text>Select account</Typography.Text>
+            )
+          }
+        </div>
+        <div className={'__input-suffix'}><Icon type='phosphor' phosphorIcon={CaretDown} size='sm' /></div>
+      </div>
     </div>
   );
 };
 
-export const AccountSelectorInput = styled(Component)<AccountSelectorProps>(({theme}) => {
+export const AccountSelectorInput = styled(Component)<AccountSelectorInputProps>(({theme}) => {
   const token = theme.token;
   return {
-    '&.account-selector-modal': {
-      top: 0,
-      maxWidth: 704,
+
+    '&.__input-container': {
+      borderRadius: '50px',
+      cursor: 'pointer',
       display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
+      color: token.colorTextTertiary,
+      lineHeight: token.lineHeightLG,
+      position: 'relative',
+      background: token.colorBgSecondary,
 
-      '.ant-sw-modal-content': {
-        maxHeight: 700,
-        borderRadius: 16,
-        boxShadow: '0px 4px 100px 0px rgba(0, 0, 0, 0.40)',
-      },
+      '&:hover': {
+        background: token.colorBgInput,
 
-      '.ant-sw-header-container-center .ant-sw-header-center-part': {
-        width: 'auto',
-        marginLeft: 48,
-        marginRight: 48,
-      },
-
-      '.__button-wrapper': {
-        display: 'flex',
-        justifyContent: 'center'
-      },
+        '.selected-account-item': {
+          background: token.colorBgInput,
+        }
+      }
     },
 
-    '.ant-select-modal-input-container': {
-      borderRadius: '50px'
-    },
-    '.ant-select-modal-input-wrapper': {
-      padding: '9px !important'
+    '.__input-wrapper': {
+      padding: '9px 16px',
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      gap: 8,
+      overflow: 'hidden',
     },
 
     '.ant-account-item': {

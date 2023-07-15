@@ -1,28 +1,27 @@
-import React, {useCallback, useContext} from 'react';
+import React, {useCallback, useContext, MouseEventHandler, SyntheticEvent} from 'react';
 import styled from 'styled-components';
-import {Button, Icon, ModalContext, SelectModal, SwList, SwModal} from '@subwallet/react-ui';
+import {Button, Icon, ModalContext, SwList, SwModal} from '@subwallet/react-ui';
 import {ThemeProps} from '../types';
 import {AppContext, WalletContext} from '../contexts';
 import {WalletAccount} from '@subwallet/wallet-connect/types';
 import AccountCard from '@subwallet/react-ui/es/web3-block/account-card';
-import AccountItem from '@subwallet/react-ui/es/web3-block/account-item';
-import {toShort} from '@subwallet/react-ui/es/_util/address';
 import {Copy} from 'phosphor-react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import CN from 'classnames';
 import {HEADER_MENU_MODAL, SELECT_ACCOUNT_MODAL} from "../constants";
+import useIsMobileSize from "../hooks/useIsMobileSize";
 
 
-type AccountSelectorProps = ThemeProps;
+type AccountSelectorModalProps = ThemeProps;
 
 const modalId = SELECT_ACCOUNT_MODAL;
 const menuModalId = HEADER_MENU_MODAL;
 
-export const Component = ({className}: AccountSelectorProps): React.ReactElement => {
+export const Component = ({className}: AccountSelectorModalProps): React.ReactElement => {
   const {currentAddress, setCurrentAddress} = useContext(AppContext);
   const walletState = useContext(WalletContext);
   const { inactiveModal, inactiveModals } = useContext(ModalContext);
-
+  const isMobileSize = useIsMobileSize();
 
   const onSelect = useCallback((account: WalletAccount) => {
     return () => {
@@ -30,6 +29,10 @@ export const Component = ({className}: AccountSelectorProps): React.ReactElement
       inactiveModals([modalId, menuModalId]);
     }
   }, [setCurrentAddress, inactiveModals])
+
+  const onCopy= useCallback((event: SyntheticEvent) => {
+    event.stopPropagation();
+  }, []);
 
   const renderAccount = useCallback(
     (account: WalletAccount) => {
@@ -43,24 +46,25 @@ export const Component = ({className}: AccountSelectorProps): React.ReactElement
           isSelected={isSelected}
           addressPreLength={9}
           addressSufLength={9}
-          renderRightItem={(dItem) => (
-            <>
-              {dItem}
-              <CopyToClipboard text={account.address}>
-                <Button
-                  icon={
-                    <Icon
-                      phosphorIcon={Copy}
-                      weight={'light'}
-                      size="sm"
-                    />
-                  }
-                  size="xs"
-                  type="ghost"
-                />
-              </CopyToClipboard>
-            </>
-          )}
+          // renderRightItem={(dItem) => (
+          //   <>
+          //     {dItem}
+          //     <CopyToClipboard text={account.address}>
+          //       <Button
+          //         icon={
+          //           <Icon
+          //             phosphorIcon={Copy}
+          //             weight={'light'}
+          //             size="sm"
+          //           />
+          //         }
+          //         size="xs"
+          //         type="ghost"
+          //         onClick={onCopy}
+          //       />
+          //     </CopyToClipboard>
+          //   </>
+          // )}
           onPressItem={onSelect(account)}
         />
       );
@@ -97,8 +101,7 @@ export const Component = ({className}: AccountSelectorProps): React.ReactElement
   );
 };
 
-export const AccountSelectorModal = styled(Component)<AccountSelectorProps>(({theme}) => {
-  const token = theme.token;
+export const AccountSelectorModal = styled(Component)<AccountSelectorModalProps>(({theme: { token }}: AccountSelectorModalProps) => {
   return {
     '&.account-selector-modal': {
       top: 0,
@@ -125,13 +128,6 @@ export const AccountSelectorModal = styled(Component)<AccountSelectorProps>(({th
       },
     },
 
-    '.ant-select-modal-input-container': {
-      borderRadius: '50px'
-    },
-    '.ant-select-modal-input-wrapper': {
-      padding: '9px !important'
-    },
-
     '.ant-account-item': {
       padding: 0,
       paddingRight: 6,
@@ -141,20 +137,5 @@ export const AccountSelectorModal = styled(Component)<AccountSelectorProps>(({th
         justifyContent: 'flex-start'
       },
     },
-
-    '.selected-account-item': {
-      '.__name': {
-        color: token.colorText,
-        marginRight: 2,
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        maxWidth: 90,
-      },
-      '.__address': {
-        display: 'inline-block',
-        whiteSpace: 'nowrap'
-      }
-    }
   };
 });
