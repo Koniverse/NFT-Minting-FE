@@ -74,6 +74,10 @@ const App = styled(Component)<Props>(({theme: {token, extendToken}}: ThemeProps)
 
     '.app-header': {
       paddingTop: 48,
+
+      [`@media(min-width:${extendToken.mobileSize})`]: {
+        paddingBottom: 16,
+      }
     },
 
     '.app-body': {

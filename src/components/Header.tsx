@@ -64,11 +64,11 @@ export function Component({className}: HeaderProps): React.ReactElement {
             </a>
           </div>
 
-          {!!(walletContext.wallet || walletContext.evmWallet) && walletContext.accounts.length && <AccountSelectorInput/>}
+          {!!(walletContext.wallet || walletContext.evmWallet) && !!walletContext.accounts.length && <AccountSelectorInput/>}
         </div>
       </div>
       <div className={'__right-part __mobile'}>
-        {!!(walletContext.wallet || walletContext.evmWallet) && walletContext.accounts.length && <AccountSelectorInput/>}
+        {!!(walletContext.wallet || walletContext.evmWallet) && !!walletContext.accounts.length && <AccountSelectorInput/>}
       </div>
 
       <SwModal
@@ -169,8 +169,6 @@ export const Header = styled(Component)<HeaderProps>(({theme: {token, extendToke
           }
         },
         [`@media(min-width:${extendToken.mobileSize})`]: {
-          display: "unset",
-
           '&.__mobile': {
             display: "none",
           }
