@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.a369a1e3.css",
-    "main.js": "/static/js/main.a8c1faa4.js",
+    "main.js": "/static/js/main.9e2af6ac.js",
     "static/media/squircle-logo.svg": "/static/media/squircle-logo.5f367bf94c1aeaf3cda43ea892435014.svg",
     "static/media/polkadot.png": "/static/media/polkadot.6384db5e1ffac799b521.png",
     "static/media/3.Default.png": "/static/media/3.Default.88315a37f872bfe09093.png",
@@ -13,10 +13,11 @@
     "static/media/1.Polkadot.svg": "/static/media/1.Polkadot.51f911ff27b045014462b2654abcccfd.svg",
     "static/media/2.Kusama.svg": "/static/media/2.Kusama.6d0c5ceb4938b6d8322b52bb73d79689.svg",
     "static/media/PolkadotLogo.svg": "/static/media/PolkadotLogo.8492330aac9d174faa4886cab4cb5b93.svg",
+    "static/media/dual-ball.svg": "/static/media/dual-ball.ed26e8dd190462cc67bebfab2be834f0.svg",
     "index.html": "/index.html"
   },
   "entrypoints": [
     "static/css/main.a369a1e3.css",
-    "static/js/main.a8c1faa4.js"
+    "static/js/main.9e2af6ac.js"
   ]
 }
