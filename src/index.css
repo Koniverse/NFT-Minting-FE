@@ -491,6 +491,10 @@ div#popup-container {
 .ant-typography,
 .ant-sw-header,
 [class*=" ant-sw-sub-header"],
+.ant-form,
+[class*=" ant-form"],
+.ant-number,
+[class*=" ant-number"],
 .ant-sw-modal {
   font-family: inherit !important;
 }
