@@ -8,8 +8,8 @@ import {WalletContext} from '../contexts';
 import {Footer} from "./Footer";
 import {X} from "phosphor-react";
 import {HEADER_MENU_MODAL} from "../constants";
-import {useNavigate} from "react-router";
 import {AccountSelectorInput} from "./AccountSelectorInput";
+import {useNavigate} from "react-router";
 
 
 type HeaderProps = ThemeProps;
@@ -41,12 +41,17 @@ export function Component({className}: HeaderProps): React.ReactElement {
     }
   }, [addExclude, removeExclude])
 
-  return (
-    <div className={CN(className, '__container')}>
-      <Image className={'__left-part logo'} width={88} height={88} src={logo} onClick={goRoot}/>
-      <Image className={'__left-part logo __mobile'} width={88} height={88} src={logo} onClick={openModal}/>
-      <div className={'__right-part'}>
+  const showAccount = !!(walletContext.wallet || walletContext.evmWallet) && !!walletContext.accounts.length;
 
+  return (
+    <div className={CN(className, '__container' ,  { __center: !showAccount })}>
+      <div className="__left-part">
+        <Image className={'logo'} width={88} height={88} src={logo} onClick={goRoot}/>
+      </div>
+      <div className="__left-part __mobile">
+        <Image className={'__mobile'} width={88} height={88} src={logo} onClick={openModal}/>
+      </div>
+      <div className={'__right-part'}>
         <div className="__menu">
           <div className="__menu-item">
             <a className="__link-button -highlight" onClick={goRoot}>
@@ -59,9 +64,13 @@ export function Component({className}: HeaderProps): React.ReactElement {
             </a>
           </div>
 
-          {!!(walletContext.wallet || walletContext.evmWallet) && <AccountSelectorInput/>}
+          {!!(walletContext.wallet || walletContext.evmWallet) && walletContext.accounts.length && <AccountSelectorInput/>}
         </div>
       </div>
+      <div className={'__right-part __mobile'}>
+        {!!(walletContext.wallet || walletContext.evmWallet) && walletContext.accounts.length && <AccountSelectorInput/>}
+      </div>
+
       <SwModal
         className={CN(className, 'modal-full')}
         id={modalId}
@@ -82,6 +91,7 @@ export function Component({className}: HeaderProps): React.ReactElement {
               )}
               type="ghost"
               onClick={closeModal}
+              size='lg'
             />
           </div>
           <div className="__menu">
@@ -95,8 +105,6 @@ export function Component({className}: HeaderProps): React.ReactElement {
                 DOTinVietNam
               </a>
             </div>
-
-            {!!(walletContext.wallet || walletContext.evmWallet) && walletContext.accounts.length && <AccountSelectorInput/>}
           </div>
           <Footer className='__footer' />
         </div>
@@ -110,10 +118,16 @@ export const Header = styled(Component)<HeaderProps>(({theme: {token, extendToke
     '&.__container': {
       display: 'flex',
       alignItems: 'center',
+      paddingRight: 16,
+      paddingLeft: 16,
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
-        justifyContent: 'center',
-        marginBottom: 72
+        justifyContent: 'space-between',
+        marginBottom: 72,
+
+        '&.__center': {
+          justifyContent: 'center',
+        },
       },
 
       '.logo': {
@@ -121,8 +135,30 @@ export const Header = styled(Component)<HeaderProps>(({theme: {token, extendToke
       },
 
       '.__left-part': {
+        [`@media(max-width:${extendToken.mobileSize})`]: {
+          display: "none",
+
+          '&.__mobile': {
+            display: "unset",
+          }
+        },
+        [`@media(min-width:${extendToken.mobileSize})`]: {
+          display: "unset",
+
+          '&.__mobile': {
+            display: "none",
+          }
+        },
+      },
+
+      '.__right-part': {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        flex: 1,
+        paddingBottom: 8,
+
         '&.__mobile': {
-          cursor: 'pointer'
+          flex: "unset",
         },
 
         [`@media(max-width:${extendToken.mobileSize})`]: {
@@ -138,17 +174,6 @@ export const Header = styled(Component)<HeaderProps>(({theme: {token, extendToke
           '&.__mobile': {
             display: "none",
           }
-        }
-      },
-
-      '.__right-part': {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        flex: 1,
-        paddingBottom: 8,
-
-        '@media(max-width:1007px)': {
-          display: "none"
         }
       },
     },
