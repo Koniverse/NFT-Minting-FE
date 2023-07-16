@@ -133,7 +133,7 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
     let cancel = false;
     // Get user random code
     if (currentAddress && !currentAccountData.userId) {
-      APICall.getUseRandomrCode(currentAddress).then(({id, randomCode}: GetUserCodeResponse) => {
+      APICall.getUserRandomCode(currentAddress).then(({id, randomCode}: GetUserCodeResponse) => {
         !cancel && setCurrentAccountData({...currentAccountData, userId: id, randomCode});
       });
     }

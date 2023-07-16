@@ -59,17 +59,20 @@ const clientWithGetParams = async (
 
 
 export const APICall = {
-    getUseRandomrCode: async (address: string) => {
+    getUserRandomCode: async (address: string) => {
         return await client("POST", "/api/user/get-code", {
             address,
         });
     },
     fetchALlCollection: async () => {
-        return await client("GET", "/api/collection/fetch", {});
+        return await clientWithGetParams( "/api/collection/fetch", {
+            rmrkCollectionId: ENVIRONMENT.RMRK_COLLECTION_ID
+        });
     },
     fetchMintedNft: async (address: string) => {
         return await clientWithGetParams( "/api/mint/fetch", {
-            address
+            address,
+            rmrkCollectionId: ENVIRONMENT.RMRK_COLLECTION_ID
         });
     },
     mintCheck: async (checkInput: MintCheckInput) => {
