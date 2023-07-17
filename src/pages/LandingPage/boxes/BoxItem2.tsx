@@ -36,8 +36,6 @@ export const BoxItem2 = styled(Component)<Props>((theme: Props) => {
     '.__image-background': {
       position: 'absolute',
       top: 0,
-      left: 0,
-      bottom: 0,
       right: 0,
       width: '100%',
       height: 'auto',
@@ -63,6 +61,26 @@ export const BoxItem2 = styled(Component)<Props>((theme: Props) => {
 
     '.__text-highlight': {
       ...textHighlight
+    },
+
+    [`@media(max-width:1599px)`]: {
+      height: 400,
+
+      '.__image-background': {
+        marginRight: -70,
+      },
+
+      '.__image': {
+        width: 231,
+        height: 'auto',
+        marginBottom: -67,
+        marginLeft: -250,
+      },
+
+      '.__text-box': {
+        height: 174,
+        paddingTop: 90,
+      },
     },
   };
 });

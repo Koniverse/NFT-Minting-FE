@@ -8,6 +8,7 @@ import {Button} from '@subwallet/react-ui';
 import {BoxItem1} from './boxes/BoxItem1';
 import {BoxItem2} from './boxes/BoxItem2';
 import {BoxItem3} from './boxes/BoxItem3';
+import {aura} from '@polkadot/types/interfaces/definitions';
 
 type Props = ThemeProps;
 
@@ -20,7 +21,7 @@ function Component({className}: Props): React.ReactElement<Props> {
       <div className={'landing-launch-area'}>
         <EventTitles className={'__event-titles'}/>
         <div className={'__minting-time'}>
-          Minting period: 17 Jul - 23 Jul
+          Minting period: <br className={'__show-on-mobile'}/> 17 Jul - 23 Jul
         </div>
 
         <Button
@@ -40,9 +41,9 @@ function Component({className}: Props): React.ReactElement<Props> {
       </div>
 
       <div className={'landing-boxes-area'}>
-        <BoxItem1/>
-        <BoxItem2/>
-        <BoxItem3/>
+        <BoxItem1 className={'__box-item'}/>
+        <BoxItem2 className={'__box-item'}/>
+        <BoxItem3 className={'__box-item'}/>
       </div>
 
       <div className={'landing-install-app-area'}>
@@ -74,6 +75,12 @@ export const LandingPage = styled(Component)<Props>(({theme: {token, extendToken
   return {
     position: 'relative',
     backgroundColor: '#070620',
+
+    '.__show-on-mobile': {
+      [`@media(min-width:${extendToken.mobileSize})`]: {
+        display: 'none',
+      },
+    },
 
     '.bgi-background-landing-1, .bgi-background-landing-2': {
       position: 'absolute',
@@ -107,23 +114,33 @@ export const LandingPage = styled(Component)<Props>(({theme: {token, extendToken
     '.landing-header': {
       paddingTop: 48,
       paddingBottom: 48,
-      maxWidth: 1472,
+      paddingLeft: 32,
+      paddingRight: 32,
+      maxWidth: 1504,
       marginLeft: 'auto',
       marginRight: 'auto',
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        marginBottom: 0,
+        paddingTop: 44,
+        paddingBottom: 44,
+      },
     },
 
     '.landing-launch-area': {
       textAlign: 'center',
       paddingTop: 176,
       paddingBottom: 140,
+      paddingLeft: 32,
+      paddingRight: 32,
 
       '.__event-titles': {
-        marginBottom: 56,
+        marginBottom: 36,
       },
 
       '.__minting-time': {
         fontSize: 40,
-        fontWeight: 500,
+        fontWeight: 700,
         color: token.colorTextLight1,
         lineHeight: 1.3,
         marginBottom: 86,
@@ -140,6 +157,27 @@ export const LandingPage = styled(Component)<Props>(({theme: {token, extendToken
         color: token.colorSuccess,
         lineHeight: 1.3
       },
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        paddingTop: 28,
+
+        '.__event-titles': {
+          marginBottom: 46,
+        },
+
+        '.__minting-time': {
+          fontSize: 20,
+          marginBottom: 64,
+        },
+
+        '.__slogan': {
+          fontSize: 20,
+        },
+
+        '.__button': {
+          marginBottom: 104,
+        },
+      },
     },
 
     '.landing-boxes-area': {
@@ -149,12 +187,27 @@ export const LandingPage = styled(Component)<Props>(({theme: {token, extendToken
       marginLeft: 'auto',
       marginRight: 'auto',
       gap: 32,
+
+      '.__box-item': {
+        flex: 1,
+      },
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        '.__box-item': {
+          flex: '0 1 auto',
+        },
+        alignItems: 'center',
+        flexDirection: 'column',
+        marginBottom: 96,
+        paddingLeft: 32,
+        paddingRight: 32,
+        gap: 16,
+      },
     },
 
     '.landing-install-app-area': {
-      paddingLeft: 16,
-      paddingRight: 16,
-      marginBottom: 32,
+      paddingLeft: 32,
+      paddingRight: 32,
       backgroundColor: token.colorBgDefault,
       position: 'relative',
 
@@ -200,16 +253,45 @@ export const LandingPage = styled(Component)<Props>(({theme: {token, extendToken
         maxWidth: 284,
         width: '100%',
       },
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        '.__title': {
+          fontSize: 24,
+          marginBottom: 20,
+        },
+
+        '.__text': {
+          fontSize: 16,
+          marginBottom: 30,
+        },
+
+        '.__inner-container': {
+          paddingTop: 56,
+          paddingBottom: 358,
+        },
+
+        '.__image-background': {
+          height: 293,
+          width: 'auto',
+          right: '50%',
+          transform: 'translateX(50%)',
+        },
+      },
     },
 
     '.landing-footer': {
-      paddingTop: 50,
+      paddingTop: 82,
       paddingBottom: 50,
-      paddingLeft: 16,
-      paddingRight: 16,
-      maxWidth: 1472,
+      paddingLeft: 32,
+      paddingRight: 32,
+      maxWidth: 1504,
       marginRight: 'auto',
       marginLeft: 'auto',
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        paddingTop: 30,
+        paddingBottom: 40,
+      },
     },
   };
 });

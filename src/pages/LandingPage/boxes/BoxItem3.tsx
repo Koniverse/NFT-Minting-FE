@@ -75,5 +75,20 @@ export const BoxItem3 = styled(Component)<Props>((theme: Props) => {
     '.__text-highlight': {
       ...textHighlight
     },
+
+    [`@media(max-width:1599px)`]: {
+      height: 400,
+
+
+      '.__image': {
+        width: 116,
+        right: 40,
+        height: 'auto',
+      },
+
+      '.__text-box': {
+        height: 174,
+      },
+    },
   };
 });

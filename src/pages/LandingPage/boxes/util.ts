@@ -16,7 +16,8 @@ export function generateBoxStyle(theme: ThemeProps): BoxStyle {
     container: {
       height: 492,
       position: 'relative',
-      flex: 1,
+      maxWidth: 460,
+      width: '100%',
     },
 
     textBox: {
@@ -37,6 +38,11 @@ export function generateBoxStyle(theme: ThemeProps): BoxStyle {
       fontSize: 22,
       lineHeight: 1.5,
       color: token.colorTextLight1,
+
+      [`@media(max-width:1599px)`]: {
+        fontSize: 16,
+        lineHeight: 1.3,
+      }
     },
 
     textHighlight: {

@@ -209,15 +209,15 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         height: 50,
-        lineHeight: '48px',
-        borderWidth: 1,
+        lineHeight: '46px',
+        borderWidth: 2,
       },
 
       '.ant-btn-content-wrapper': {
         textTransform: 'uppercase',
 
         [`@media(max-width:${extendToken.mobileSize})`]: {
-          fontSize: token.size,
+          fontSize: 14,
         }
       },
 
@@ -247,7 +247,7 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
         textTransform: 'uppercase',
 
         [`@media(max-width:${extendToken.mobileSize})`]: {
-          fontSize: token.size,
+          fontSize: 14,
         }
       },
 
