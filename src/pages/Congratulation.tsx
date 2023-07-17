@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import React, {useContext} from 'react';
 import {AppContext} from '../contexts';
 import {Icon, Image} from '@subwallet/react-ui';
-import {DISCORD_URL} from '../constants';
+import {DISCORD_URL, DOWNLOAD_URL} from '../constants';
 import {FacebookLogo, TwitterLogo} from 'phosphor-react';
 
 type Props = ThemeProps;
@@ -34,9 +34,8 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
 
           <div className="__text-container">
             <div className={'__text'}>
-              Open your <span className={'__highlight'}>SubWallet extension</span> or mobile app to view your Polkadot
-              Power
-              Passport. There may be occasional delays due to network stability.
+              Open your <span className={'__highlight'}>SubWallet extension</span> or <a className={'__highlight'}  href={DOWNLOAD_URL} target={'_blank'}>mobile app</a> to view your Polkadot
+              Power Passport. There may be occasional delays due to network stability.
             </div>
             <div className={'__text'}>
               View NFT on <a className={'__highlight'} href={singularLink} target={'_blank'}>Singular</a>
@@ -60,8 +59,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
             </div>
             <div className={'__text'}>
               Join <a className={'__highlight'} href={DISCORD_URL} target={'_blank'}>SubWallet Discord</a> to track
-              Polkadot
-              ecosystem retroactive & aridrop campaigns
+              Polkadot ecosystem campaigns & activities.
             </div>
           </div>
         </div>

@@ -36,7 +36,7 @@ export const EventTitles = styled(Component)<Props>(({theme: {extendToken, token
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         fontSize: 44,
-        marginBottom: 21,
+        marginBottom: 16,
         padding: `0 ${token.paddingXL}px`
       },
     },
@@ -54,8 +54,9 @@ export const EventTitles = styled(Component)<Props>(({theme: {extendToken, token
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         fontSize: 44,
-        lineHeight: '43px',
-        padding: `0 ${token.paddingXL}px`
+        lineHeight: '52.8px',
+        padding: `0 ${token.paddingXL}px`,
+        '-webkit-text-stroke': '2px #fff',
       },
 
       span: {

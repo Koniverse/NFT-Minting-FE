@@ -325,12 +325,16 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
               statusHelpAsTooltip={true}
             >
               <Input
-                placeholder={'Enter address'}
+                placeholder={'Fill your Substrate address to Mint'}
                 prefix={<Wallet size={24}/>}
                 type={'text'}
               />
             </Form.Item>
-
+            {
+              !isSubstrateAddress && (
+                <div className='__note'>Polkadot Power Passport is minted on Kusama, which is a Substrate chain. Please enter your Substrate address to mint your NFT.</div>
+              )
+            }
             <Button
               block
               shape={'circle'}
@@ -457,6 +461,12 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
       },
     },
 
+    '.__note': {
+      fontFamily: 'inherit !important',
+      fontSize: 16,
+      lineHeight: '24px',
+    },
+
     '.__table': {
       display: 'flex',
       flexDirection: 'column',
@@ -526,14 +536,14 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
         bottom: 0,
       },
 
-      img: {
+      'img, .__video': {
         borderWidth: 10,
       },
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         maxWidth: 192,
 
-        img: {
+        'img, .__video': {
           borderWidth: 4,
         },
       },

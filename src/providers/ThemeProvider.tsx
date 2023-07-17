@@ -201,15 +201,16 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
     },
 
     '.general-bordered-button.general-bordered-button': {
-      height: 72,
-      lineHeight: '68px',
+      height: 60,
+      lineHeight: '56px',
       color: token['colorSuccess'],
       backgroundColor: 'transparent',
       border: '2px solid',
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
-        height: 52,
-        lineHeight: '52px',
+        height: 50,
+        lineHeight: '48px',
+        borderWidth: 1,
       },
 
       '.ant-btn-content-wrapper': {
@@ -233,14 +234,14 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
     },
 
     '.general-button.general-button': {
-      height: 72,
-      lineHeight: '72px',
+      height: 60,
+      lineHeight: '60px',
       backgroundColor: token['colorSuccess'],
       color: token['geekblue-1'],
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
-        height: 52,
-        lineHeight: '52px',
+        height: 50,
+        lineHeight: '50px',
       },
 
       '.ant-btn-content-wrapper': {
