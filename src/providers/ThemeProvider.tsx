@@ -214,7 +214,6 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
       },
 
       '.ant-btn-content-wrapper': {
-        fontSize: token.sizeMD,
         textTransform: 'uppercase',
 
         [`@media(max-width:${extendToken.mobileSize})`]: {
@@ -245,7 +244,6 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
       },
 
       '.ant-btn-content-wrapper': {
-        fontSize: token.sizeMD,
         textTransform: 'uppercase',
 
         [`@media(max-width:${extendToken.mobileSize})`]: {

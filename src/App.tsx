@@ -8,6 +8,7 @@ import {ThemeProps} from './types';
 import {Footer} from './components/Footer';
 import {Image} from '@subwallet/react-ui';
 import loadingImage from './assets/dual-ball.svg';
+import CN from 'classnames';
 
 type Props = ThemeProps;
 
@@ -34,7 +35,7 @@ function Component({className}: Props) {
   }, [currentAddress, mintedNft, navigate, walletContext.wallet, walletContext.evmWallet, isAppReady]);
 
   return (
-    <div className={className}>
+    <div className={CN(className, 'app-background')}>
       <div className="app-layout">
         <Header className={'app-header'}/>
         <div className={'app-body'}>
@@ -62,6 +63,7 @@ const App = styled(Component)<Props>(({theme: {token, extendToken}}: ThemeProps)
     overflowX: 'hidden',
     paddingLeft: 16,
     paddingRight: 16,
+    backgroundSize: 'cover',
 
     '.app-layout': {
       maxWidth: '1440px',

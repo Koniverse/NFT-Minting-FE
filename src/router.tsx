@@ -8,6 +8,7 @@ import {ConnectWallet} from './pages/ConnectWallet';
 import {MintNft} from './pages/MintNft';
 import {Congratulation} from './pages/Congratulation';
 import {Welcome} from "./pages/Welcome";
+import {LandingPage} from './pages/LandingPage';
 
 const timeLoader = () => {
   return new Promise((resolve) => {
@@ -47,5 +48,10 @@ export const router = createHashRouter([
         element: <Congratulation />
       }
     ]
+  },
+  {
+    path: '/landing-page',
+    loader: timeLoader,
+    element: <LandingPage/>,
   },
 ])
