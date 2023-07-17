@@ -221,7 +221,15 @@ export const Header = styled(Component)<HeaderProps>(({theme: {token, extendToke
       },
 
       '.__closer': {
-        alignSelf: 'center'
+        alignSelf: 'center',
+
+        '.anticon': {
+          [`@media(max-width:${extendToken.mobileSize})`]: {
+            height: 64,
+            fontSize: 64,
+            width: 64,
+          },
+        }
       },
 
       '.__footer': {
