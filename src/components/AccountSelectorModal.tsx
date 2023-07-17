@@ -10,6 +10,7 @@ import CN from 'classnames';
 import {HEADER_MENU_MODAL, SELECT_ACCOUNT_MODAL} from "../constants";
 import useIsMobileSize from "../hooks/useIsMobileSize";
 import {Footer} from "./Footer";
+import {generateModalStyle} from '../utils/styles';
 
 
 type AccountSelectorModalProps = ThemeProps;
@@ -102,31 +103,12 @@ export const Component = ({className}: AccountSelectorModalProps): React.ReactEl
   );
 };
 
-export const AccountSelectorModal = styled(Component)<AccountSelectorModalProps>(({theme: { token, extendToken }}: AccountSelectorModalProps) => {
+export const AccountSelectorModal = styled(Component)<AccountSelectorModalProps>((theme: AccountSelectorModalProps) => {
+  const {theme: { extendToken}} = theme;
+
   return {
     '&.account-selector-modal': {
-      top: 0,
-      maxWidth: 704,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-
-      '.ant-sw-modal-content': {
-        maxHeight: 700,
-        borderRadius: 16,
-        boxShadow: '0px 4px 100px 0px rgba(0, 0, 0, 0.40)',
-
-        [`@media(max-width:${extendToken.mobileSize})`]: {
-          maxHeight: 'unset',
-          borderRadius: 0,
-        },
-      },
-
-      '.ant-sw-header-container-center .ant-sw-header-center-part': {
-        width: 'auto',
-        marginLeft: 48,
-        marginRight: 48,
-      },
+      ...generateModalStyle(theme),
 
       '.__button-wrapper': {
         display: 'flex',

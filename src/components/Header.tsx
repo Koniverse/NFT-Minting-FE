@@ -123,7 +123,7 @@ export const Header = styled(Component)<HeaderProps>(({theme: {token, extendToke
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         justifyContent: 'space-between',
-        marginBottom: 72,
+        marginBottom: 44,
 
         '&.__center': {
           justifyContent: 'center',

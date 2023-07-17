@@ -495,6 +495,11 @@ div#popup-container {
 [class*=" ant-form"],
 .ant-number,
 [class*=" ant-number"],
+.ant-web3-block,
+[class*=" ant-web3-block"],
+.ant-sw-list,
+[class*=" ant-sw-list"],
+.ant-sw-list-section,
 .ant-sw-modal {
   font-family: inherit !important;
 }

@@ -8,6 +8,7 @@ import {getEvmWalletBySource} from '@subwallet/wallet-connect/evm/evmWallets';
 import ethereumLogo from '../../assets/network/ethereum.png';
 import polkadotLogo from '../../assets/network/polkadot.png';
 import logo from '../../assets/squircle-logo.svg';
+import {generateModalStyle} from '../../utils/styles';
 
 export type ActionItemType = {
   key: string,
@@ -95,19 +96,11 @@ function Component({className = '', onCancel}: Props): React.ReactElement<Props>
   );
 }
 
-export const SelectAccountTypeModal = styled(Component)<Props>(({theme: {token, logoMap}}: Props) => {
-  console.log('theme.logoMap', logoMap);
+export const SelectAccountTypeModal = styled(Component)<Props>((theme: Props) => {
+  const {theme: { extendToken}} = theme;
 
   return ({
-    top: 0,
-    maxWidth: 704,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-
-    '.ant-sw-modal-content': {
-      maxHeight: 700
-    },
+    ...generateModalStyle(theme),
 
     '.__content-container': {
       display: 'flex',
@@ -115,12 +108,6 @@ export const SelectAccountTypeModal = styled(Component)<Props>(({theme: {token, 
       paddingTop: 30,
       flexDirection: 'column',
       alignItems: 'center',
-    },
-
-    '.ant-sw-header-container-center .ant-sw-header-center-part': {
-      width: 'auto',
-      marginLeft: 48,
-      marginRight: 48,
     },
 
     '.__image-wrapper': {
