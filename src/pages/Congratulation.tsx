@@ -2,9 +2,10 @@ import {ThemeProps} from '../types';
 import styled from 'styled-components';
 import React, {useContext} from 'react';
 import {AppContext} from '../contexts';
-import {Icon, Image} from '@subwallet/react-ui';
+import {Icon} from '@subwallet/react-ui';
 import {DISCORD_URL, DOWNLOAD_URL} from '../constants';
 import {FacebookLogo, TwitterLogo} from 'phosphor-react';
+import NftImage from "../components/NftImage";
 
 type Props = ThemeProps;
 
@@ -20,12 +21,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
       <div className="__box">
         <div className="__box-inner">
           <div className={'__image-wrapper'}>
-            <Image
-              className={'nft-image'}
-              width={'100%'}
-              height={'100%'}
-              src={mintedNft?.nftImage}
-              shape={'default'}/>
+            <NftImage src={mintedNft?.nftImage || ''}/>
           </div>
 
           <div className={'title __title'}>
@@ -96,8 +92,9 @@ export const Congratulation = styled(Component)<Props>(({theme: {token}}: Props)
       width: 180,
       height: 180,
       marginBottom: 56,
+      position: 'relative',
 
-      img: {
+      'img, .__video': {
         borderWidth: 4,
       }
     },
