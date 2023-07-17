@@ -500,6 +500,7 @@ div#popup-container {
 .ant-sw-list,
 [class*=" ant-sw-list"],
 [class*="ant-input"],
+.ant-account-item,
 .ant-sw-list-section,
 .ant-sw-modal {
   font-family: inherit !important;

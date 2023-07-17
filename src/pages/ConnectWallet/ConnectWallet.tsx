@@ -2,19 +2,19 @@ import {ThemeProps} from '../../types';
 import styled from 'styled-components';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {Button, Image, ModalContext} from '@subwallet/react-ui';
-import {SelectAccountTypeModal, SelectAccountTypeModalId} from './SelectAccountTypeModal';
 import logo from '../../assets/squircle-logo.svg';
 import {EventTitles} from './EventTitles';
 import {isWalletInstalled} from '@subwallet/wallet-connect/dotsama/wallets';
-import {openInNewTab} from '../../utils/common/browser';
+import {SELECT_ACCOUNT_TYPE_MODAL} from "../../constants";
+import {openInNewTab} from "../../utils/common/browser";
 
 type Props = ThemeProps;
 
 function Component({className}: ThemeProps): React.ReactElement<Props> {
   const [isSubWalletInstalled] = useState(isWalletInstalled('subwallet-js'));
-  const {activeModal, inactiveModal} = useContext(ModalContext);
+  const {activeModal} = useContext(ModalContext);
   const onConnectWallet = useCallback(() => {
-    activeModal(SelectAccountTypeModalId);
+    activeModal(SELECT_ACCOUNT_TYPE_MODAL);
   }, [activeModal])
 
   useEffect(() => {
@@ -35,15 +35,13 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
         <Image className={'__logo'} width='var(--logo-size)' height='var(--logo-size)' src={logo}/>
       </div>
 
-      <Button className={'general-button general-button-width'} shape={'circle'}
-              onClick={isSubWalletInstalled ? onConnectWallet : onInstallWallet}
+      <Button
+        className={'general-button general-button-width'}
+        shape={'circle'}
+        onClick={isSubWalletInstalled ? onConnectWallet : onInstallWallet}
       >
         {isSubWalletInstalled ? 'Connect Subwallet' : 'Install Wallet'}
       </Button>
-
-      <SelectAccountTypeModal onCancel={() => {
-        inactiveModal(SelectAccountTypeModalId);
-      }}/>
     </div>
   );
 }

@@ -30,7 +30,7 @@ export const EventTitles = styled(Component)<Props>(({theme: {extendToken, token
       fontSize: 112,
       lineHeight: 0.75,
       fontWeight: '900',
-      marginBottom: 28,
+      marginBottom: 16,
       letterSpacing: 5.6,
       textTransform: 'uppercase',
 
@@ -41,12 +41,12 @@ export const EventTitles = styled(Component)<Props>(({theme: {extendToken, token
       },
     },
     '.__second-title': {
-      lineHeight: '84px',
       letterSpacing: 5.6,
       position: 'relative',
       color: '#39384d',
       fontWeight: '900',
       fontSize: 112,
+      lineHeight: 1,
       textTransform: 'uppercase',
       marginBottom: 0,
       '-webkit-text-stroke': '5.68px #fff',
