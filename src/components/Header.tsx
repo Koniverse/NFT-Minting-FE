@@ -10,6 +10,7 @@ import {X} from "phosphor-react";
 import {HEADER_MENU_MODAL} from "../constants";
 import {AccountSelectorInput} from "./AccountSelectorInput";
 import {useNavigate} from "react-router";
+import ConnectButton from "./ConnectButton";
 
 
 type HeaderProps = ThemeProps;
@@ -57,7 +58,11 @@ export function Component({className}: HeaderProps): React.ReactElement {
             </a>
           </div>
 
-          {!!(walletContext.wallet || walletContext.evmWallet) && !!walletContext.accounts.length && <AccountSelectorInput/>}
+          {
+            !!(walletContext.wallet || walletContext.evmWallet) && !!walletContext.accounts.length
+              ? <AccountSelectorInput/>
+              : <ConnectButton />
+          }
         </div>
       </div>
       <div className={'__right-part __mobile'}>
@@ -98,6 +103,7 @@ export function Component({className}: HeaderProps): React.ReactElement {
                 DOTinVietNam
               </a>
             </div>
+            {(!(walletContext.wallet || walletContext.evmWallet) || !walletContext.accounts.length) && <ConnectButton />}
           </div>
           <Footer className='__footer' />
         </div>

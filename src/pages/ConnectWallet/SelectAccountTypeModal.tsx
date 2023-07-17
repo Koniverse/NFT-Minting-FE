@@ -1,4 +1,4 @@
-import {Button, Image, SwIconProps, SwModal} from '@subwallet/react-ui';
+import {Button, Image, ModalContext, SwIconProps, SwModal} from '@subwallet/react-ui';
 import React, {useCallback, useContext, useState} from 'react';
 import styled from 'styled-components';
 import {ThemeProps} from '../../types';
@@ -9,6 +9,7 @@ import ethereumLogo from '../../assets/network/ethereum.png';
 import polkadotLogo from '../../assets/network/polkadot.png';
 import logo from '../../assets/squircle-logo.svg';
 import {generateModalStyle} from '../../utils/styles';
+import {HEADER_MENU_MODAL, SELECT_ACCOUNT_TYPE_MODAL} from "../../constants";
 
 export type ActionItemType = {
   key: string,
@@ -18,43 +19,46 @@ export type ActionItemType = {
   onClick?: () => void
 };
 
-type Props = ThemeProps & {
-  onCancel: () => void,
-}
+type Props = ThemeProps;
 
-export const SelectAccountTypeModalId = 'SelectAccountTypeModalId';
+const modalId = SELECT_ACCOUNT_TYPE_MODAL;
 
-function Component({className = '', onCancel}: Props): React.ReactElement<Props> {
+function Component({className = ''}: Props): React.ReactElement<Props> {
   const walletContext = useContext(WalletContext);
+  const { inactiveModals } = useContext(ModalContext);
   const [loadingKey, setLoadingKey] = useState<'substrate' | 'evm' | null>(null);
+
+  const onClose = useCallback(() => {
+    inactiveModals([modalId, HEADER_MENU_MODAL]);
+  }, [inactiveModals])
 
   const onConnectSubstrateWallet = useCallback(() => {
     setLoadingKey('substrate')
     const wallet = getWalletBySource('subwallet-js');
     walletContext.setWallet(wallet, 'substrate').then(() => {
-      onCancel();
+      onClose();
     }).finally(() => {
       setLoadingKey(null);
     });
-  }, [walletContext]);
+  }, [onClose, walletContext]);
 
   const onConnectEvmWallet = useCallback(() => {
     setLoadingKey('evm')
     const wallet = getEvmWalletBySource('SubWallet');
     walletContext.setWallet(wallet, 'evm').then(() => {
-      onCancel();
+      onClose();
     }).finally(() => {
       setLoadingKey(null);
     });
-  }, [walletContext]);
+  }, [onClose, walletContext]);
 
   return (
     <SwModal
       className={className}
       width={'auto'}
       closable={false}
-      id={SelectAccountTypeModalId}
-      onCancel={!loadingKey ? onCancel : undefined}
+      id={SELECT_ACCOUNT_TYPE_MODAL}
+      onCancel={!loadingKey ? onClose : undefined}
       transitionName='fade'
     >
       <div className={'__content-container'}>
