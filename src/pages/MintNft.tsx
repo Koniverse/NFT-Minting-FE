@@ -6,13 +6,75 @@ import {Button, Form, Icon, Image, Input, Number} from '@subwallet/react-ui';
 import {APICall} from '../api/nft';
 import {isAddress, isEthereumAddress} from '@polkadot/util-crypto';
 import {RuleObject} from '@subwallet/react-ui/es/form';
-import {CheckCircle, Wallet, XCircle} from 'phosphor-react';
+import {CheckCircle, Question, Wallet, XCircle} from 'phosphor-react';
 import LoadingIcon from '@subwallet/react-ui/es/button/LoadingIcon';
 
 type Props = ThemeProps;
 
 interface RecipientAddressInput {
   address?: string;
+}
+
+interface SIProps {
+  isLoading: boolean;
+  checked: boolean;
+  checkResult?: boolean;
+}
+
+
+interface NBProps {
+  isLoading: boolean;
+  needSign: boolean;
+  needRecheck: boolean;
+  signAction: () => void;
+  nextAction: () => void;
+  recheckAction: () => void;
+}
+
+function StatusIcon({isLoading, checked, checkResult}: SIProps) {
+  const token = useContext<Theme>(ThemeContext as Context<Theme>).token;
+  if (isLoading && !checkResult) {
+    return <LoadingIcon loading existIcon prefixCls={'ant'}/>;
+  }
+
+  if (checked) {
+    return <Icon
+      iconColor={checkResult ? token.colorSuccess : token.colorError}
+      phosphorIcon={checkResult ? CheckCircle : XCircle}
+      weight={'fill'}/>;
+  } else {
+    return <Icon
+      iconColor={token.colorBorder}
+      phosphorIcon={Question}
+      weight={'fill'}/>;
+  }
+}
+
+function NextButton({isLoading, needSign, needRecheck, signAction, recheckAction, nextAction}: NBProps) {
+  let label = 'Mint for free';
+  if (isLoading) {
+    label = 'Checking...';
+  } else if (needSign) {
+    label = 'Check Eligibility'
+  } else if (needRecheck) {
+    label = 'Check Again'
+  }
+
+  let onClick: (() => void) | undefined = needSign ? signAction : nextAction;
+  if (isLoading) {
+    onClick = undefined
+  } if (needRecheck) {
+    onClick = recheckAction;
+  }
+
+  return <Button
+    onClick={onClick}
+    shape={'circle'}
+    schema="primary"
+    className={'__button general-bordered-button general-button-width'}
+    loading={isLoading}>
+    {label}
+  </Button>
 }
 
 function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
@@ -25,10 +87,9 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
     mintedNft,
     setMintedNft,
   } = useContext(AppContext);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<'check' | 'confirm'>('check');
   const walletContext = useContext(WalletContext);
-  const token = useContext<Theme>(ThemeContext as Context<Theme>).token;
 
   // Mint Data
   const [mintCheckResult, setMintCheckResult] = useState<Partial<MintCheckResult>>({});
@@ -56,6 +117,30 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
     []
   );
 
+  const signToCheck = useCallback(() => {
+    const {userId, signature, randomCode} = currentAccountData;
+    const needSign = isAppReady && !mintedNft && currentAddress! && userId && randomCode && !signature;
+    if (needSign) {
+      setLoading(true);
+      walletContext.signMessage(currentAddress, randomCode)
+        .then((signature) => {
+          if (signature) {
+            setMintCheckResult({isOwner: true});
+            setCurrentAccountData({
+              ...currentAccountData,
+              signature,
+            });
+          }
+        })
+        .catch(() => {
+          setMintCheckResult({isOwner: false});
+        })
+        .finally(() => {
+        setLoading(false);
+      });
+    }
+  }, [currentAccountData, currentAddress, isAppReady, mintedNft, setCurrentAccountData, walletContext]);
+
   const mintCheck = useCallback(
     () => {
       let cancel = false;
@@ -66,19 +151,9 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
 
       // Sign message
       if (needSign) {
-        setLoading(true);
-        walletContext.signMessage(currentAddress, randomCode)
-        .then((signature) => {
-          if (!cancel && signature) {
-            setCurrentAccountData({
-              ...currentAccountData,
-              signature,
-            });
-          }
-        }).catch(console.error).finally(() => {
-          setLoading(false);
-        });
+        setMintCheckResult({});
       } else if (canCheck) {
+        setLoading(true);
         // Ready to check mint
         if (currentAddress && userId && signature && campaignId) {
           APICall.mintCheck({
@@ -94,6 +169,9 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
             setLoading(false);
           });
         }
+      } else {
+        setStep('check');
+        setMintCheckResult({});
       }
 
       return () => {
@@ -101,7 +179,7 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
         cancel = true;
       };
     },
-    [collectionInfo?.currentCampaignId, currentAccountData, currentAddress, isAppReady, mintedNft, walletContext],
+    [collectionInfo?.currentCampaignId, currentAccountData, currentAddress, isAppReady, mintedNft, signToCheck],
   );
 
   const nextStep = useCallback(() => {
@@ -146,38 +224,28 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
             </div>
             <div className={'__checklist'}>
               <div className={'__checklist-item'}>
-                {loading && <LoadingIcon loading existIcon prefixCls={'ant'}/>}
-                {!loading && <Icon
-                  iconColor={(mintCheckResult.isOwner && currentAccountData.signature) ? token.colorSuccess : token.colorError}
-                  phosphorIcon={(mintCheckResult.isOwner && currentAccountData.signature) ? CheckCircle : XCircle}
-                  weight={'fill'}/>}
+                <StatusIcon isLoading={loading} checked={!!currentAccountData.signature}
+                            checkResult={!!(mintCheckResult.isOwner && currentAccountData.signature)}/>
                 <div className={'__checklist-item-text'}>Own this wallet</div>
               </div>
               <div className={'__checklist-item'}>
-                {loading && <LoadingIcon loading existIcon prefixCls={'ant'}/>}
-                {!loading && <Icon phosphorIcon={mintCheckResult.hasBalance ? CheckCircle : XCircle}
-                                   iconColor={mintCheckResult.hasBalance ? token.colorSuccess : token.colorError}
-                                   weight={'fill'}/>}
+                <StatusIcon isLoading={loading} checked={mintCheckResult.hasBalance !== undefined}
+                            checkResult={mintCheckResult.hasBalance}/>
                 <div className={'__checklist-item-text'}>Has balance</div>
               </div>
               <div className={'__checklist-item'}>
-                {loading && <LoadingIcon loading existIcon prefixCls={'ant'}/>}
-                {!loading &&
-                  <Icon phosphorIcon={mintCheckResult.notDuplicated ? CheckCircle : XCircle}
-                        iconColor={mintCheckResult.notDuplicated ? token.colorSuccess : token.colorError}
-                        weight={'fill'}/>}
-                <div className={'__checklist-item-text'}>Minted before</div>
+                <StatusIcon isLoading={loading} checked={mintCheckResult.notDuplicated !== undefined}
+                            checkResult={mintCheckResult.notDuplicated}/>
+                <div className={'__checklist-item-text'}>Can mint this collection</div>
               </div>
             </div>
 
-            <Button
-              shape={'circle'}
-              onClick={mintCheckResult.requestId ? nextStep : mintCheck}
-              schema="primary"
-              className={'__button general-bordered-button general-button-width'}
-              loading={loading}>
-              {loading ? 'Checking...' : mintCheckResult.requestId ? 'Mint for free' : 'Check Again'}
-            </Button>
+            <NextButton isLoading={loading}
+                        needSign={!currentAccountData.signature}
+                        needRecheck={!!currentAccountData.signature && (!mintCheckResult.hasBalance || !mintCheckResult.notDuplicated)}
+                        recheckAction={mintCheck}
+                        signAction={signToCheck}
+                        nextAction={nextStep}/>
           </div>
         </div>
 
@@ -205,6 +273,18 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
           <div className={'__sub-title'}>
             Please confirm the following information
           </div>
+
+          {
+            collectionInfo && (
+              <div className="__nft-image-wrapper -show-on-mobile">
+                <Image className={'nft-image'}
+                       width={'100%'}
+                       height={'100%'}
+                       src={collectionInfo.image}
+                       shape={'default'}/>
+              </div>
+            )
+          }
 
           <div className={'__table'}>
             <div className={'__table-row'}>
@@ -386,6 +466,11 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
       display: 'flex',
       flexDirection: 'column',
       gap: 24,
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        gap: 12,
+        alignSelf: 'stretch',
+      },
     },
 
     '.__table-row': {
@@ -393,6 +478,12 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
       justifyContent: 'space-between',
       fontSize: 16,
       lineHeight: '24px',
+      gap: 16,
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        fontSize: 14,
+        lineHeight: '22px',
+      },
     },
 
     '.__table-footer': {
@@ -402,15 +493,55 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
       fontSize: 20,
       paddingTop: 22,
       paddingBottom: 22,
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        borderTopWidth: 2,
+        fontSize: 16,
+        paddingTop: 12,
+        paddingBottom: 12,
+
+        '.ant-typography': {
+          fontSize: 'inherit !important',
+        }
+      },
     },
 
     '.__nft-image-wrapper': {
-      width: 448,
-      height: 446,
+      maxWidth: 448,
+      position: 'relative',
+      width: '100%',
+
+      '&.-show-on-mobile': {
+        [`@media(min-width:992px)`]: {
+          display: 'none'
+        },
+      },
+
+      '&:before': {
+        content: '\'\'',
+        display: 'block',
+        paddingTop: '100%',
+      },
+
+      '.ant-image': {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      },
 
       img: {
         borderWidth: 10,
-      }
+      },
+
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        maxWidth: 192,
+
+        img: {
+          borderWidth: 4,
+        },
+      },
     },
 
     '.__table-row-title': {
@@ -422,8 +553,27 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
     },
 
     '.__box.-step-confirm': {
+      '.__table': {
+        marginBottom: 18,
+      },
+
+      '.__button': {
+        marginTop: 18,
+      },
+
       [`@media(max-width:${extendToken.mobileSize})`]: {
         justifyContent: 'start',
+        maxWidth: 500,
+
+        '.ant-form': {
+          alignSelf: 'stretch'
+        },
+
+        '.__button': {
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          display: 'flex'
+        },
       },
 
       '.__box-left-part': {
@@ -431,6 +581,14 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
         display: 'flex',
         alignItems: 'center',
         paddingLeft: 120,
+
+        [`@media(min-width:1100px) and (max-width:1599px)`]: {
+          paddingLeft: 60,
+        },
+
+        [`@media(min-width:992px) and (max-width:1099px)`]: {
+          paddingLeft: 32,
+        },
 
         [`@media(max-width:${extendToken.mobileSize})`]: {
           display: 'none',
@@ -444,6 +602,8 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
 
         [`@media(max-width:${extendToken.mobileSize})`]: {
           fontSize: 28,
+          lineHeight: '1.3',
+          marginBottom: 4,
         },
       },
 
@@ -452,23 +612,45 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
         lineHeight: 1.5,
         marginBottom: 64,
         color: token.colorTextLight3,
+
+        [`@media(max-width:${extendToken.mobileSize})`]: {
+          fontSize: 14,
+          marginBottom: 24,
+        },
       },
 
       '.__box-right-part': {
         flex: 10,
         maxWidth: 580,
         marginRight: 124,
+        marginLeft: 124,
         paddingTop: 80,
         paddingBottom: 100,
         position: 'relative',
 
-        [`@media(max-width:${extendToken.mobileSize})`]: {
-          paddingTop: 56,
+        [`@media(min-width:1100px) and (max-width:1599px)`]: {
+          marginRight: 60,
+          marginLeft: 60,
         },
-      },
 
-      '.__table': {
-        marginBottom: 36,
+        [`@media(min-width:992px) and (max-width:1099px)`]: {
+          marginRight: 32,
+          marginLeft: 32,
+        },
+
+        [`@media(max-width:${extendToken.mobileSize})`]: {
+          marginRight: 16,
+          marginLeft: 16,
+          paddingTop: 56,
+          paddingBottom: 44,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+
+          '.__nft-image-wrapper': {
+            marginBottom: 24,
+          },
+        },
       },
     },
   };

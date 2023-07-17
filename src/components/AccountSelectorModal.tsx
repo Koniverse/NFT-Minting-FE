@@ -1,16 +1,16 @@
-import React, {useCallback, useContext, MouseEventHandler, SyntheticEvent} from 'react';
+import React, {useCallback, useContext} from 'react';
 import styled from 'styled-components';
 import {Button, Icon, ModalContext, SwList, SwModal} from '@subwallet/react-ui';
 import {ThemeProps} from '../types';
 import {AppContext, WalletContext} from '../contexts';
 import {WalletAccount} from '@subwallet/wallet-connect/types';
 import AccountCard from '@subwallet/react-ui/es/web3-block/account-card';
-import {Copy, X} from 'phosphor-react';
-import CopyToClipboard from 'react-copy-to-clipboard';
+import {X} from 'phosphor-react';
 import CN from 'classnames';
 import {HEADER_MENU_MODAL, SELECT_ACCOUNT_MODAL} from "../constants";
 import useIsMobileSize from "../hooks/useIsMobileSize";
 import {Footer} from "./Footer";
+import {generateModalStyle} from '../utils/styles';
 
 
 type AccountSelectorModalProps = ThemeProps;
@@ -31,9 +31,6 @@ export const Component = ({className}: AccountSelectorModalProps): React.ReactEl
     }
   }, [setCurrentAddress, inactiveModals])
 
-  const onCopy= useCallback((event: SyntheticEvent) => {
-    event.stopPropagation();
-  }, []);
 
   const renderAccount = useCallback(
     (account: WalletAccount) => {
@@ -47,25 +44,6 @@ export const Component = ({className}: AccountSelectorModalProps): React.ReactEl
           isSelected={isSelected}
           addressPreLength={9}
           addressSufLength={9}
-          // renderRightItem={(dItem) => (
-          //   <>
-          //     {dItem}
-          //     <CopyToClipboard text={account.address}>
-          //       <Button
-          //         icon={
-          //           <Icon
-          //             phosphorIcon={Copy}
-          //             weight={'light'}
-          //             size="sm"
-          //           />
-          //         }
-          //         size="xs"
-          //         type="ghost"
-          //         onClick={onCopy}
-          //       />
-          //     </CopyToClipboard>
-          //   </>
-          // )}
           onPressItem={onSelect(account)}
         />
       );
@@ -107,7 +85,7 @@ export const Component = ({className}: AccountSelectorModalProps): React.ReactEl
         </div>
         <SwList.Section
           displayRow={true}
-          list={new Array(5).fill(walletState.accounts).flat()}
+          list={walletState.accounts}
           renderItem={renderAccount}
           searchMinCharactersCount={2}
           rowGap='16px'
@@ -125,31 +103,12 @@ export const Component = ({className}: AccountSelectorModalProps): React.ReactEl
   );
 };
 
-export const AccountSelectorModal = styled(Component)<AccountSelectorModalProps>(({theme: { token, extendToken }}: AccountSelectorModalProps) => {
+export const AccountSelectorModal = styled(Component)<AccountSelectorModalProps>((theme: AccountSelectorModalProps) => {
+  const {theme: { extendToken}} = theme;
+
   return {
     '&.account-selector-modal': {
-      top: 0,
-      maxWidth: 704,
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-
-      '.ant-sw-modal-content': {
-        maxHeight: 700,
-        borderRadius: 16,
-        boxShadow: '0px 4px 100px 0px rgba(0, 0, 0, 0.40)',
-
-        [`@media(max-width:${extendToken.mobileSize})`]: {
-          maxHeight: 'unset',
-          borderRadius: 0,
-        },
-      },
-
-      '.ant-sw-header-container-center .ant-sw-header-center-part': {
-        width: 'auto',
-        marginLeft: 48,
-        marginRight: 48,
-      },
+      ...generateModalStyle(theme),
 
       '.__button-wrapper': {
         display: 'flex',

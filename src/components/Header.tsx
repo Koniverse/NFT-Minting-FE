@@ -49,7 +49,7 @@ export function Component({className}: HeaderProps): React.ReactElement {
         <Image className={'logo'} width={88} height={88} src={logo} onClick={goRoot}/>
       </div>
       <div className="__left-part __mobile">
-        <Image className={'__mobile'} width={88} height={88} src={logo} onClick={openModal}/>
+        <Image className={'__mobile'} width={72} height={72} src={logo} onClick={openModal}/>
       </div>
       <div className={'__right-part'}>
         <div className="__menu">
@@ -64,11 +64,11 @@ export function Component({className}: HeaderProps): React.ReactElement {
             </a>
           </div>
 
-          {!!(walletContext.wallet || walletContext.evmWallet) && walletContext.accounts.length && <AccountSelectorInput/>}
+          {!!(walletContext.wallet || walletContext.evmWallet) && !!walletContext.accounts.length && <AccountSelectorInput/>}
         </div>
       </div>
       <div className={'__right-part __mobile'}>
-        {!!(walletContext.wallet || walletContext.evmWallet) && walletContext.accounts.length && <AccountSelectorInput/>}
+        {!!(walletContext.wallet || walletContext.evmWallet) && !!walletContext.accounts.length && <AccountSelectorInput/>}
       </div>
 
       <SwModal
@@ -123,7 +123,7 @@ export const Header = styled(Component)<HeaderProps>(({theme: {token, extendToke
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         justifyContent: 'space-between',
-        marginBottom: 72,
+        marginBottom: 44,
 
         '&.__center': {
           justifyContent: 'center',
@@ -169,8 +169,6 @@ export const Header = styled(Component)<HeaderProps>(({theme: {token, extendToke
           }
         },
         [`@media(min-width:${extendToken.mobileSize})`]: {
-          display: "unset",
-
           '&.__mobile': {
             display: "none",
           }
