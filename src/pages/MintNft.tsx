@@ -2,12 +2,13 @@ import {MintCheckResult, MintedNftResponse, Theme, ThemeProps} from '../types';
 import styled, {ThemeContext} from 'styled-components';
 import React, {Context, useCallback, useContext, useEffect, useState} from 'react';
 import {AppContext, WalletContext} from '../contexts';
-import {Button, Form, Icon, Image, Input, Number} from '@subwallet/react-ui';
+import {Button, Form, Icon, Input, Number} from '@subwallet/react-ui';
 import {APICall} from '../api/nft';
 import {isAddress, isEthereumAddress} from '@polkadot/util-crypto';
 import {RuleObject} from '@subwallet/react-ui/es/form';
 import {CheckCircle, Question, Wallet, XCircle} from 'phosphor-react';
 import LoadingIcon from '@subwallet/react-ui/es/button/LoadingIcon';
+import NftImage from "../components/NftImage";
 
 type Props = ThemeProps;
 
@@ -114,7 +115,7 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
 
       return Promise.resolve();
     },
-    []
+    [isSubstrateAddress]
   );
 
   const signToCheck = useCallback(() => {
@@ -254,13 +255,11 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
         <div className={'__box-left-part'}>
           {
             collectionInfo && (
-              <div className="__nft-image-wrapper">
-                <Image className={'nft-image'}
-                       width={'100%'}
-                       height={'100%'}
-                       src={collectionInfo.image}
-                       shape={'default'}/>
-              </div>
+              <>
+                <div className="__nft-image-wrapper">
+                  <NftImage src={collectionInfo.image} />
+                </div>
+              </>
             )
           }
         </div>
@@ -277,11 +276,7 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
           {
             collectionInfo && (
               <div className="__nft-image-wrapper -show-on-mobile">
-                <Image className={'nft-image'}
-                       width={'100%'}
-                       height={'100%'}
-                       src={collectionInfo.image}
-                       shape={'default'}/>
+                <NftImage src={collectionInfo.image} />
               </div>
             )
           }
