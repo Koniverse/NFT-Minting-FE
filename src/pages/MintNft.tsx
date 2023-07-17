@@ -217,7 +217,7 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
       {step === 'check' && (
         <div className={'__box -step-check'}>
           <div className={'__box-left-part'}>
-            <div className={'mockup-background-image'}></div>
+            <div className={'bgi-mockup-2'}></div>
           </div>
           <div className={'__box-right-part'}>
             <div className={'title __title'}>
@@ -417,7 +417,7 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
       },
 
       '.__box-left-part': {
-        '.mockup-background-image': {
+        '.bgi-mockup-2': {
           position: 'absolute',
           bottom: 0,
           left: 0,
