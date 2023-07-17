@@ -5,6 +5,7 @@ import {WalletAccount} from '@subwallet/wallet-connect/types';
 import {CollectionItem, CurrentAccountData, MintedNFTItem, MintedNftResponse} from '../types';
 import {isEthereumAddress} from '@polkadot/util-crypto';
 import {APICall} from '../api/nft';
+import useNotification from '../hooks/useNotification';
 
 export interface AppContextProps {
   children: React.ReactNode;
@@ -31,6 +32,7 @@ type FetchMintedNftResponse = MintedNftResponse[];
 
 export function AppStateProvider({children}: AppContextProps): React.ReactElement<AppContextProps> {
   const walletContext = useContext(WalletContext);
+  const notify = useNotification();
 
   const [isAppReady, setIsAppReady] = useState(false);
 
@@ -65,8 +67,14 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
             minted: collection.minted
           });
         }
-      })
-  }, []);
+      }).catch((e) => {
+      notify({
+        message: e.message,
+        type: 'error',
+        duration: 1.5
+      });
+    })
+  }, [notify]);
 
   // Fetch minted NFT when selected account
   useEffect(() => {
@@ -83,6 +91,12 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
         } else {
           setMintedNft(undefined);
         }
+      }).catch((e) => {
+        notify({
+          message: e.message,
+          type: 'error',
+          duration: 1.5
+        });
       }).finally(() => {
         setIsAppReady(true);
       });
@@ -93,7 +107,7 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
     return () => {
       cancel = true;
     }
-  }, [currentAccountData, collectionInfo?.currentCampaignId, currentAddress]);
+  }, [currentAccountData, collectionInfo?.currentCampaignId, currentAddress, notify]);
 
   // Todo: Move to wallet context
   const signMessage = useCallback((randomCode: string, cb: (sig: string) => void): Promise<void> => {
@@ -135,13 +149,19 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
     if (currentAddress && !currentAccountData.userId) {
       APICall.getUserRandomCode(currentAddress).then(({id, randomCode}: GetUserCodeResponse) => {
         !cancel && setCurrentAccountData({...currentAccountData, userId: id, randomCode});
+      }).catch((e) => {
+        notify({
+          message: e.message,
+          type: 'error',
+          duration: 1.5
+        });
       });
     }
 
     return () => {
       cancel = true;
     }
-  }, [currentAccountData, currentAddress]);
+  }, [currentAccountData, currentAddress, notify]);
 
   // Update when current account change
   const _setCurrentAddress = useCallback((address: string) => {
