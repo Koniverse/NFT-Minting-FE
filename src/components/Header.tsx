@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect} from 'react';
+import React, {useCallback, useContext} from 'react';
 import styled from 'styled-components';
 import CN from 'classnames';
 import {Button, Icon, Image, ModalContext, SwModal} from '@subwallet/react-ui';
@@ -18,12 +18,13 @@ const modalId = HEADER_MENU_MODAL;
 
 export function Component({className}: HeaderProps): React.ReactElement {
   const walletContext = useContext(WalletContext);
-  const { activeModal, inactiveModal, addExclude, removeExclude } = useContext(ModalContext);
+  const { activeModal, inactiveModal } = useContext(ModalContext);
   const navigate = useNavigate();
 
   const goRoot = useCallback(() => {
-    navigate('/')
-  }, [activeModal]);
+    navigate('/');
+    inactiveModal(modalId);
+  }, [navigate, inactiveModal]);
 
   const openModal = useCallback(() => {
     activeModal(modalId);
@@ -32,14 +33,6 @@ export function Component({className}: HeaderProps): React.ReactElement {
   const closeModal = useCallback(() => {
     inactiveModal(modalId);
   }, [inactiveModal]);
-
-  useEffect(() => {
-    addExclude(modalId)
-
-    return () => {
-      removeExclude(modalId)
-    }
-  }, [addExclude, removeExclude])
 
   const showAccount = !!(walletContext.wallet || walletContext.evmWallet) && !!walletContext.accounts.length;
 
@@ -96,7 +89,7 @@ export function Component({className}: HeaderProps): React.ReactElement {
           </div>
           <div className="__menu">
             <div className="__menu-item">
-              <a className="__link-button -highlight">
+              <a className="__link-button -highlight" onClick={goRoot}>
                 Home
               </a>
             </div>
