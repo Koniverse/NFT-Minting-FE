@@ -47,10 +47,6 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
           Power Passport. There may be occasional delays due to network stability.
         </div>
 
-        <div className={'__text'}>
-          View NFT on <a className={'__highlight'} href={singularLink} target={'_blank'}>Singular</a>
-        </div>
-
         <div className={'__share-container'}>
           <div className={'__share-label'}>Share the good news on</div>
 
