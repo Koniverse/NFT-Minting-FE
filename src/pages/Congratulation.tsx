@@ -1,20 +1,36 @@
 import {ThemeProps} from '../types';
 import styled from 'styled-components';
-import React, {useContext} from 'react';
+import React, {useContext, useRef} from 'react';
 import {AppContext} from '../contexts';
 import {Button, Icon} from '@subwallet/react-ui';
-import {DISCORD_URL} from '../constants';
+import {DISCORD_URL, SHARE_URL} from '../constants';
 import {FacebookLogo, TwitterLogo} from 'phosphor-react';
 import NFT from '../components/NFT';
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+} from 'react-share';
 
 type Props = ThemeProps;
 
 function Component({className}: ThemeProps): React.ReactElement<Props> {
   const {mintedNft, collectionInfo} = useContext(AppContext);
+  const twitterRef = useRef(null);
+  const facebookRef = useRef(null);
 
   const singularLink = collectionInfo && mintedNft
     ? `https://singular.app/collectibles/${collectionInfo?.network}/${collectionInfo?.rmrkCollectionId}/${mintedNft?.rmrkNftId}`
     : 'https://singular.app';
+
+  const onShareTwitter = () => {
+    // @ts-ignore
+    twitterRef.current?.click();
+  };
+
+  const onShareFacebook = () => {
+    // @ts-ignore
+    facebookRef.current?.click();
+  };
 
   return (
     <div className={className}>
@@ -39,10 +55,19 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
           <div className={'__share-label'}>Share the good news on</div>
 
           <div className="__share-buttons">
+            <FacebookShareButton
+              ref={facebookRef}
+              url={SHARE_URL}
+              className={'hidden'}
+              children={undefined}
+            />
+
+            <TwitterShareButton className={'hidden'} ref={twitterRef} children={undefined} url={SHARE_URL}/>
             <Button
               shape={'circle'}
               schema="primary"
               size={'sm'}
+              onClick={onShareTwitter}
               className={'__button __twitter-button general-button'}
               icon={<Icon
                 phosphorIcon={TwitterLogo}
@@ -56,6 +81,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
               shape={'circle'}
               schema="primary"
               size={'sm'}
+              onClick={onShareFacebook}
               className={'__button __facebook-button general-button'}
               icon={<Icon
                 phosphorIcon={FacebookLogo}

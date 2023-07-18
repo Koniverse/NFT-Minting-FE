@@ -498,3 +498,7 @@ div#popup-container {
 .ant-sw-modal {
   font-family: inherit !important;
 }
+
+.hidden {
+  display: none !important;
+}
