@@ -29,8 +29,9 @@ const Component: React.FC<Props> = (props: Props) => {
   return (
     <div className={CN(className)}>
       <Button
-        className={CN('general-button', 'general-button-width', '__small')}
+        className={CN('general-button')}
         shape={'circle'}
+        size={'sm'}
         onClick={isSubWalletInstalled ? onConnectWallet : onInstallWallet}
         icon={<Icon phosphorIcon={Wallet} weight='fill' />}
       >
@@ -42,16 +43,7 @@ const Component: React.FC<Props> = (props: Props) => {
 
 const ConnectButton = styled(Component)<Props>(({ theme: { token } }: Props) => {
   return {
-    '.general-button.__small': {
-      height: 48,
-      lineHeight: '28px',
 
-      '.ant-btn-content-wrapper': {
-        fontSize: 16,
-        fontWeight: 700,
-        textTransform: 'capitalize'
-      }
-    }
   };
 });
 
