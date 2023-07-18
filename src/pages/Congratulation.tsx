@@ -5,7 +5,7 @@ import {AppContext} from '../contexts';
 import {Button, Icon} from '@subwallet/react-ui';
 import {DISCORD_URL} from '../constants';
 import {FacebookLogo, TwitterLogo} from 'phosphor-react';
-import NftImage from '../components/NftImage';
+import NFT from '../components/NFT';
 
 type Props = ThemeProps;
 
@@ -19,9 +19,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
   return (
     <div className={className}>
       <div className="__left-part">
-        <div className={'__image-wrapper'}>
-          <NftImage src={mintedNft?.nftImage || ''}/>
-        </div>
+        {mintedNft && <NFT nft={mintedNft} className={'__image-wrapper'}/>}
       </div>
       <div className="__right-part">
         <div className={'title __title'}>

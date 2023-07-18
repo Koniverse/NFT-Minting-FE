@@ -8,8 +8,8 @@ import {isAddress, isEthereumAddress} from '@polkadot/util-crypto';
 import {RuleObject} from '@subwallet/react-ui/es/form';
 import {ArrowCircleUpRight, CheckCircle, Question, Wallet, XCircle} from 'phosphor-react';
 import LoadingIcon from '@subwallet/react-ui/es/button/LoadingIcon';
-import NftImage from '../components/NftImage';
 import CN from 'classnames';
+import Collection from '../components/Collection';
 
 type Props = ThemeProps;
 
@@ -64,7 +64,7 @@ function NextButton({isLoading, needSign, needRecheck, signAction, recheckAction
 
   let onClick: (() => void) | undefined = needSign ? signAction : nextAction;
   if (isLoading) {
-    onClick = undefined
+    onClick = undefined;
   } else if (needRecheck) {
     onClick = recheckAction;
   }
@@ -225,11 +225,7 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
       <div className="__left-part">
         {
           collectionInfo && (
-            <>
-              <div className="__image-wrapper">
-                <NftImage src={collectionInfo.image}/>
-              </div>
-            </>
+            <Collection collection={collectionInfo} className={'__image-wrapper'}/>
           )
         }
       </div>
@@ -278,7 +274,7 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
 
         <div className={'__table'}>
           <div className={'__table-row'}>
-            <div className={'__table-row-title'}>NFT:</div>
+            <div className={'__table-row-title'}>NFT</div>
             <div className={'__table-row-value'}>{collectionInfo?.name}</div>
           </div>
           <div className={'__table-row'}>
