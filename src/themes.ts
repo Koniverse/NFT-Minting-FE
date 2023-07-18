@@ -27,6 +27,8 @@ export const appTheme = {
     token: derivative(currentToken),
     extendToken: {
         colorTitle: currentToken.colorPrimary,
+        collectionImageSize: 480,
+        nftImageSize: 480,
         mobileSize: '992px',
         mediumSize: '1200px',
         largeSize: '1600px',

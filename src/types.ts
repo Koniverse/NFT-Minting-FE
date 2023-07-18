@@ -11,6 +11,8 @@ export type GlobalToken = _GlobalToken;
 
 export interface ExtraToken {
   colorTitle: string,
+  collectionImageSize: number,
+  nftImageSize: number,
   mobileSize: string,
   mediumSize: string,
   largeSize: string,
