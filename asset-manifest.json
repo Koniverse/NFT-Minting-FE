@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.818d6b00.css",
-    "main.js": "/static/js/main.71b0a27b.js",
+    "main.css": "/static/css/main.9ecb9953.css",
+    "main.js": "/static/js/main.f6e4fa13.js",
     "static/media/3.Default.png": "/static/media/3.Default.88315a37f872bfe09093.png",
     "static/media/logo.svg": "/static/media/logo.3e09bf7bb3c3545b70c87ffebb942ef4.svg",
     "static/media/SubWalletLogo.svg": "/static/media/SubWalletLogo.637b860fce4059c3a3b6b7c876a13601.svg",
@@ -14,7 +14,7 @@
     "static/media/dual-ball.svg": "/static/media/dual-ball.ed26e8dd190462cc67bebfab2be834f0.svg"
   },
   "entrypoints": [
-    "static/css/main.818d6b00.css",
-    "static/js/main.71b0a27b.js"
+    "static/css/main.9ecb9953.css",
+    "static/js/main.f6e4fa13.js"
   ]
 }
