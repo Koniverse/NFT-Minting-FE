@@ -2,7 +2,7 @@ import {CSSObject} from 'styled-components';
 import {ThemeProps} from '../types';
 
 export function generateModalStyle(theme: ThemeProps): CSSObject {
-  const {theme: { extendToken}} = theme;
+  const {theme: { token, extendToken}} = theme;
 
   return ({
     top: 0,
@@ -22,6 +22,7 @@ export function generateModalStyle(theme: ThemeProps): CSSObject {
     '.ant-sw-modal-content': {
       maxHeight: 700,
       borderRadius: 16,
+      backgroundColor: '#232323',
       boxShadow: '0px 4px 100px 0px rgba(0, 0, 0, 0.40)',
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
