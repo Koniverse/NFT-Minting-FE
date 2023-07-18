@@ -227,17 +227,17 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
               <div className={'__checklist-item'}>
                 <StatusIcon isLoading={loading} checked={!!currentAccountData.signature}
                             checkResult={!!(mintCheckResult.isOwner && currentAccountData.signature)}/>
-                <div className={'__checklist-item-text'}>Own this wallet</div>
+                <div className={'__checklist-item-text'}>You own this wallet</div>
               </div>
               <div className={'__checklist-item'}>
                 <StatusIcon isLoading={loading} checked={mintCheckResult.hasBalance !== undefined}
                             checkResult={mintCheckResult.hasBalance}/>
-                <div className={'__checklist-item-text'}>Has balance</div>
+                <div className={'__checklist-item-text'}>You have assets on at least one of 60+ Polkadot chains</div>
               </div>
               <div className={'__checklist-item'}>
                 <StatusIcon isLoading={loading} checked={mintCheckResult.notDuplicated !== undefined}
                             checkResult={mintCheckResult.notDuplicated}/>
-                <div className={'__checklist-item-text'}>Can mint this collection</div>
+                <div className={'__checklist-item-text'}>This is your first time minting this NFT</div>
               </div>
             </div>
 
