@@ -1,23 +1,20 @@
 {
   "files": {
-    "main.css": "/static/css/main.ff885617.css",
-    "main.js": "/static/js/main.ae3cdb5e.js",
-    "static/media/squircle-logo.svg": "/static/media/squircle-logo.5f367bf94c1aeaf3cda43ea892435014.svg",
-    "static/media/polkadot.png": "/static/media/polkadot.6384db5e1ffac799b521.png",
+    "main.css": "/static/css/main.818d6b00.css",
+    "main.js": "/static/js/main.30fc71d1.js",
     "static/media/3.Default.png": "/static/media/3.Default.88315a37f872bfe09093.png",
     "static/media/logo.svg": "/static/media/logo.3e09bf7bb3c3545b70c87ffebb942ef4.svg",
     "static/media/SubWalletLogo.svg": "/static/media/SubWalletLogo.637b860fce4059c3a3b6b7c876a13601.svg",
     "static/media/MetaMaskLogo.svg": "/static/media/MetaMaskLogo.1e91d234a70747385cb8c9123cf4869d.svg",
-    "static/media/logo-with-text-light.svg": "/static/media/logo-with-text-light.f64e1c221215f678613cda2a1a7875b9.svg",
     "static/media/TalismanLogo.svg": "/static/media/TalismanLogo.d2bc76e57d50979e1e7bfa71211ddc6f.svg",
     "static/media/1.Polkadot.svg": "/static/media/1.Polkadot.51f911ff27b045014462b2654abcccfd.svg",
     "static/media/2.Kusama.svg": "/static/media/2.Kusama.6d0c5ceb4938b6d8322b52bb73d79689.svg",
+    "index.html": "/index.html",
     "static/media/PolkadotLogo.svg": "/static/media/PolkadotLogo.8492330aac9d174faa4886cab4cb5b93.svg",
-    "static/media/dual-ball.svg": "/static/media/dual-ball.ed26e8dd190462cc67bebfab2be834f0.svg",
-    "index.html": "/index.html"
+    "static/media/dual-ball.svg": "/static/media/dual-ball.ed26e8dd190462cc67bebfab2be834f0.svg"
   },
   "entrypoints": [
-    "static/css/main.ff885617.css",
-    "static/js/main.ae3cdb5e.js"
+    "static/css/main.818d6b00.css",
+    "static/js/main.30fc71d1.js"
   ]
 }
