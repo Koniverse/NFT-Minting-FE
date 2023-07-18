@@ -170,12 +170,16 @@ export const Congratulation = styled(Component)<Props>(({theme: {token}}: Props)
 
     '@media(max-width: 991px)': {
       '.__image-wrapper': {
-        maxWidth: 400,
+        maxWidth: 240,
         width: '100%',
         height: 'auto',
       },
 
       flexDirection: 'column',
+
+      '.__title': {
+        fontSize: 36,
+      },
 
       '.__right-part': {
         maxWidth: 600,
