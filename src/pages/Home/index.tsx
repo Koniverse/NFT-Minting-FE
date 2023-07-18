@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useContext, useMemo} from 'react';
 import styled from 'styled-components';
 import {ThemeProps} from '../../types';
 import {Button, Icon} from '@subwallet/react-ui';
@@ -8,11 +8,30 @@ import {BoxItem3} from './boxes/BoxItem3';
 import {EventTitles} from '../EventTitles';
 import {useNavigate} from 'react-router';
 import { GlobeHemisphereWest } from 'phosphor-react';
+import {AppContext} from "../../contexts";
 
 type Props = ThemeProps;
 
+function formatDateToCustomFormat(date: Date) {
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const month = date.toLocaleString('default', { month: 'short' });
+  const day = date.getDate();
+
+  return `${day} ${month} ${hours}:${minutes}`;
+}
+
 function Component({className}: Props): React.ReactElement<Props> {
   const navigate = useNavigate();
+  const {collectionInfo} = useContext(AppContext);
+  const mintingPeriod = useMemo(() => {
+    const currentCampaign = collectionInfo?.currentCampaign;
+    if (currentCampaign) {
+      return `${formatDateToCustomFormat(currentCampaign.startTimeObj)} - ${formatDateToCustomFormat(currentCampaign.endTimeObj)}`;
+    }
+
+    return '';
+  }, [collectionInfo?.currentCampaign]);
 
   const goConnect = useCallback(
     () => {
@@ -31,7 +50,7 @@ function Component({className}: Props): React.ReactElement<Props> {
         </div>
 
         <div className={'__minting-time'}>
-          Minting period: 17 Jul - 23 Jul
+          <span className={'__label'}>Minting period:</span> <span className={'__value'}>{mintingPeriod}</span>
         </div>
 
         <Button
@@ -89,6 +108,12 @@ export const Home = styled(Component)<Props>(({theme: {token, extendToken}}: Pro
       [`@media(max-width:${extendToken.mobileSize})`]: {
 
       },
+    },
+
+    '.__minting-time': {
+      '.__label,.__value': {
+        display: 'inline-block',
+      }
     },
 
     '.home-boxes-area': {

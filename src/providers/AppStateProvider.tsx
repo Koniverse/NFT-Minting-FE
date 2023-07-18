@@ -2,7 +2,7 @@ import React, {useCallback, useContext, useEffect, useRef, useState} from 'react
 import {AppContext, WalletContext} from '../contexts';
 import {useLocalStorage} from '../hooks/useLocalStorage';
 import {WalletAccount} from '@subwallet/wallet-connect/types';
-import {CollectionItem, CurrentAccountData, MintedNFTItem, MintedNftResponse} from '../types';
+import {CampaignItem, CollectionItem, CurrentAccountData, MintedNFTItem, MintedNftResponse} from '../types';
 import {isEthereumAddress} from '@polkadot/util-crypto';
 import {APICall} from '../api/nft';
 import useNotification from '../hooks/useNotification';
@@ -17,13 +17,7 @@ type GetUserCodeResponse = {
 };
 
 type FetchALlCollectionResponseItem = CollectionItem & {
-  campaigns: {
-    id: number,
-    collectionId: number,
-    image: string,
-    startTime: string,
-    endTime: string,
-  }[]
+  campaigns: CampaignItem[]
 };
 
 type FetchALlCollectionResponse = FetchALlCollectionResponseItem[];
@@ -66,6 +60,24 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
       .then((rs: FetchALlCollectionResponse) => {
         if (rs && rs.length) {
           const collection = rs[0];
+          const now = new Date();
+          const campaigns = collection.campaigns;
+
+          // Detect campaign
+          campaigns.forEach((c) => {
+            campaigns.forEach((c) => {
+              c.startTimeObj = new Date(c.startTime);
+              c.endTimeObj = new Date(c.endTime);
+            });
+          })
+
+          let currentCampaign = campaigns.find((c) => {
+            return now < c.endTimeObj && now > c.startTimeObj;
+          });
+          if (!currentCampaign) {
+            currentCampaign = campaigns[campaigns.length - 1]
+          }
+
           setCollectionInfo({
             id: collection.id,
             rmrkCollectionId: collection.rmrkCollectionId,
@@ -75,7 +87,8 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
             network: collection.network,
             networkType: collection.networkType,
             networkName: collection.networkName,
-            currentCampaignId: collection.campaigns[0].id,
+            currentCampaignId: currentCampaign?.id || 0,
+            currentCampaign: currentCampaign,
             minted: collection.minted
           });
         }

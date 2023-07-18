@@ -105,7 +105,18 @@ export interface CollectionItem {
   networkType: NetworkType,
   networkName: string,
   currentCampaignId: number,
+  currentCampaign?: CampaignItem,
   minted: number
+}
+
+export interface CampaignItem {
+  id: number,
+  collectionId: number,
+  image: string,
+  startTime: string,
+  endTime: string,
+  startTimeObj: Date,
+  endTimeObj: Date,
 }
 
 export interface MintedNFTItem {
