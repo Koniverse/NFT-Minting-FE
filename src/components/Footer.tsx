@@ -4,7 +4,7 @@ import React from 'react';
 import {DISCORD_URL, TELEGRAM_URL, TWITTER_URL} from '../constants';
 import {DiscordLogo, TelegramLogo, TwitterLogo} from 'phosphor-react';
 import {Button, Icon, Image, SwIconProps} from '@subwallet/react-ui';
-import logo from '../assets/logo-with-text-light.svg';
+import logo from '../assets/logo-with-text.png';
 import {openInNewTab} from '../utils/common/browser';
 
 type Props = ThemeProps;
@@ -67,7 +67,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
         <Image className={'__logo'} width={'auto'} shape={'square'} height="var(--logo-height)" src={logo}/>
         <div className={'__divider'}></div>
         <div className={'__copy-right'}>
-          @2023 subwallet.app All rights reserved
+          © 2023. All rights reserved
         </div>
       </div>
     </div>
@@ -85,12 +85,11 @@ export const Footer = styled(Component)<Props>(({theme: {token, extendToken}}: P
 
     '.__social-button': {
       color: token.colorTextLight1,
-
-      [`@media(min-width:${extendToken.mobileSize})`]: {
-        height: 48,
-        width: 48,
-        lineHeight: 48,
-      },
+      // [`@media(min-width:${extendToken.mobileSize})`]: {
+      //   height: 48,
+      //   width: 48,
+      //   lineHeight: 48,
+      // },
 
       '.anticon.anticon.anticon': {
         fontSize: 28,
@@ -109,7 +108,9 @@ export const Footer = styled(Component)<Props>(({theme: {token, extendToken}}: P
       },
     },
     '.__left-part': {
+      display: 'flex',
       flex: 1,
+      gap: 8,
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         marginBottom: 2,
@@ -128,10 +129,6 @@ export const Footer = styled(Component)<Props>(({theme: {token, extendToken}}: P
 
     '.__logo': {
       '--logo-height': token.sizeLG,
-
-      [`@media(max-width:${extendToken.mobileSize})`]: {
-        '--logo-height': token.sizeMD
-      }
     },
 
     '.__divider': {
@@ -144,12 +141,8 @@ export const Footer = styled(Component)<Props>(({theme: {token, extendToken}}: P
       }
     },
     '.__copy-right': {
-      fontSize: token.fontSizeLG,
-      lineHeight: token.lineHeightLG,
-
-      [`@media(max-width:${extendToken.mobileSize})`]: {
-        fontSize: 10.83
-      }
+      fontSize: 12,
+      lineHeight: '24px',
     },
   };
 });

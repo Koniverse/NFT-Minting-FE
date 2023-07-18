@@ -18,15 +18,14 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
   );
 }
 
-export const EventTitles = styled(Component)<Props>(({theme: {extendToken, token}}: Props) => {
-
+export const EventTitles = styled(Component)<Props>(({theme: {token, extendToken}}: Props) => {
   return {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
 
     '.__first-title': {
-      color: extendToken.colorTitle,
+      color: token.colorPrimary,
       fontSize: 90,
       lineHeight: 1.2,
       fontWeight: '900',

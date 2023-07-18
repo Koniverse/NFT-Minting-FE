@@ -67,7 +67,14 @@ export const BoxItem1 = styled(Component)<Props>((theme: Props) => {
     [`@media(max-width:1599px)`]: {
       height: 400,
 
+      '.__image': {
+        width: 268,
+        marginBottom: -50,
+        marginLeft: -242,
+      },
+
       '.__text-box': {
+        paddingTop: 56,
         height: 174,
       },
     },

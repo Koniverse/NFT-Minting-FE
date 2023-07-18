@@ -240,33 +240,8 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
     },
 
     '.general-button.general-button': {
-      height: 60,
-      lineHeight: '60px',
-      backgroundColor: token['colorSuccess'],
-      color: token['geekblue-1'],
-
-      [`@media(max-width:${extendToken.mobileSize})`]: {
-        height: 50,
-        lineHeight: '50px',
-      },
-
-      '.ant-btn-content-wrapper': {
-        textTransform: 'uppercase',
-
-        [`@media(max-width:${extendToken.mobileSize})`]: {
-          fontSize: 14,
-        }
-      },
-
-      ':hover': {
-        backgroundColor: token['colorSuccess-5'],
-        color: token['geekblue-1'],
-      },
-
-      '&:active, &:disabled': {
-        backgroundColor: token['colorSuccess-4'],
-        color: token['geekblue-1'],
-      },
+      paddingLeft: 24,
+      paddingRight: 24,
     },
 
     '.nft-image': {
