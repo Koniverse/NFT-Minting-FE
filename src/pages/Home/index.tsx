@@ -87,9 +87,6 @@ export const Home = styled(Component)<Props>(({theme: {token, extendToken}}: Pro
         marginBottom: 48,
       },
 
-      '.__button': {
-      },
-
       [`@media(max-width:${extendToken.mobileSize})`]: {
 
       },

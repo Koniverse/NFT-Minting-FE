@@ -85,11 +85,6 @@ export const Footer = styled(Component)<Props>(({theme: {token, extendToken}}: P
 
     '.__social-button': {
       color: token.colorTextLight1,
-      // [`@media(min-width:${extendToken.mobileSize})`]: {
-      //   height: 48,
-      //   width: 48,
-      //   lineHeight: 48,
-      // },
 
       '.anticon.anticon.anticon': {
         fontSize: 28,
@@ -104,7 +99,7 @@ export const Footer = styled(Component)<Props>(({theme: {token, extendToken}}: P
       },
 
       '&:hover': {
-        color: token.colorSuccess
+        color: token.colorPrimary
       },
     },
     '.__left-part': {

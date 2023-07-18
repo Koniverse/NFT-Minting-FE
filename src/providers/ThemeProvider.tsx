@@ -242,6 +242,7 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
     '.general-button.general-button': {
       paddingLeft: 24,
       paddingRight: 24,
+      fontWeight: '500',
     },
 
     '.nft-image': {
