@@ -21,7 +21,7 @@ function Component({className}: Props) {
   useEffect(() => {
     if (isAppReady) {
       if (location.pathname !== '/' && location.pathname !== '/home') {
-        if (!currentAddress || !(walletContext.wallet || walletContext.evmWallet)) {
+        if (!currentAddress) {
           navigate('/connect-wallet');
         } else if (mintedNft) {
           navigate('/congratulation');
