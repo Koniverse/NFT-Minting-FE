@@ -151,7 +151,7 @@ export const SelectAccountTypeModal = styled(Component)<Props>((theme: Props) =>
     '.__header': {
       width: '100%',
       display: 'flex',
-      marginBottom: 4,
+      marginBottom: 12,
 
       '.__title': {
         flex: 1,

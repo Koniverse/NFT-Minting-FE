@@ -6,7 +6,7 @@ export function generateModalStyle(theme: ThemeProps): CSSObject {
 
   return ({
     top: 0,
-    maxWidth: 704,
+    maxWidth: 570,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',

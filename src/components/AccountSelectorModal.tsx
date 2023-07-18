@@ -42,8 +42,8 @@ export const Component = ({className}: AccountSelectorModalProps): React.ReactEl
           address={account.address}
           accountName={account.name || ''} avatarIdentPrefix={42}
           isSelected={isSelected}
-          addressPreLength={isMobileSize ? 12 : 40}
-          addressSufLength={isMobileSize ? 12 : 40}
+          addressPreLength={isMobileSize ? 12 : 18}
+          addressSufLength={isMobileSize ? 12 : 18}
           onPressItem={onSelect(account)}
         />
       );
