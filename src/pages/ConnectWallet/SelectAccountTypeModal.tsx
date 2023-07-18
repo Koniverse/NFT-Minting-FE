@@ -175,6 +175,10 @@ export const SelectAccountTypeModal = styled(Component)<Props>((theme: Props) =>
       flexDirection: 'column',
       gap: 12,
 
+      '.wallet-logo': {
+        marginRight: 12,
+      },
+
       [`@media(max-width:${extendToken.mobileSize})`]: {
         flex: '1 1 200px',
       },
