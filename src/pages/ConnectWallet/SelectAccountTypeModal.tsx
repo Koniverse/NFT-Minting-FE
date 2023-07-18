@@ -96,8 +96,8 @@ function Component({className = ''}: Props): React.ReactElement<Props> {
                 className={'wallet-logo'}
                 src={SubWalletLogo}
                 shape="default"
-                width={48}
-                height={48}
+                width={40}
+                height={40}
               />
             }
             shape={'default'} onClick={onConnectSubstrateWallet}
@@ -116,8 +116,8 @@ function Component({className = ''}: Props): React.ReactElement<Props> {
                 className={'wallet-logo'}
                 src={SubWalletLogo}
                 shape="default"
-                width={48}
-                height={48}
+                width={40}
+                height={40}
               />
             }
             shape={'default'} onClick={onConnectEvmWallet}

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import React, {useContext, useRef} from 'react';
 import {AppContext} from '../contexts';
 import {Button, Icon} from '@subwallet/react-ui';
-import {DISCORD_URL, SHARE_TEXT, SHARE_URL} from '../constants';
+import {DISCORD_URL, SHARE_TAGS, SHARE_TEXT, SHARE_URL} from '../constants';
 import {FacebookLogo, TwitterLogo} from 'phosphor-react';
 import NFT from '../components/NFT';
 import {
@@ -55,11 +55,12 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
               ref={facebookRef}
               quote={SHARE_TEXT}
               url={SHARE_URL}
+              hashtag={SHARE_TAGS.join(' ')}
               className={'hidden'}
               children={undefined}
             />
 
-            <TwitterShareButton className={'hidden'} ref={twitterRef} children={undefined} url={SHARE_URL} title={SHARE_TEXT}/>
+            <TwitterShareButton className={'hidden'} ref={twitterRef} children={undefined} url={SHARE_URL} title={SHARE_TEXT} hashtags={SHARE_TAGS}/>
             <Button
               shape={'circle'}
               schema="primary"
