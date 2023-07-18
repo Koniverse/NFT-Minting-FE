@@ -60,8 +60,8 @@ const App = styled(Component)<Props>(({theme: {token, extendToken}}: ThemeProps)
     height: '100%',
     overflow: 'auto',
     overflowX: 'hidden',
-    paddingLeft: 16,
-    paddingRight: 16,
+    paddingLeft: 32,
+    paddingRight: 32,
     backgroundSize: '100% auto',
     backgroundColor: token.colorBgDefault,
     backgroundPosition: 'center top',
@@ -76,10 +76,11 @@ const App = styled(Component)<Props>(({theme: {token, extendToken}}: ThemeProps)
     },
 
     '.app-header': {
-      paddingTop: 48,
+      paddingTop: 36,
+      paddingBottom: 36,
 
-      [`@media(min-width:${extendToken.mobileSize})`]: {
-        paddingBottom: 16,
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        paddingBottom: 36,
       }
     },
 
@@ -95,8 +96,8 @@ const App = styled(Component)<Props>(({theme: {token, extendToken}}: ThemeProps)
     },
 
     '.app-footer': {
-      paddingTop: 30,
-      paddingBottom: 30,
+      paddingTop: 36,
+      paddingBottom: 36,
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         paddingTop: 40,
@@ -106,6 +107,11 @@ const App = styled(Component)<Props>(({theme: {token, extendToken}}: ThemeProps)
 
     '.__loading': {
       textAlign: 'center'
+    },
+
+    [`@media(max-width:${extendToken.mobileSize})`]: {
+      paddingLeft: 16,
+      paddingRight: 16,
     }
   };
 });

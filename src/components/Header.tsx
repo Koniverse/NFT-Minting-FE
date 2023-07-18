@@ -119,12 +119,9 @@ export const Header = styled(Component)<HeaderProps>(({theme: {token, extendToke
     '&.__container': {
       display: 'flex',
       alignItems: 'center',
-      paddingRight: 16,
-      paddingLeft: 16,
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         justifyContent: 'space-between',
-        marginBottom: 44,
 
         '&.__center': {
           justifyContent: 'center',
