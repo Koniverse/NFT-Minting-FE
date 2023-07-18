@@ -28,7 +28,6 @@ function Component({className}: Props): React.ReactElement<Props> {
 
         <div className={'__subtitle'}>
           Proof of asset for Polkadot ecosystem holder
-          NFT Holder Utilities
         </div>
 
         <div className={'__minting-time'}>
