@@ -58,11 +58,13 @@ export function Component({className}: HeaderProps): React.ReactElement {
             </a>
           </div>
 
-          {
-            !!(walletContext.wallet || walletContext.evmWallet) && !!walletContext.accounts.length
-              ? <AccountSelectorInput/>
-              : <ConnectButton />
-          }
+          <div className="__menu-item __wallet-button">
+            {
+              !!(walletContext.wallet || walletContext.evmWallet) && !!walletContext.accounts.length
+                ? <AccountSelectorInput/>
+                : <ConnectButton />
+            }
+          </div>
         </div>
       </div>
       <div className={'__right-part __mobile'}>
@@ -178,6 +180,11 @@ export const Header = styled(Component)<HeaderProps>(({theme: {token, extendToke
     '.__menu': {
       display: 'flex',
       gap: 64
+    },
+
+    '.__wallet-button': {
+      width: 232,
+      display: 'inline-block',
     },
 
     '.__link-button': {
