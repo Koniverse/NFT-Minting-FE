@@ -501,12 +501,13 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
 
     '@media(max-width: 991px)': {
       '.__image-wrapper': {
-        maxWidth: 400,
+        maxWidth: 240,
         width: '100%',
         height: 'auto',
       },
 
       '.__title': {
+        fontSize: 36,
         textAlign: 'center',
       },
 
@@ -516,6 +517,14 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+
+        '.__title': {
+          marginBottom: 32,
+        },
+
+        '.__checklist': {
+          marginBottom: 40,
+        },
       },
 
       '.__right-part.-step-confirm': {
