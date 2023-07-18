@@ -37,6 +37,10 @@ function Component({className}: Props): React.ReactElement<Props> {
       <Button shape={'circle'} className={'general-bordered-button general-button-width'} onClick={goConnect}>
         Mint for Free
       </Button>
+
+      <Button shape={'circle'} schema={'primary'} onClick={goConnect}>
+        Mint for Free
+      </Button>
     </div>
   );
 }

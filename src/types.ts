@@ -28,9 +28,9 @@ export interface SwThemeConfig extends ThemeConfig {
   id: ThemeNames,
   name: string;
 
-  generateExtraTokens: (token: AliasToken) => ExtraToken;
+  generateExtraTokens: (token: Partial<AliasToken>) => ExtraToken;
 
-  customTokens: (token: AliasToken) => AliasToken;
+  customTokens: (token: Partial<AliasToken>) => Partial<AliasToken>;
   logoMap: Web3LogoMap
 }
 
