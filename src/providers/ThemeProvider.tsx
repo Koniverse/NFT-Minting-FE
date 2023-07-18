@@ -202,7 +202,7 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
     },
 
     '.title': {
-      color: extendToken.colorTitle,
+      color: token.colorPrimary,
       fontWeight: 900,
       textTransform: 'uppercase',
     },
@@ -243,12 +243,6 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
       paddingLeft: 24,
       paddingRight: 24,
       fontWeight: '500',
-    },
-
-    '.nft-image': {
-      border: '10px solid rgba(255, 255, 255, 0.12)',
-      boxShadow: '7.409873008728027px -5.5574049949646px 27.787025451660156px 0px rgba(33, 33, 33, 0.20)',
-      borderRadius: 16
     },
   });
 });

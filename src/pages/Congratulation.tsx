@@ -2,10 +2,10 @@ import {ThemeProps} from '../types';
 import styled from 'styled-components';
 import React, {useContext} from 'react';
 import {AppContext} from '../contexts';
-import {Icon} from '@subwallet/react-ui';
-import {DISCORD_URL, DOWNLOAD_URL} from '../constants';
+import {Button, Icon} from '@subwallet/react-ui';
+import {DISCORD_URL} from '../constants';
 import {FacebookLogo, TwitterLogo} from 'phosphor-react';
-import NftImage from "../components/NftImage";
+import NftImage from '../components/NftImage';
 
 type Props = ThemeProps;
 
@@ -18,46 +18,60 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
 
   return (
     <div className={className}>
-      <div className="__box">
-        <div className="__box-inner">
-          <div className={'__image-wrapper'}>
-            <NftImage src={mintedNft?.nftImage || ''}/>
+      <div className="__left-part">
+        <div className={'__image-wrapper'}>
+          <NftImage src={mintedNft?.nftImage || ''}/>
+        </div>
+      </div>
+      <div className="__right-part">
+        <div className={'title __title'}>
+          Superb!
+        </div>
+
+        <div className={'__text'}>
+          Open your <span className={'__highlight'}>SubWallet</span> to view your Polkadot
+          Power Passport. There may be occasional delays due to network stability.
+        </div>
+
+        <div className={'__text'}>
+          View NFT on <a className={'__highlight'} href={singularLink} target={'_blank'}>Singular</a>
+        </div>
+
+        <div className={'__share-container'}>
+          <div className={'__share-label'}>Share the good news on</div>
+
+          <div className="__share-buttons">
+            <Button
+              shape={'circle'}
+              schema="primary"
+              size={'sm'}
+              className={'__button __twitter-button general-button'}
+              icon={<Icon
+                phosphorIcon={TwitterLogo}
+                weight="fill"
+              />}
+            >
+              Twitter
+            </Button>
+
+            <Button
+              shape={'circle'}
+              schema="primary"
+              size={'sm'}
+              className={'__button __facebook-button general-button'}
+              icon={<Icon
+                phosphorIcon={FacebookLogo}
+                weight="fill"
+              />}
+            >
+              Facebook
+            </Button>
           </div>
+        </div>
 
-          <div className={'title __title'}>
-            Superb!
-          </div>
-
-          <div className="__text-container">
-            <div className={'__text'}>
-              Open your <span className={'__highlight'}>SubWallet extension</span> or <a className={'__highlight'}  href={DOWNLOAD_URL} target={'_blank'}>mobile app</a> to view your Polkadot
-              Power Passport. There may be occasional delays due to network stability.
-            </div>
-            <div className={'__text'}>
-              View NFT on <a className={'__highlight'} href={singularLink} target={'_blank'}>Singular</a>
-            </div>
-            <div className={'__text -with-complex-content'}>
-            <span>
-              Share the good news on
-            </span>
-
-              <div className={'__share-container'}>
-                <a target={'_blank'} className={'__button-link'}>
-                  <Icon phosphorIcon={TwitterLogo} weight={'fill'} iconColor={'#2595E6'}/>
-                  Twitter
-                </a>
-
-                <a target={'_blank'} className={'__button-link'}>
-                  <Icon phosphorIcon={FacebookLogo} weight={'fill'} iconColor={'#2565E6'}/>
-                  Facebook
-                </a>
-              </div>
-            </div>
-            <div className={'__text'}>
-              Join <a className={'__highlight'} href={DISCORD_URL} target={'_blank'}>SubWallet Discord</a> to track
-              Polkadot ecosystem campaigns & activities.
-            </div>
-          </div>
+        <div className={'__text'}>
+          Join <a className={'__highlight'} href={DISCORD_URL} target={'_blank'}>SubWallet Discord</a> to track
+          Polkadot ecosystem campaigns & activities.
         </div>
       </div>
     </div>
@@ -66,122 +80,109 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
 
 export const Congratulation = styled(Component)<Props>(({theme: {token}}: Props) => {
   return {
-    '.__box': {
-      maxWidth: '950px',
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      backgroundColor: token.colorBgDefault,
-      boxShadow: '4px 4px 32px 0px rgba(34, 84, 215, 0.30)',
-      borderRadius: 16,
-      paddingLeft: 16,
-      paddingRight: 16,
-    },
-
-    '.__box-inner': {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      textAlign: 'center',
-      maxWidth: 704,
-      paddingTop: 64,
-      paddingBottom: 72,
-      margin: 'auto',
-    },
+    maxWidth: 1120,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 74,
 
     '.__image-wrapper': {
-      width: 180,
-      height: 180,
-      marginBottom: 56,
+      width: 480,
+      height: 480,
       position: 'relative',
+    },
 
-      'img, .__video': {
-        borderWidth: 4,
-      }
+    '.__right-part': {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 40,
     },
 
     '.__title': {
-      fontSize: 64,
-      lineHeight: '48px',
-      marginBottom: 48,
+      fontSize: 40,
+      lineHeight: 1,
     },
 
     '.__text': {
-      fontSize: 20,
-      color: token.colorTextLight3,
+      fontWeight: '300',
+      fontSize: 16,
       lineHeight: 1.5
     },
 
-    '.__text.-with-complex-content': {
-      display: 'flex',
-      flexWrap: 'wrap',
-      justifyContent: 'center'
-    },
-
     '.__highlight': {
-      color: token.colorSuccess
+      color: token.colorPrimary,
+      fontWeight: 500,
     },
 
     'a.__highlight': {
-      textDecoration: 'underline'
-    },
+      color: token.colorTextLight3,
+      transition: `${token.motionDurationMid} color`,
 
-    '.__button-link': {
-      display: 'inline-flex',
-      gap: 8,
-      paddingLeft: 8,
-      paddingRight: 8,
-
-      '.anticon': {
-        fontSize: 28
+      '&:hover': {
+        color: token.colorPrimary,
       },
     },
 
-    '.__button-link + .__button-link': {
-      paddingLeft: 0,
+    '.__share-label': {
+      color: token.colorTextLight3,
+      fontSize: 20,
+      lineHeight: 1.5,
+      marginBottom: 24,
     },
 
-    '.__text-container': {
+    '.__share-buttons': {
       display: 'flex',
-      flexDirection: 'column',
-      gap: 24
+      flexWrap: 'wrap',
+      gap: 16,
+    },
+
+    '.__twitter-button': {
+      backgroundColor: token['blue-7'],
+
+      '&:hover': {
+        backgroundColor: token['blue-5'],
+      },
+
+      '&:active': {
+        backgroundColor: token['blue-4'],
+      },
+    },
+
+    '.__facebook-button': {
+      backgroundColor: token['geekblue-6'],
+
+      '&:hover': {
+        backgroundColor: token['geekblue-5'],
+      },
+
+      '&:active': {
+        backgroundColor: token['geekblue-4'],
+      },
+    },
+
+    '@media(max-width: 1199px)': {
+      gap: 40,
+      '.__image-wrapper': {
+        width: 400,
+        height: 400,
+      },
     },
 
     '@media(max-width: 991px)': {
-      '.__image-wrapper': {
-        width: 124,
-        height: 124,
-        marginBottom: 36,
+      maxWidth: 400,
+      width: '100%',
+      height: 'auto',
+      flexDirection: 'column',
+
+      '.__right-part': {
+        textAlign: 'center',
+        alignItems: 'center',
       },
 
-      '.__box-inner': {
-        paddingTop: 56,
-        paddingBottom: 44,
+      '.__share-buttons': {
+        justifyContent: 'center',
       },
-
-      '.__text-container': {
-        gap: 20,
-      },
-
-      '.__title': {
-        fontSize: 40,
-        lineHeight: '30px',
-        marginBottom: 32,
-      },
-
-      '.__text': {
-        fontSize: 14,
-      },
-
-      '.__share-container': {
-        marginTop: 8,
-        flexBasis: '100%',
-      },
-
-      '.__button-link': {
-        '.anticon': {
-          fontSize: 20
-        },
-      },
-    }
+    },
   };
 });
