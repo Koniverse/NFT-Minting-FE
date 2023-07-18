@@ -89,10 +89,6 @@ const App = styled(Component)<Props>(({theme: {token, extendToken}}: ThemeProps)
       display: 'flex',
       justifyContent: 'center',
       flexDirection: 'column',
-
-      [`@media(max-width:${extendToken.mobileSize})`]: {
-        justifyContent: 'start',
-      }
     },
 
     '.app-footer': {

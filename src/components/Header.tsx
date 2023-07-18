@@ -176,7 +176,7 @@ export const Header = styled(Component)<HeaderProps>(({theme: {token, extendToke
 
     '.__menu': {
       display: 'flex',
-      gap: 64
+      gap: 32
     },
 
     '.__wallet-button': {
@@ -187,13 +187,15 @@ export const Header = styled(Component)<HeaderProps>(({theme: {token, extendToke
     '.__link-button': {
       cursor: 'pointer',
       color: token.colorTextLight3,
-      fontSize: 20,
-      lineHeight: 1.4,
+      fontSize: 16,
+      lineHeight: '28px',
       display: 'flex',
       height: 48,
       position: 'relative',
       alignItems: 'center',
       transition: `${token.motionDurationMid} color`,
+      paddingRight: 4,
+      paddingLeft: 4,
 
       '&:hover' : {
         color: token.colorTextLight2,
