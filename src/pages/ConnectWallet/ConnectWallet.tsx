@@ -7,21 +7,29 @@ import {isWalletInstalled} from '@subwallet/wallet-connect/dotsama/wallets';
 import {SELECT_ACCOUNT_TYPE_MODAL} from "../../constants";
 import {openInNewTab} from "../../utils/common/browser";
 import {EventTitles} from '../EventTitles';
+import {WalletContext} from "../../contexts";
 
 type Props = ThemeProps;
 
 function Component({className}: ThemeProps): React.ReactElement<Props> {
   const [isSubWalletInstalled] = useState(isWalletInstalled('subwallet-js'));
   const {activeModal} = useContext(ModalContext);
+  const walletContext = useContext(WalletContext);
   const onConnectWallet = useCallback(() => {
     activeModal(SELECT_ACCOUNT_TYPE_MODAL);
   }, [activeModal])
 
   useEffect(() => {
-    if (isSubWalletInstalled) {
-      onConnectWallet();
+    const to = setTimeout(() => {
+      if (!walletContext.currentWallet && isSubWalletInstalled) {
+        onConnectWallet();
+      }
+    }, 300)
+
+    return () => {
+      clearTimeout(to);
     }
-  }, [isSubWalletInstalled, onConnectWallet]);
+  }, [isSubWalletInstalled, onConnectWallet, walletContext.currentWallet]);
 
   const onInstallWallet = () => {
     openInNewTab('https://chrome.google.com/webstore/detail/subwallet-polkadot-wallet/onhogfjeacnfoofkfgppdlbmlmnplgbn')();

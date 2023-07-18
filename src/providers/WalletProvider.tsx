@@ -17,6 +17,7 @@ interface Props {
 }
 
 export function WalletProvider({children}: Props) {
+  const [isReady, setIsReady] = useState(false);
   const [walletKey, setWalletKey] = useLocalStorage('wallet-key');
   const [walletType, setWalletType] = useLocalStorage('wallet-type', 'substrate');
   const [currentWallet, setCurrentWallet] = useState<Wallet | EvmWallet | undefined>(getWalletBySource(walletKey));
@@ -50,7 +51,7 @@ export function WalletProvider({children}: Props) {
   const afterSelectEvmWallet = useCallback(
     async (wallet: EvmWallet) => {
       await wallet?.enable(); // Quick call extension?.request({ method: 'eth_requestAccounts' });
-      const _accounts = await wallet?.request({ method: 'eth_accounts' }) as string[];
+      const _accounts = await wallet?.request({method: 'eth_accounts'}) as string[];
 
       if (_accounts && _accounts.length) {
         setAccounts(_accounts.map(a => ({address: a, name: toShort(a, 8, 8), source: walletKey})));
@@ -58,7 +59,7 @@ export function WalletProvider({children}: Props) {
         throw Error(NO_ACCOUNT);
       }
     },
-    []
+    [walletKey]
   );
 
   const selectEvmWallet = useCallback(
@@ -79,30 +80,28 @@ export function WalletProvider({children}: Props) {
       }
 
       if (walletType === 'evm') {
-        if (currentWallet) {
-          (currentWallet as EvmWallet).request({
-            method: 'personal_sign',
-            params: [message, address]
-          }).then(rs => {
-            resolve(rs as unknown as string);
-          }).catch(reject);
-        }
+        (currentWallet as EvmWallet).request({
+          method: 'personal_sign',
+          params: [message, address]
+        }).then(rs => {
+          resolve(rs as unknown as string);
+        }).catch(reject);
       } else {
-        if (walletType === 'substrate' && currentWallet) {
-          (currentWallet as Wallet).signer?.signRaw?.({
-            address: address,
-            type: 'payload',
-            data: message
-          }).then(rs => {
-            resolve(rs.signature);
-          }).catch(reject);
-        }
+        (currentWallet as Wallet).signer?.signRaw?.({
+          address: address,
+          type: 'payload',
+          data: message
+        }).then(rs => {
+          resolve(rs.signature);
+        }).catch(reject);
       }
     });
   }, [currentWallet, walletType]);
 
 
   const walletContext: WalletContextInterface = {
+    isReady: isReady,
+    currentWallet: currentWallet,
     wallet: getWalletBySource(walletKey),
     evmWallet: getEvmWalletBySource(walletKey),
     signMessage,
@@ -127,18 +126,26 @@ export function WalletProvider({children}: Props) {
       if (walletType === 'substrate') {
         const wallet = getWalletBySource(walletKey);
         setCurrentWallet(wallet);
-        setTimeout(() => {
-          if (wallet && wallet?.installed) {
-            // eslint-disable-next-line no-void
-            void afterSelectWallet(wallet);
-          }
-        }, 150);
+        if (wallet && wallet?.installed) {
+          afterSelectWallet(wallet).catch(console.error).finally(() => {
+            setIsReady(true);
+          });
+        } else {
+          setIsReady(true);
+        }
       } else {
         const evmWallet = getEvmWalletBySource(walletKey);
         setCurrentWallet(evmWallet);
-        evmWallet && evmWallet?.isReady.then(() => {
-          afterSelectEvmWallet(evmWallet).catch(console.error);
-        });
+        if (evmWallet && evmWallet?.installed) {
+          evmWallet && evmWallet?.isReady
+            .then(() => {
+              afterSelectEvmWallet(evmWallet).catch(console.error);
+            }).finally(() => {
+              setIsReady(true);
+            });
+        } else {
+          setIsReady(true);
+        }
       }
     },
     [afterSelectEvmWallet, afterSelectWallet, walletKey, walletType]);

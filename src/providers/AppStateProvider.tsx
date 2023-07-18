@@ -37,9 +37,11 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
   const [isAppReady, setIsAppReady] = useState(false);
 
   // Account data
-  const [currentAddress, setCurrentAddress] = useLocalStorage<string|undefined>('currentAddress');
-  const prevAddress = useRef<string|undefined>(currentAddress);
+  const [currentAddress, setCurrentAddress] = useLocalStorage<string | undefined>('currentAddress');
+  const prevAddress = useRef<string | undefined>(currentAddress);
   const [currentAccountData, setCurrentAccountData] = useLocalStorage<CurrentAccountData>('currentAccountData', {});
+  const fetchingCodeFor = useRef('');
+  const fetchingDataFor = useRef('');
   const [walletAccount, setWalletAccount] = useState<WalletAccount | undefined>(undefined);
 
   // Collection data
@@ -47,6 +49,16 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
 
   // NFT Data
   const [mintedNft, setMintedNft] = useState<MintedNFTItem | undefined>(undefined);
+
+  // Reset data when change current address
+  useEffect(() => {
+    if (prevAddress.current !== currentAddress) {
+      setIsAppReady(false);
+      setCurrentAccountData({});
+      setMintedNft(undefined);
+      prevAddress.current = currentAddress;
+    }
+  }, [currentAddress]);
 
   // Init actions
   useEffect(() => {
@@ -76,10 +88,33 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
     })
   }, [notify]);
 
+  useEffect(() => {
+    let cancel = false;
+    // Get user random code
+    if (fetchingCodeFor.current !== currentAddress && currentAddress && !currentAccountData.userId) {
+      fetchingCodeFor.current = currentAddress;
+      APICall.getUserRandomCode(currentAddress).then(({id, randomCode}: GetUserCodeResponse) => {
+        !cancel && setCurrentAccountData({...currentAccountData, userId: id, randomCode});
+      }).catch((e) => {
+        notify({
+          message: e.message,
+          type: 'error',
+          duration: 1.5
+        });
+      });
+    }
+
+    return () => {
+      cancel = true;
+    }
+  }, [currentAccountData, currentAddress, notify]);
+
   // Fetch minted NFT when selected account
   useEffect(() => {
     let cancel = false;
-    if (currentAddress && collectionInfo?.currentCampaignId) {
+    // On change account
+    if (fetchingDataFor.current !== currentAddress && currentAddress && collectionInfo?.currentCampaignId) {
+      fetchingDataFor.current = currentAddress;
       APICall.fetchMintedNft(currentAddress).then((rs: FetchMintedNftResponse) => {
         if (cancel) {
           return;
@@ -107,7 +142,7 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
     return () => {
       cancel = true;
     }
-  }, [currentAccountData, collectionInfo?.currentCampaignId, currentAddress, notify]);
+  }, [collectionInfo?.currentCampaignId, currentAddress, notify]);
 
   // Todo: Move to wallet context
   const signMessage = useCallback((randomCode: string, cb: (sig: string) => void): Promise<void> => {
@@ -143,26 +178,6 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
     });
   }, [currentAccountData, walletContext.walletType, walletContext.evmWallet, walletContext.wallet]);
 
-  useEffect(() => {
-    let cancel = false;
-    // Get user random code
-    if (currentAddress && !currentAccountData.userId) {
-      APICall.getUserRandomCode(currentAddress).then(({id, randomCode}: GetUserCodeResponse) => {
-        !cancel && setCurrentAccountData({...currentAccountData, userId: id, randomCode});
-      }).catch((e) => {
-        notify({
-          message: e.message,
-          type: 'error',
-          duration: 1.5
-        });
-      });
-    }
-
-    return () => {
-      cancel = true;
-    }
-  }, [currentAccountData, currentAddress, notify]);
-
   // Update when current account change
   const _setCurrentAddress = useCallback((address: string) => {
     if (address !== currentAddress) {
@@ -190,15 +205,6 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
       setCurrentAddress(walletAccounts[0].address);
     }
   }, [currentAddress, walletContext.accounts]);
-
-  // Reset data when change current address
-  useEffect(() => {
-    if (prevAddress.current !== currentAddress) {
-      setCurrentAccountData({});
-      setMintedNft(undefined);
-      prevAddress.current = currentAddress;
-    }
-  }, [currentAddress]);
 
   return (
     <AppContext.Provider value={{
