@@ -80,6 +80,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
 
 export const Congratulation = styled(Component)<Props>(({theme: {token}}: Props) => {
   return {
+    width: '100%',
     maxWidth: 1120,
     marginLeft: 'auto',
     marginRight: 'auto',
@@ -170,12 +171,16 @@ export const Congratulation = styled(Component)<Props>(({theme: {token}}: Props)
     },
 
     '@media(max-width: 991px)': {
-      maxWidth: 400,
-      width: '100%',
-      height: 'auto',
+      '.__image-wrapper': {
+        maxWidth: 400,
+        width: '100%',
+        height: 'auto',
+      },
+
       flexDirection: 'column',
 
       '.__right-part': {
+        maxWidth: 600,
         textAlign: 'center',
         alignItems: 'center',
       },
