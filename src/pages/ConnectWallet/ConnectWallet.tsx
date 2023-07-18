@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {Button, Image, ModalContext} from '@subwallet/react-ui';
 import logo from '../../assets/squircle-logo.svg';
-import {EventTitles} from './EventTitles';
 import {isWalletInstalled} from '@subwallet/wallet-connect/dotsama/wallets';
 import {SELECT_ACCOUNT_TYPE_MODAL} from "../../constants";
 import {openInNewTab} from "../../utils/common/browser";
+import {EventTitles} from '../EventTitles';
 
 type Props = ThemeProps;
 

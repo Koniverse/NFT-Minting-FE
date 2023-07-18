@@ -7,8 +7,7 @@ import App from './App';
 import {ConnectWallet} from './pages/ConnectWallet';
 import {MintNft} from './pages/MintNft';
 import {Congratulation} from './pages/Congratulation';
-import {Welcome} from "./pages/Welcome";
-import {LandingPage} from './pages/LandingPage';
+import {Home} from './pages/Home';
 
 const timeLoader = () => {
   return new Promise((resolve) => {
@@ -32,8 +31,8 @@ export const router = createHashRouter([
     element: <App/>,
     children: [
       {
-        path: 'welcome',
-        element: <Welcome />
+        path: 'home',
+        element: <Home />
       },
       {
         path: 'connect-wallet',
@@ -48,10 +47,5 @@ export const router = createHashRouter([
         element: <Congratulation />
       }
     ]
-  },
-  {
-    path: '/landing-page',
-    loader: timeLoader,
-    element: <LandingPage/>,
   },
 ])

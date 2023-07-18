@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import React from 'react';
-import {ThemeProps} from '../../types';
+import {ThemeProps} from '../types';
 
 type Props = ThemeProps;
 
@@ -12,8 +12,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
       </div>
       <div className={'__second-title'}>
         Power Passport
-        <span aria-hidden="true">Power
-           Passport</span>
+        <span aria-hidden="true">Power Passport</span>
       </div>
     </div>
   );
@@ -27,36 +26,32 @@ export const EventTitles = styled(Component)<Props>(({theme: {extendToken, token
     alignItems: 'center',
 
     '.__first-title': {
-      color: token.colorTextLight1,
-      fontSize: 116,
-      lineHeight: '87px',
-      marginBottom: 20,
+      color: extendToken.colorTitle,
+      fontSize: 90,
+      lineHeight: 1.2,
       fontWeight: '900',
-      letterSpacing: 5.6,
       textTransform: 'uppercase',
+      marginBottom: 4,
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         fontSize: 44,
-        lineHeight: '33px',
-        marginBottom: 12,
       },
     },
     '.__second-title': {
-      lineHeight: 1,
-      letterSpacing: 5.6,
+      letterSpacing: 4.5,
       position: 'relative',
-      color: '#38374c',
+      color: '#3d3d3d',
       fontWeight: '900',
-      fontSize: 112,
+      fontSize: 90,
+      lineHeight: 1.2,
       textTransform: 'uppercase',
       marginBottom: 0,
       '-webkit-text-stroke': '5.68px #fff',
       textAlign: 'center',
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
-        lineHeight: 1.3,
         fontSize: 44,
-        maxWidth: 360,
+        '-webkit-text-stroke': '2px #fff',
       },
 
       span: {
@@ -65,6 +60,10 @@ export const EventTitles = styled(Component)<Props>(({theme: {extendToken, token
         top: 0,
         '-webkit-text-stroke': 0,
         pointerEvents: 'none',
+
+        [`@media(max-width:${extendToken.mobileSize})`]: {
+
+        },
       }
     },
   };

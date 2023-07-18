@@ -20,7 +20,7 @@ function Component({className}: Props) {
 
   useEffect(() => {
     if (isAppReady) {
-      if (location.pathname !== '/' && location.pathname !== '/welcome') {
+      if (location.pathname !== '/' && location.pathname !== '/home') {
         if (!currentAddress || !(walletContext.wallet || walletContext.evmWallet)) {
           navigate('/connect-wallet');
         } else if (mintedNft) {
@@ -29,7 +29,7 @@ function Component({className}: Props) {
           navigate('/mint-nft');
         }
       } else {
-        navigate('/welcome');
+        navigate('/home');
       }
     }
   }, [currentAddress, mintedNft, navigate, walletContext.wallet, walletContext.evmWallet, isAppReady]);
@@ -42,7 +42,6 @@ function Component({className}: Props) {
           {!isAppReady ? (<div className={'__loading'}>
             <Image
               src={loadingImage}
-              // shape="none"
               width={200}
               height={200}
             />
@@ -63,7 +62,9 @@ const App = styled(Component)<Props>(({theme: {token, extendToken}}: ThemeProps)
     overflowX: 'hidden',
     paddingLeft: 16,
     paddingRight: 16,
-    backgroundSize: 'cover',
+    backgroundSize: '100% auto',
+    backgroundColor: token.colorBgDefault,
+    backgroundPosition: 'center top',
 
     '.app-layout': {
       maxWidth: '1440px',
