@@ -8,6 +8,7 @@ import {ThemeProps} from './types';
 import {Footer} from './components/Footer';
 import {Image} from '@subwallet/react-ui';
 import loadingImage from './assets/dual-ball.svg';
+import CN from 'classnames';
 
 type Props = ThemeProps;
 
@@ -19,8 +20,8 @@ function Component({className}: Props) {
 
   useEffect(() => {
     if (isAppReady) {
-      if (location.pathname !== '/' && location.pathname !== '/welcome') {
-        if (!currentAddress || !(walletContext.wallet || walletContext.evmWallet)) {
+      if (location.pathname !== '/' && location.pathname !== '/home') {
+        if (!currentAddress) {
           navigate('/connect-wallet');
         } else if (mintedNft) {
           navigate('/congratulation');
@@ -28,20 +29,19 @@ function Component({className}: Props) {
           navigate('/mint-nft');
         }
       } else {
-        navigate('/welcome');
+        navigate('/home');
       }
     }
   }, [currentAddress, mintedNft, navigate, walletContext.wallet, walletContext.evmWallet, isAppReady]);
 
   return (
-    <div className={className}>
+    <div className={CN(className, 'app-background')}>
       <div className="app-layout">
         <Header className={'app-header'}/>
         <div className={'app-body'}>
           {!isAppReady ? (<div className={'__loading'}>
             <Image
               src={loadingImage}
-              // shape="none"
               width={200}
               height={200}
             />
@@ -60,8 +60,11 @@ const App = styled(Component)<Props>(({theme: {token, extendToken}}: ThemeProps)
     height: '100%',
     overflow: 'auto',
     overflowX: 'hidden',
-    paddingLeft: 16,
-    paddingRight: 16,
+    paddingLeft: 32,
+    paddingRight: 32,
+    backgroundSize: '100% auto',
+    backgroundColor: token.colorBgDefault,
+    backgroundPosition: 'center top',
 
     '.app-layout': {
       maxWidth: '1440px',
@@ -73,10 +76,11 @@ const App = styled(Component)<Props>(({theme: {token, extendToken}}: ThemeProps)
     },
 
     '.app-header': {
-      paddingTop: 48,
+      paddingTop: 36,
+      paddingBottom: 36,
 
-      [`@media(min-width:${extendToken.mobileSize})`]: {
-        paddingBottom: 16,
+      [`@media(max-width:${extendToken.mobileSize})`]: {
+        paddingBottom: 36,
       }
     },
 
@@ -85,15 +89,11 @@ const App = styled(Component)<Props>(({theme: {token, extendToken}}: ThemeProps)
       display: 'flex',
       justifyContent: 'center',
       flexDirection: 'column',
-
-      [`@media(max-width:${extendToken.mobileSize})`]: {
-        justifyContent: 'start',
-      }
     },
 
     '.app-footer': {
-      paddingTop: 30,
-      paddingBottom: 30,
+      paddingTop: 36,
+      paddingBottom: 36,
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         paddingTop: 40,
@@ -103,6 +103,11 @@ const App = styled(Component)<Props>(({theme: {token, extendToken}}: ThemeProps)
 
     '.__loading': {
       textAlign: 'center'
+    },
+
+    [`@media(max-width:${extendToken.mobileSize})`]: {
+      paddingLeft: 16,
+      paddingRight: 16,
     }
   };
 });

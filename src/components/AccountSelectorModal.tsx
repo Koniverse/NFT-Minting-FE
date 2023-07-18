@@ -5,7 +5,7 @@ import {ThemeProps} from '../types';
 import {AppContext, WalletContext} from '../contexts';
 import {WalletAccount} from '@subwallet/wallet-connect/types';
 import AccountCard from '@subwallet/react-ui/es/web3-block/account-card';
-import {X} from 'phosphor-react';
+import {Plugs, X} from 'phosphor-react';
 import CN from 'classnames';
 import {HEADER_MENU_MODAL, SELECT_ACCOUNT_MODAL} from "../constants";
 import useIsMobileSize from "../hooks/useIsMobileSize";
@@ -42,13 +42,13 @@ export const Component = ({className}: AccountSelectorModalProps): React.ReactEl
           address={account.address}
           accountName={account.name || ''} avatarIdentPrefix={42}
           isSelected={isSelected}
-          addressPreLength={9}
-          addressSufLength={9}
+          addressPreLength={isMobileSize ? 12 : 18}
+          addressSufLength={isMobileSize ? 12 : 18}
           onPressItem={onSelect(account)}
         />
       );
     },
-    [currentAddress, onSelect],
+    [currentAddress, isMobileSize, onSelect],
   );
 
   const onClose = useCallback(() => {
@@ -74,7 +74,7 @@ export const Component = ({className}: AccountSelectorModalProps): React.ReactEl
             icon={(
               <Icon
                 phosphorIcon={X}
-                iconColor='#E7087B'
+                iconColor='#777'
                 weight='bold'
               />
             )}
@@ -88,11 +88,15 @@ export const Component = ({className}: AccountSelectorModalProps): React.ReactEl
           list={walletState.accounts}
           renderItem={renderAccount}
           searchMinCharactersCount={2}
-          rowGap='16px'
+          rowGap='12px'
         />
 
         <div className={'__button-wrapper'}>
-          <Button shape={'circle'} className={'general-bordered-button general-button-width'}
+          <Button shape={'circle'}
+                  className={'general-button'}
+                  icon={<Icon phosphorIcon={Plugs} weight={'fill'}/>}
+                  schema={'primary'}
+                  size={'sm'}
                   onClick={walletState.disconnectAccount}>
             Disconnect
           </Button>
@@ -104,7 +108,7 @@ export const Component = ({className}: AccountSelectorModalProps): React.ReactEl
 };
 
 export const AccountSelectorModal = styled(Component)<AccountSelectorModalProps>((theme: AccountSelectorModalProps) => {
-  const {theme: { extendToken}} = theme;
+  const {theme: { token, extendToken}} = theme;
 
   return {
     '&.account-selector-modal': {
@@ -116,11 +120,22 @@ export const AccountSelectorModal = styled(Component)<AccountSelectorModalProps>
       },
 
       '.ant-account-card': {
-        display: 'flex'
+        backgroundColor: '#151515',
+        display: 'flex',
+        padding: 20,
+        transition: 'background-color 0.3s ease',
+
+        '&:hover': {
+          backgroundColor: 'rgba(15,15,15,0.3)',
+        },
+
+        '.ant-account-card-address': {
+          fontWeight: 300,
+        }
       },
 
       '.ant-sw-list-section': {
-        margin: '0 -16px',
+        margin: '0 8px',
 
         '.ant-sw-list-wrapper': {
           [`@media(max-width:${extendToken.mobileSize})`]: {
@@ -145,23 +160,21 @@ export const AccountSelectorModal = styled(Component)<AccountSelectorModalProps>
       flexDirection: "column",
       overflow: "hidden",
       height: "100%",
-      gap: 40,
+      gap: 24,
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         gap: 32,
-        paddingLeft: 16,
-        paddingRight: 16,
+        paddingLeft: 0,
+        paddingRight: 0,
         paddingTop: 44,
         paddingBottom: 40,
       },
     },
 
     '.__title': {
-      fontFamily: 'Unbounded',
       fontWeight: 700,
-      fontSize: 24,
-      lineHeight: '31.2px',
-      textTransform: "uppercase"
+      fontSize: 20,
+      lineHeight: '31px',
     },
 
     '.__header': {
@@ -169,10 +182,11 @@ export const AccountSelectorModal = styled(Component)<AccountSelectorModalProps>
       flexDirection: "row",
       alignItems: "center",
       justifyContent: 'space-between',
+      padding: "0px 24px",
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         flexDirection: 'column-reverse',
-        gap: 52,
+        gap: 24,
         marginBottom: 16
       },
     },

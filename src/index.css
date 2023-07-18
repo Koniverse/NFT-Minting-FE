@@ -349,12 +349,6 @@ mark {
   scrollbar-width: none;  /* Firefox */
 }
 
-/*SubWallet main css*/
-*, :after, :before {
-  -webkit-box-sizing: inherit;
-  box-sizing: inherit
-}
-
 input, button, select, optgroup, textarea {
   margin: 0;
   color: inherit;
@@ -482,7 +476,6 @@ div#popup-container {
 #root {
   width: 100%;
   height: 100%;
-  background-size: cover;
 }
 
 .ant-btn,
@@ -500,7 +493,12 @@ div#popup-container {
 .ant-sw-list,
 [class*=" ant-sw-list"],
 [class*="ant-input"],
+.ant-account-item,
 .ant-sw-list-section,
 .ant-sw-modal {
   font-family: inherit !important;
+}
+
+.hidden {
+  display: none !important;
 }

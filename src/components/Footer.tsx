@@ -4,7 +4,7 @@ import React from 'react';
 import {DISCORD_URL, TELEGRAM_URL, TWITTER_URL} from '../constants';
 import {DiscordLogo, TelegramLogo, TwitterLogo} from 'phosphor-react';
 import {Button, Icon, Image, SwIconProps} from '@subwallet/react-ui';
-import logo from '../assets/logo-with-text-light.svg';
+import logo from '../assets/logo-with-text.png';
 import {openInNewTab} from '../utils/common/browser';
 
 type Props = ThemeProps;
@@ -19,10 +19,11 @@ class PhosphorIcon {
 }
 
 interface SocialItem {
-  icon: SwIconProps['phosphorIcon']
-  type: SocialType
-  url: string
+  icon: SwIconProps['phosphorIcon'];
+  type: SocialType;
+  url: string;
 }
+
 const socialItems: SocialItem[] = [
   {
     icon: TwitterLogo,
@@ -48,13 +49,12 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
         {socialItems.map(si => (
           <Button
             key={si.type}
-            size={'sm'}
+            size={'xs'}
             icon={(
               <Icon
                 phosphorIcon={si.icon}
-                type='phosphor'
+                type="phosphor"
                 weight={'fill'}
-                customSize={'28px'}
               />
             )}
             type={'ghost'}
@@ -64,14 +64,14 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
         ))}
       </div>
       <div className={'__right-part'}>
-        <Image className={'__logo'} width={'auto'} shape={'square'} height='var(--logo-height)' src={logo}/>
+        <Image className={'__logo'} width={'auto'} shape={'square'} height="var(--logo-height)" src={logo}/>
         <div className={'__divider'}></div>
         <div className={'__copy-right'}>
-          @2023 subwallet.app All rights reserved
+          © 2023. All rights reserved
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export const Footer = styled(Component)<Props>(({theme: {token, extendToken}}: Props) => {
@@ -86,12 +86,26 @@ export const Footer = styled(Component)<Props>(({theme: {token, extendToken}}: P
     '.__social-button': {
       color: token.colorTextLight1,
 
+      '.anticon.anticon.anticon': {
+        fontSize: 28,
+        width: 28,
+        height: 28,
+
+        [`@media(max-width:${extendToken.mobileSize})`]: {
+          fontSize: 20,
+          width: 20,
+          height: 20,
+        },
+      },
+
       '&:hover': {
-        color: token.colorSuccess
+        color: token.colorPrimary
       },
     },
     '.__left-part': {
+      display: 'flex',
       flex: 1,
+      gap: 8,
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         marginBottom: 2,
@@ -110,10 +124,6 @@ export const Footer = styled(Component)<Props>(({theme: {token, extendToken}}: P
 
     '.__logo': {
       '--logo-height': token.sizeLG,
-
-      [`@media(max-width:${extendToken.mobileSize})`]: {
-        '--logo-height': token.sizeMD
-      }
     },
 
     '.__divider': {
@@ -126,12 +136,8 @@ export const Footer = styled(Component)<Props>(({theme: {token, extendToken}}: P
       }
     },
     '.__copy-right': {
-      fontSize: token.fontSizeLG,
-      lineHeight: token.lineHeightLG,
-
-      [`@media(max-width:${extendToken.mobileSize})`]: {
-        fontSize: 10.83
-      }
+      fontSize: 12,
+      lineHeight: '24px',
     },
-  }
+  };
 });

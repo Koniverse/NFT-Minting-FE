@@ -7,6 +7,8 @@ import {CollectionItem, CurrentAccountData, MintedNFTItem} from '../types';
 import {NotificationInstance} from '@subwallet/react-ui/es/notification/interface';
 
 export interface WalletContextInterface {
+  isReady: boolean,
+  currentWallet? : Wallet | EvmWallet,
   wallet?: Wallet,
   evmWallet?: EvmWallet,
   accounts: WalletAccount[],
@@ -17,6 +19,7 @@ export interface WalletContextInterface {
 }
 
 export const WalletContext = React.createContext<WalletContextInterface>({
+  isReady: false,
   accounts: [],
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setWallet: (wallet, walletType: 'substrate'|'evm') => Promise.resolve(),

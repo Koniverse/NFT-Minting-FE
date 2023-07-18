@@ -40,7 +40,7 @@ const Component: React.FC<Props> = (props: Props) => {
         showImage
           ? (
             <Image
-              className={'nft-image'}
+              className={'__image __decoration'}
               width={'100%'}
               height={'100%'}
               src={src}
@@ -50,7 +50,7 @@ const Component: React.FC<Props> = (props: Props) => {
           )
           : showVideo
               ? (
-                <div className="__video">
+                <div className="__video __decoration">
                   <video
                     autoPlay
                     loop
@@ -77,11 +77,18 @@ const Component: React.FC<Props> = (props: Props) => {
 
 const NftImage = styled(Component)<Props>(({ theme: { token } }: Props) => {
   return {
+    '.__decoration': {
+      borderRadius: 16,
+      boxShadow: '4px 4px 32px 0px rgba(34, 84, 215, 0.30)',
+    },
+
+    '.__image': {
+
+    },
+
     '.__video': {
       position: 'absolute',
       top: 0,
-      borderRadius: "8px",
-      border: "10px solid rgba(255, 255, 255, 0.12)",
       boxSizing: "border-box",
       display: 'flex',
     },

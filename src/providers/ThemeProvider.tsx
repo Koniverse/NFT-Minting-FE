@@ -2,18 +2,17 @@
 // SPDX-License-Identifier: Apache-2.0
 
 
-import {generateTheme, SW_THEME_CONFIGS} from '../themes';
+import {appTheme} from '../themes';
 import {ConfigProvider, theme as reactUiTheme} from '@subwallet/react-ui';
-import React, { useMemo } from 'react';
-import styled, { createGlobalStyle, ThemeProvider as StyledComponentThemeProvider } from 'styled-components';
-import {SwThemeConfig, Theme, ThemeProps} from "../types";
+import React from 'react';
+import styled, {createGlobalStyle, ThemeProvider as StyledComponentThemeProvider} from 'styled-components';
+import {Theme, ThemeProps} from "../types";
+import {ThemeConfig} from "@subwallet/react-ui/es/config-provider/context";
 
 interface Props {
   children: React.ReactNode;
-  themeConfig: SwThemeConfig
+  themeConfig: ThemeConfig
 }
-
-const { useToken } = reactUiTheme;
 
 const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
   const { token, extendToken } = theme as Theme;
@@ -64,6 +63,14 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
           }
         }
       }
+    },
+
+    'a': {
+      color: token.colorText,
+      transition: 'color 0.2s ease-in-out',
+        '&:hover': {
+            color: token.colorPrimary
+        }
     },
 
     '.text-secondary': {
@@ -195,7 +202,7 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
     },
 
     '.title': {
-      color: extendToken.colorTitle,
+      color: token.colorPrimary,
       fontWeight: 900,
       textTransform: 'uppercase',
     },
@@ -209,16 +216,15 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         height: 50,
-        lineHeight: '48px',
-        borderWidth: 1,
+        lineHeight: '46px',
+        borderWidth: 2,
       },
 
       '.ant-btn-content-wrapper': {
-        fontSize: token.sizeMD,
         textTransform: 'uppercase',
 
         [`@media(max-width:${extendToken.mobileSize})`]: {
-          fontSize: token.size,
+          fontSize: 14,
         }
       },
 
@@ -234,55 +240,17 @@ const GlobalStyle = createGlobalStyle<ThemeProps>(({ theme }) => {
     },
 
     '.general-button.general-button': {
-      height: 60,
-      lineHeight: '60px',
-      backgroundColor: token['colorSuccess'],
-      color: token['geekblue-1'],
-
-      [`@media(max-width:${extendToken.mobileSize})`]: {
-        height: 50,
-        lineHeight: '50px',
-      },
-
-      '.ant-btn-content-wrapper': {
-        fontSize: token.sizeMD,
-        textTransform: 'uppercase',
-
-        [`@media(max-width:${extendToken.mobileSize})`]: {
-          fontSize: token.size,
-        }
-      },
-
-      ':hover': {
-        backgroundColor: token['colorSuccess-5'],
-        color: token['geekblue-1'],
-      },
-
-      '&:active, &:disabled': {
-        backgroundColor: token['colorSuccess-4'],
-        color: token['geekblue-1'],
-      },
-    },
-
-    '.nft-image': {
-      border: '10px solid rgba(255, 255, 255, 0.12)',
-      boxShadow: '7.409873008728027px -5.5574049949646px 27.787025451660156px 0px rgba(33, 33, 33, 0.20)',
-      borderRadius: 16
+      paddingLeft: 24,
+      paddingRight: 24,
+      fontWeight: '500',
     },
   });
 });
 
 function ThemeGenerator ({ children, themeConfig }: Props): React.ReactElement<Props> {
-  const { token } = useToken();
-
-  // Generate theme from config
-  const theme = useMemo<Theme>(() => {
-    return generateTheme(themeConfig, token);
-  }, [themeConfig, token]);
-
   return (
-    <StyledComponentThemeProvider theme={theme}>
-      <GlobalStyle theme={theme} />
+    <StyledComponentThemeProvider theme={themeConfig}>
+      <GlobalStyle theme={themeConfig} />
       {children}
     </StyledComponentThemeProvider>
   );
@@ -298,16 +266,13 @@ const getPopupContainer = () => document.getElementById('tooltip-container') || 
 const TooltipContainer = styled.div`z-index: 10000`;
 
 export function ThemeProvider ({ children }: ThemeProviderProps): React.ReactElement<ThemeProviderProps> {
-  const themeName = 'dark';
-  const themeConfig = SW_THEME_CONFIGS[themeName];
-
   return (
     <ConfigProvider
       getModalContainer={getModalContainer}
       getPopupContainer={getPopupContainer}
-      theme={themeConfig}
+      theme={appTheme}
     >
-      <ThemeGenerator themeConfig={themeConfig}>
+      <ThemeGenerator themeConfig={appTheme}>
         <TooltipContainer id='tooltip-container' />
           {children}
       </ThemeGenerator>

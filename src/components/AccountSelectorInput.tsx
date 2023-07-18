@@ -56,7 +56,6 @@ export const Component = ({className}: AccountSelectorInputProps): React.ReactEl
 export const AccountSelectorInput = styled(Component)<AccountSelectorInputProps>(({theme}) => {
   const token = theme.token;
   return {
-
     '&.__input-container': {
       borderRadius: '50px',
       cursor: 'pointer',
@@ -89,7 +88,7 @@ export const AccountSelectorInput = styled(Component)<AccountSelectorInputProps>
       padding: 0,
       paddingRight: 6,
       '.ant-web3-block-middle-item': {
-        width: 'auto',
+        width: 150,
         flexDirection: 'row',
         justifyContent: 'flex-start'
       },
@@ -102,12 +101,16 @@ export const AccountSelectorInput = styled(Component)<AccountSelectorInputProps>
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
-        maxWidth: 90,
+        maxWidth: 99,
       },
       '.__address': {
         display: 'inline-block',
         whiteSpace: 'nowrap'
-      }
+      },
+    },
+    '.__input-suffix': {
+      position: 'relative',
+      top: 1,
     }
   };
 });

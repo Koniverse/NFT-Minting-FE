@@ -11,6 +11,8 @@ export type GlobalToken = _GlobalToken;
 
 export interface ExtraToken {
   colorTitle: string,
+  collectionImageSize: number,
+  nftImageSize: number,
   mobileSize: string,
   mediumSize: string,
   largeSize: string,
@@ -28,9 +30,9 @@ export interface SwThemeConfig extends ThemeConfig {
   id: ThemeNames,
   name: string;
 
-  generateExtraTokens: (token: AliasToken) => ExtraToken;
+  generateExtraTokens: (token: Partial<AliasToken>) => ExtraToken;
 
-  customTokens: (token: AliasToken) => AliasToken;
+  customTokens: (token: Partial<AliasToken>) => Partial<AliasToken>;
   logoMap: Web3LogoMap
 }
 
@@ -103,7 +105,18 @@ export interface CollectionItem {
   networkType: NetworkType,
   networkName: string,
   currentCampaignId: number,
+  currentCampaign?: CampaignItem,
   minted: number
+}
+
+export interface CampaignItem {
+  id: number,
+  collectionId: number,
+  image: string,
+  startTime: string,
+  endTime: string,
+  startTimeObj: Date,
+  endTimeObj: Date,
 }
 
 export interface MintedNFTItem {

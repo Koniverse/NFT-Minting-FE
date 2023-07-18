@@ -6,9 +6,10 @@ import {Button, Form, Icon, Input, Number} from '@subwallet/react-ui';
 import {APICall} from '../api/nft';
 import {isAddress, isEthereumAddress} from '@polkadot/util-crypto';
 import {RuleObject} from '@subwallet/react-ui/es/form';
-import {CheckCircle, Question, Wallet, XCircle} from 'phosphor-react';
+import {ArrowCircleUpRight, CheckCircle, Question, Wallet, XCircle} from 'phosphor-react';
 import LoadingIcon from '@subwallet/react-ui/es/button/LoadingIcon';
-import NftImage from "../components/NftImage";
+import CN from 'classnames';
+import Collection from '../components/Collection';
 
 type Props = ThemeProps;
 
@@ -56,15 +57,15 @@ function NextButton({isLoading, needSign, needRecheck, signAction, recheckAction
   if (isLoading) {
     label = 'Checking...';
   } else if (needSign) {
-    label = 'Check Eligibility'
+    label = 'Check Eligibility';
   } else if (needRecheck) {
-    label = 'Check Again'
+    label = 'Check Again';
   }
 
   let onClick: (() => void) | undefined = needSign ? signAction : nextAction;
   if (isLoading) {
-    onClick = undefined
-  } if (needRecheck) {
+    onClick = undefined;
+  } else if (needRecheck) {
     onClick = recheckAction;
   }
 
@@ -72,10 +73,14 @@ function NextButton({isLoading, needSign, needRecheck, signAction, recheckAction
     onClick={onClick}
     shape={'circle'}
     schema="primary"
-    className={'__button general-bordered-button general-button-width'}
+    className={'__button general-button'}
+    icon={<Icon
+      phosphorIcon={ArrowCircleUpRight}
+      weight="fill"
+    />}
     loading={isLoading}>
     {label}
-  </Button>
+  </Button>;
 }
 
 function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
@@ -120,23 +125,23 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
 
   const signToCheck = useCallback(() => {
     const {userId, signature, randomCode} = currentAccountData;
-    const needSign = isAppReady && !mintedNft && currentAddress! && userId && randomCode && !signature;
+    const needSign = isAppReady && !mintedNft && currentAddress && userId && randomCode && !signature;
     if (needSign) {
       setLoading(true);
       walletContext.signMessage(currentAddress, randomCode)
-        .then((signature) => {
-          if (signature) {
-            setMintCheckResult({isOwner: true});
-            setCurrentAccountData({
-              ...currentAccountData,
-              signature,
-            });
-          }
-        })
-        .catch(() => {
-          setMintCheckResult({isOwner: false});
-        })
-        .finally(() => {
+      .then((signature) => {
+        if (signature) {
+          setMintCheckResult({isOwner: true});
+          setCurrentAccountData({
+            ...currentAccountData,
+            signature,
+          });
+        }
+      })
+      .catch(() => {
+        setMintCheckResult({isOwner: false});
+      })
+      .finally(() => {
         setLoading(false);
       });
     }
@@ -213,138 +218,127 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
   };
 
   return (
-    <div className={className}>
-      {step === 'check' && (
-        <div className={'__box -step-check'}>
-          <div className={'__box-left-part'}>
-            <div className={'bgi-mockup-2'}></div>
-          </div>
-          <div className={'__box-right-part'}>
-            <div className={'title __title'}>
-              Eligibility check
-            </div>
-            <div className={'__checklist'}>
-              <div className={'__checklist-item'}>
-                <StatusIcon isLoading={loading} checked={!!currentAccountData.signature}
-                            checkResult={!!(mintCheckResult.isOwner && currentAccountData.signature)}/>
-                <div className={'__checklist-item-text'}>Own this wallet</div>
-              </div>
-              <div className={'__checklist-item'}>
-                <StatusIcon isLoading={loading} checked={mintCheckResult.hasBalance !== undefined}
-                            checkResult={mintCheckResult.hasBalance}/>
-                <div className={'__checklist-item-text'}>Has balance</div>
-              </div>
-              <div className={'__checklist-item'}>
-                <StatusIcon isLoading={loading} checked={mintCheckResult.notDuplicated !== undefined}
-                            checkResult={mintCheckResult.notDuplicated}/>
-                <div className={'__checklist-item-text'}>Can mint this collection</div>
-              </div>
-            </div>
+    <div className={CN(className, {
+      '-step-check': step === 'check',
+      '-step-confirm': step === 'confirm',
+    })}>
+      <div className="__left-part">
+        {
+          collectionInfo && (
+            <Collection collection={collectionInfo} className={'__image-wrapper'}/>
+          )
+        }
+      </div>
 
-            <NextButton isLoading={loading}
-                        needSign={!currentAccountData.signature}
-                        needRecheck={!!currentAccountData.signature && (!mintCheckResult.hasBalance || !mintCheckResult.notDuplicated)}
-                        recheckAction={mintCheck}
-                        signAction={signToCheck}
-                        nextAction={nextStep}/>
+      {step === 'check' && (
+        <div className={'__right-part -step-check'}>
+          <div className={'title __title'}>
+            Eligibility check
           </div>
+          <div className={'__checklist'}>
+            <div className={'__checklist-item'}>
+              <StatusIcon isLoading={loading} checked={!!currentAccountData.signature}
+                          checkResult={!!(mintCheckResult.isOwner && currentAccountData.signature)}/>
+              <div className={'__checklist-item-text'}>You own this wallet</div>
+            </div>
+            <div className={'__checklist-item'}>
+              <StatusIcon isLoading={loading} checked={mintCheckResult.hasBalance !== undefined}
+                          checkResult={mintCheckResult.hasBalance}/>
+              <div className={'__checklist-item-text'}>You have assets on at least one of 60+ Polkadot chains</div>
+            </div>
+            <div className={'__checklist-item'}>
+              <StatusIcon isLoading={loading} checked={mintCheckResult.notDuplicated !== undefined}
+                          checkResult={mintCheckResult.notDuplicated}/>
+              <div className={'__checklist-item-text'}>This is your first time minting this NFT</div>
+            </div>
+          </div>
+
+          <NextButton isLoading={loading}
+                      needSign={!currentAccountData.signature}
+                      needRecheck={!!currentAccountData.signature && (!mintCheckResult.hasBalance || !mintCheckResult.notDuplicated)}
+                      recheckAction={mintCheck}
+                      signAction={signToCheck}
+                      nextAction={nextStep}/>
         </div>
 
       )}
-      {step === 'confirm' && (<div className={'__box -step-confirm'}>
-        <div className={'__box-left-part'}>
-          {
-            collectionInfo && (
-              <>
-                <div className="__nft-image-wrapper">
-                  <NftImage src={collectionInfo.image} />
-                </div>
-              </>
-            )
-          }
+
+      {step === 'confirm' && (<div className={'__right-part -step-confirm'}>
+        <div className={'title __title'}>
+          Minting Detail
         </div>
 
-        <div className={'__box-right-part'}>
-          <div className={'title __title'}>
-            Minting Detail
+        <div className={'__sub-title'}>
+          Please confirm the following information
+        </div>
+
+        <div className={'__table'}>
+          <div className={'__table-row'}>
+            <div className={'__table-row-title'}>NFT</div>
+            <div className={'__table-row-value'}>{collectionInfo?.name}</div>
           </div>
-
-          <div className={'__sub-title'}>
-            Please confirm the following information
+          <div className={'__table-row'}>
+            <div className={'__table-row-title'}>Network</div>
+            <div className={'__table-row-value'}>{collectionInfo?.networkName}</div>
           </div>
-
-          {
-            collectionInfo && (
-              <div className="__nft-image-wrapper -show-on-mobile">
-                <NftImage src={collectionInfo.image} />
-              </div>
-            )
-          }
-
-          <div className={'__table'}>
-            <div className={'__table-row'}>
-              <div className={'__table-row-title'}>NFT:</div>
-              <div className={'__table-row-value'}>{collectionInfo?.name}</div>
-            </div>
-            <div className={'__table-row'}>
-              <div className={'__table-row-title'}>Network</div>
-              <div className={'__table-row-value'}>{collectionInfo?.networkName}</div>
-            </div>
-            <div className={'__table-row'}>
-              <div className={'__table-row-title'}>Price</div>
-              <div className={'__table-row-value'}>Free</div>
-            </div>
-            <div className={'__table-row'}>
-              <div className={'__table-row-title'}>Gas Fee</div>
-              <div className={'__table-row-value'}>sponsored by SubWallet</div>
-            </div>
-            <div className={'__table-footer'}>
-              <div className={'__table-row-title'}>Total</div>
-              <div className={'__table-row-value'}>
-                <Number
-                  className={'__balance-value'}
-                  decimal={0}
-                  decimalOpacity={0.45}
-                  size={20}
-                  suffix="KSM"
-                  value={'0.00'}
-                />
-              </div>
-            </div>
+          <div className={'__table-row'}>
+            <div className={'__table-row-title'}>Price</div>
+            <div className={'__table-row-value'}>Free</div>
           </div>
-
-          <Form form={form} onFinish={mintSubmit} className={'mint-form'}>
-            <Form.Item
-              hidden={!!isSubstrateAddress}
-              name={'address'}
-              rules={[
-                {
-                  validator: accountAddressValidator
-                }
-              ]}
-              statusHelpAsTooltip={true}
-            >
-              <Input
-                placeholder={'Fill your Substrate address to Mint'}
-                prefix={<Wallet size={24}/>}
-                type={'text'}
+          <div className={'__table-row'}>
+            <div className={'__table-row-title'}>Gas Fee</div>
+            <div className={'__table-row-value'}>sponsored by SubWallet</div>
+          </div>
+          <div className={'__table-footer'}>
+            <div className={'__table-row-title'}>Total</div>
+            <div className={'__table-row-value'}>
+              <Number
+                className={'__balance-value'}
+                decimal={0}
+                decimalOpacity={0.45}
+                size={20}
+                suffix="KSM"
+                value={'0.00'}
               />
-            </Form.Item>
-            {
-              !isSubstrateAddress && (
-                <div className='__note'>Polkadot Power Passport is minted on Kusama, which is a Substrate chain. Please enter your Substrate address to mint your NFT.</div>
-              )
-            }
-            <Button
-              block
-              shape={'circle'}
-              onClick={form.submit}
-              schema="primary"
-              className={'__button general-bordered-button general-button-width'} loading={loading}>
-              Mint for free
-            </Button>
-          </Form>
+            </div>
+          </div>
         </div>
+
+        <Form form={form} onFinish={mintSubmit} className={'mint-form'}>
+          <Form.Item
+            hidden={!!isSubstrateAddress}
+            name={'address'}
+            rules={[
+              {
+                validator: accountAddressValidator
+              }
+            ]}
+            statusHelpAsTooltip={true}
+          >
+            <Input
+              placeholder={'Fill your Substrate address to Mint'}
+              prefix={<Wallet size={24}/>}
+              type={'text'}
+            />
+          </Form.Item>
+          {
+            !isSubstrateAddress && (
+              <div className="__note">Polkadot Power Passport is minted on Kusama, which is a Substrate chain. Please
+                enter your Substrate address to mint your NFT.</div>
+            )
+          }
+          <Button
+            shape={'circle'}
+            onClick={form.submit}
+            schema="primary"
+            icon={<Icon
+              phosphorIcon={ArrowCircleUpRight}
+              weight="fill"
+            />}
+            className={'__button general-button'} loading={loading}>
+            Mint for free
+          </Button>
+        </Form>
       </div>)}
     </div>
   );
@@ -352,114 +346,67 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
 
 export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: Props) => {
   return {
-    '.__box': {
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      backgroundColor: token.colorBgDefault,
-      boxShadow: '4px 4px 32px 0px rgba(34, 84, 215, 0.30)',
-      display: 'flex',
-      position: 'relative',
-      borderRadius: token.size,
-      flexDirection: 'row',
+    // ---- general ----
+    maxWidth: 1120,
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    gap: 74,
 
-      [`@media(max-width:${extendToken.mobileSize})`]: {
-        flexDirection: 'column',
-      },
+    '&.-step-confirm': {
+      maxWidth: 1180,
     },
+
+    '.__image-wrapper': {
+      width: 480,
+      height: 480,
+    },
+
+    '.__title': {
+      fontSize: 40,
+      letterSpacing: 2,
+      lineHeight: 1
+    },
+
+    '.__right-part': {
+      flex: 1,
+    },
+
+    // ---- step check ----
 
     '.__checklist': {
       display: 'flex',
       flexDirection: 'column',
       gap: 12,
-      marginBottom: 48,
+      marginBottom: 50,
     },
 
     '.__checklist-item': {
       display: 'flex',
       alignItems: 'center',
       gap: 8,
+
       '.anticon': {
         fontSize: 28,
         width: 28,
         height: 28,
-
-        [`@media(max-width:${extendToken.mobileSize})`]: {
-          fontSize: 24,
-          width: 24,
-          height: 24,
-        },
       },
     },
 
     '.__checklist-item-text': {
-      fontSize: 20,
+      fontSize: 16,
       lineHeight: 1.5,
-
-      [`@media(max-width:${extendToken.mobileSize})`]: {
-        fontSize: 16,
-      },
     },
 
-    '.__box.-step-check': {
-      justifyContent: 'flex-end',
-      minHeight: 600,
-
-      [`@media(max-width:${extendToken.mobileSize})`]: {
-        alignItems: 'center',
-        justifyContent: 'start',
-        maxWidth: 500,
-      },
-
+    '.__right-part.-step-check': {
       '.__title': {
-        fontSize: 44,
-        marginBottom: 56,
-
-        [`@media(max-width:${extendToken.mobileSize})`]: {
-          fontSize: 22,
-          marginBottom: 24,
-        },
-      },
-
-      '.__box-left-part': {
-        '.bgi-mockup-2': {
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          top: 0,
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'left bottom',
-          backgroundSize: 'auto auto',
-
-          [`@media(min-width:992px) and (max-width: 1300px)`]: {
-            opacity: 0.4,
-          },
-
-          [`@media(max-width:${extendToken.mobileSize})`]: {
-            backgroundSize: 'auto 242px',
-            opacity: 1,
-          },
-        },
-      },
-
-      '.__box-right-part': {
-        maxWidth: 610,
-        marginRight: 90,
-        paddingTop: 148,
-        position: 'relative',
-
-        [`@media(max-width:${extendToken.mobileSize})`]: {
-          paddingTop: 56,
-          marginRight: 0,
-          alignSelf: 'stretch',
-          paddingLeft: 16,
-          paddingRight: 16,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        },
+        marginBottom: 48,
       },
     },
+
+    // ---- step confirm ----
 
     '.__note': {
       fontFamily: 'inherit !important',
@@ -482,8 +429,8 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
       display: 'flex',
       justifyContent: 'space-between',
       fontSize: 16,
+      flexWrap: 'wrap',
       lineHeight: '24px',
-      gap: 16,
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         fontSize: 14,
@@ -498,6 +445,7 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
       fontSize: 20,
       paddingTop: 22,
       paddingBottom: 22,
+      flexWrap: 'wrap',
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         borderTopWidth: 2,
@@ -511,150 +459,82 @@ export const MintNft = styled(Component)<Props>(({theme: {token, extendToken}}: 
       },
     },
 
-    '.__nft-image-wrapper': {
-      maxWidth: 448,
-      position: 'relative',
-      width: '100%',
-
-      '&.-show-on-mobile': {
-        [`@media(min-width:992px)`]: {
-          display: 'none'
-        },
-      },
-
-      '&:before': {
-        content: '\'\'',
-        display: 'block',
-        paddingTop: '100%',
-      },
-
-      '.ant-image': {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-      },
-
-      'img, .__video': {
-        borderWidth: 10,
-      },
-
-      [`@media(max-width:${extendToken.mobileSize})`]: {
-        maxWidth: 192,
-
-        'img, .__video': {
-          borderWidth: 4,
-        },
-      },
-    },
-
     '.__table-row-title': {
       color: token.colorTextLight2
     },
 
     '.__table-row-value': {
-      color: token.colorTextLight1
+      color: token.colorTextLight1,
+      paddingRight: 16,
     },
 
-    '.__box.-step-confirm': {
-      '.__table': {
-        marginBottom: 18,
-      },
-
-      '.__button': {
-        marginTop: 18,
-      },
-
-      [`@media(max-width:${extendToken.mobileSize})`]: {
-        justifyContent: 'start',
-        maxWidth: 500,
-
-        '.ant-form': {
-          alignSelf: 'stretch'
-        },
-
-        '.__button': {
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          display: 'flex'
-        },
-      },
-
-      '.__box-left-part': {
-        flex: 1,
-        display: 'flex',
-        alignItems: 'center',
-        paddingLeft: 120,
-
-        [`@media(min-width:1100px) and (max-width:1599px)`]: {
-          paddingLeft: 60,
-        },
-
-        [`@media(min-width:992px) and (max-width:1099px)`]: {
-          paddingLeft: 32,
-        },
-
-        [`@media(max-width:${extendToken.mobileSize})`]: {
-          display: 'none',
-        },
-      },
-
+    '.__right-part.-step-confirm': {
       '.__title': {
-        fontSize: 52,
-        lineHeight: '40px',
-        marginBottom: 24,
-
-        [`@media(max-width:${extendToken.mobileSize})`]: {
-          fontSize: 28,
-          lineHeight: '1.3',
-          marginBottom: 4,
-        },
+        marginBottom: 12,
       },
 
       '.__sub-title': {
+        color: token.colorTextLight3,
         fontSize: 20,
         lineHeight: 1.5,
-        marginBottom: 64,
-        color: token.colorTextLight3,
+        marginBottom: 40,
+      },
 
-        [`@media(max-width:${extendToken.mobileSize})`]: {
-          fontSize: 14,
-          marginBottom: 24,
+      '.__table': {
+        marginBottom: 20,
+      },
+
+      '.__button': {
+        marginTop: 20,
+      },
+    },
+
+    // ---- responsive ----
+
+    '@media(max-width: 1199px)': {
+      gap: 40,
+      '.__image-wrapper': {
+        width: 400,
+        height: 400,
+      },
+    },
+
+    '@media(max-width: 991px)': {
+      '.__image-wrapper': {
+        maxWidth: 240,
+        width: '100%',
+        height: 'auto',
+      },
+
+      '.__title': {
+        fontSize: 36,
+        textAlign: 'center',
+      },
+
+      flexDirection: 'column',
+
+      '.__right-part.-step-check': {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+
+        '.__title': {
+          marginBottom: 32,
+        },
+
+        '.__checklist': {
+          marginBottom: 40,
         },
       },
 
-      '.__box-right-part': {
-        flex: 10,
-        maxWidth: 580,
-        marginRight: 124,
-        marginLeft: 124,
-        paddingTop: 80,
-        paddingBottom: 100,
-        position: 'relative',
-
-        [`@media(min-width:1100px) and (max-width:1599px)`]: {
-          marginRight: 60,
-          marginLeft: 60,
+      '.__right-part.-step-confirm': {
+        maxWidth: 600,
+        '.__sub-title': {
+          textAlign: 'center',
         },
 
-        [`@media(min-width:992px) and (max-width:1099px)`]: {
-          marginRight: 32,
-          marginLeft: 32,
-        },
-
-        [`@media(max-width:${extendToken.mobileSize})`]: {
-          marginRight: 16,
-          marginLeft: 16,
-          paddingTop: 56,
-          paddingBottom: 44,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-
-          '.__nft-image-wrapper': {
-            marginBottom: 24,
-          },
+        '.ant-form': {
+          textAlign: 'center',
         },
       },
     },

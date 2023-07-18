@@ -5,6 +5,7 @@
 import {ModalContextProvider} from '@subwallet/react-ui';
 import React from 'react';
 import {AccountSelectorModal} from "../components/AccountSelectorModal";
+import {SelectAccountTypeModal} from "../pages/ConnectWallet/SelectAccountTypeModal";
 
 
 export interface ModalProviderProps {
@@ -16,6 +17,7 @@ export function ModalProvider ({ children }: ModalProviderProps): React.ReactEle
     <ModalContextProvider>
       {children}
       <AccountSelectorModal/>
+      <SelectAccountTypeModal />
     </ModalContextProvider>
   );
 }

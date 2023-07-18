@@ -10,6 +10,7 @@ import {X} from "phosphor-react";
 import {HEADER_MENU_MODAL} from "../constants";
 import {AccountSelectorInput} from "./AccountSelectorInput";
 import {useNavigate} from "react-router";
+import ConnectButton from "./ConnectButton";
 
 
 type HeaderProps = ThemeProps;
@@ -52,12 +53,18 @@ export function Component({className}: HeaderProps): React.ReactElement {
             </a>
           </div>
           <div className="__menu-item">
-            <a className="__link-button" href='https://dotinvietnam.com/'>
+            <a className="__link-button" href='https://dotinvietnam.com/' target={"_blank"}>
               DOTinVietNam
             </a>
           </div>
 
-          {!!(walletContext.wallet || walletContext.evmWallet) && !!walletContext.accounts.length && <AccountSelectorInput/>}
+          <div className="__menu-item __wallet-button">
+            {
+              !!(walletContext.wallet || walletContext.evmWallet) && !!walletContext.accounts.length
+                ? <AccountSelectorInput/>
+                : <ConnectButton />
+            }
+          </div>
         </div>
       </div>
       <div className={'__right-part __mobile'}>
@@ -94,10 +101,11 @@ export function Component({className}: HeaderProps): React.ReactElement {
               </a>
             </div>
             <div className="__menu-item">
-              <a className="__link-button" href='https://dotinvietnam.com/'>
+              <a className="__link-button" href='https://dotinvietnam.com/' target={"_blank"}>
                 DOTinVietNam
               </a>
             </div>
+            {(!(walletContext.wallet || walletContext.evmWallet) || !walletContext.accounts.length) && <ConnectButton />}
           </div>
           <Footer className='__footer' />
         </div>
@@ -111,12 +119,9 @@ export const Header = styled(Component)<HeaderProps>(({theme: {token, extendToke
     '&.__container': {
       display: 'flex',
       alignItems: 'center',
-      paddingRight: 16,
-      paddingLeft: 16,
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         justifyContent: 'space-between',
-        marginBottom: 44,
 
         '&.__center': {
           justifyContent: 'center',
@@ -171,19 +176,26 @@ export const Header = styled(Component)<HeaderProps>(({theme: {token, extendToke
 
     '.__menu': {
       display: 'flex',
-      gap: 64
+      gap: 32
+    },
+
+    '.__wallet-button': {
+      width: 232,
+      display: 'inline-block',
     },
 
     '.__link-button': {
       cursor: 'pointer',
       color: token.colorTextLight3,
-      fontSize: 20,
-      lineHeight: 1.4,
+      fontSize: 16,
+      lineHeight: '28px',
       display: 'flex',
       height: 48,
       position: 'relative',
       alignItems: 'center',
       transition: `${token.motionDurationMid} color`,
+      paddingRight: 4,
+      paddingLeft: 4,
 
       '&:hover' : {
         color: token.colorTextLight2,
