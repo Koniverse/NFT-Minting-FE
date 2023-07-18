@@ -94,7 +94,7 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
     if (fetchingCodeFor.current !== currentAddress && currentAddress && !currentAccountData.userId) {
       fetchingCodeFor.current = currentAddress;
       APICall.getUserRandomCode(currentAddress).then(({id, randomCode}: GetUserCodeResponse) => {
-        !cancel && setCurrentAccountData({...currentAccountData, userId: id, randomCode});
+        !cancel && setCurrentAccountData({userId: id, randomCode, signature: undefined});
       }).catch((e) => {
         notify({
           message: e.message,
@@ -107,7 +107,7 @@ export function AppStateProvider({children}: AppContextProps): React.ReactElemen
     return () => {
       cancel = true;
     }
-  }, [currentAccountData, currentAddress, notify]);
+  }, [currentAddress, notify]);
 
   // Fetch minted NFT when selected account
   useEffect(() => {

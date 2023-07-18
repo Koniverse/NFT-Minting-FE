@@ -64,7 +64,7 @@ function NextButton({isLoading, needSign, needRecheck, signAction, recheckAction
   let onClick: (() => void) | undefined = needSign ? signAction : nextAction;
   if (isLoading) {
     onClick = undefined
-  } if (needRecheck) {
+  } else if (needRecheck) {
     onClick = recheckAction;
   }
 
@@ -120,7 +120,7 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
 
   const signToCheck = useCallback(() => {
     const {userId, signature, randomCode} = currentAccountData;
-    const needSign = isAppReady && !mintedNft && currentAddress! && userId && randomCode && !signature;
+    const needSign = isAppReady && !mintedNft && currentAddress && userId && randomCode && !signature;
     if (needSign) {
       setLoading(true);
       walletContext.signMessage(currentAddress, randomCode)
