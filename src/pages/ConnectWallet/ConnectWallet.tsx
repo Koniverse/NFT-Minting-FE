@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {Button, Icon, ModalContext} from '@subwallet/react-ui';
 import {isWalletInstalled} from '@subwallet/wallet-connect/dotsama/wallets';
-import {SELECT_ACCOUNT_TYPE_MODAL} from '../../constants';
+import {DOWNLOAD_URL, SELECT_ACCOUNT_TYPE_MODAL} from '../../constants';
 import {openInNewTab} from '../../utils/common/browser';
 import {EventTitles} from '../EventTitles';
 import {Wallet} from 'phosphor-react';
@@ -34,7 +34,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
   }, [isSubWalletInstalled, onConnectWallet, walletContext.currentWallet]);
 
   const onInstallWallet = () => {
-    openInNewTab('https://chrome.google.com/webstore/detail/subwallet-polkadot-wallet/onhogfjeacnfoofkfgppdlbmlmnplgbn')();
+    openInNewTab(DOWNLOAD_URL)();
   };
 
   return (

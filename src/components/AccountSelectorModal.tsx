@@ -164,8 +164,8 @@ export const AccountSelectorModal = styled(Component)<AccountSelectorModalProps>
 
       [`@media(max-width:${extendToken.mobileSize})`]: {
         gap: 32,
-        paddingLeft: 16,
-        paddingRight: 16,
+        paddingLeft: 0,
+        paddingRight: 0,
         paddingTop: 44,
         paddingBottom: 40,
       },
