@@ -4,23 +4,20 @@ import React, {useContext, useRef} from 'react';
 import {AppContext} from '../contexts';
 import {Button, Icon} from '@subwallet/react-ui';
 import {DISCORD_URL, SHARE_TAGS, SHARE_TEXT, SHARE_URL} from '../constants';
-import {FacebookLogo, TwitterLogo} from 'phosphor-react';
+import {FacebookLogo, Share, TwitterLogo} from 'phosphor-react';
 import NFT from '../components/NFT';
 import {
   FacebookShareButton,
   TwitterShareButton,
 } from 'react-share';
+import {canMobileShare} from "../utils/share";
 
 type Props = ThemeProps;
 
 function Component({className}: ThemeProps): React.ReactElement<Props> {
-  const {mintedNft, collectionInfo} = useContext(AppContext);
+  const {mintedNft,} = useContext(AppContext);
   const twitterRef = useRef(null);
   const facebookRef = useRef(null);
-
-  const singularLink = collectionInfo && mintedNft
-    ? `https://singular.app/collectibles/${collectionInfo?.network}/${collectionInfo?.rmrkCollectionId}/${mintedNft?.rmrkNftId}`
-    : 'https://singular.app';
 
   const onShareTwitter = () => {
     // @ts-ignore
@@ -30,6 +27,14 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
   const onShareFacebook = () => {
     // @ts-ignore
     facebookRef.current?.click();
+  };
+
+  const onMobileShare = () => {
+    navigator?.share({
+      title: SHARE_TEXT,
+      text: SHARE_TEXT,
+      url: SHARE_URL
+    })
   };
 
   return (
@@ -47,7 +52,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
           Power Passport. There may be occasional delays due to network stability.
         </div>
 
-        <div className={'__share-container'}>
+        {!canMobileShare && <div className={'__share-container'}>
           <div className={'__share-label'}>Share the good news on</div>
 
           <div className="__share-buttons">
@@ -89,7 +94,26 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
               Facebook
             </Button>
           </div>
+        </div>}
+
+        {canMobileShare && <div className={'__share-container'}>
+          <div className="__share-buttons">
+            <Button
+              shape={'circle'}
+              schema="primary"
+              size={'sm'}
+              onClick={onMobileShare}
+              className={'__button general-button'}
+              icon={<Icon
+                phosphorIcon={Share}
+                weight="fill"
+              />}
+            >
+            Share the good news
+          </Button>
+          </div>
         </div>
+        }
 
         <div className={'__text'}>
           Join <a className={'__highlight'} href={DISCORD_URL} target={'_blank'}>SubWallet Discord</a> to track
