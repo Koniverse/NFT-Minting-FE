@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.9ecb9953.css",
-    "main.js": "/static/js/main.de71774c.js",
+    "main.js": "/static/js/main.0d892d51.js",
     "static/media/subwallet.png": "/static/media/subwallet.d748cf26482ed7afac1c.png",
     "static/media/3.Default.png": "/static/media/3.Default.88315a37f872bfe09093.png",
     "static/media/logo.svg": "/static/media/logo.3e09bf7bb3c3545b70c87ffebb942ef4.svg",
@@ -16,6 +16,6 @@
   },
   "entrypoints": [
     "static/css/main.9ecb9953.css",
-    "static/js/main.de71774c.js"
+    "static/js/main.0d892d51.js"
   ]
 }
