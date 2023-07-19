@@ -9,6 +9,7 @@ import {EventTitles} from '../EventTitles';
 import {useNavigate} from 'react-router';
 import { GlobeHemisphereWest } from 'phosphor-react';
 import {AppContext} from "../../contexts";
+import {isMobile} from "../../utils/environment";
 
 type Props = ThemeProps;
 
@@ -33,12 +34,9 @@ function Component({className}: Props): React.ReactElement<Props> {
     return '';
   }, [collectionInfo?.currentCampaign]);
 
-  const goConnect = useCallback(
-    () => {
+  const launchApp = useCallback(() => {
       navigate('/connect-wallet');
-    },
-    [navigate],
-  );
+    }, [navigate]);
 
   return (
     <div className={className}>
@@ -57,7 +55,7 @@ function Component({className}: Props): React.ReactElement<Props> {
           shape={'circle'}
           schema="primary"
           size={'sm'}
-          onClick={goConnect}
+          onClick={launchApp}
           className={'__button general-button'}
           icon={<Icon
             phosphorIcon={GlobeHemisphereWest}

@@ -9,8 +9,13 @@ import {EventTitles} from '../EventTitles';
 import {Wallet} from 'phosphor-react';
 import {AppContext} from '../../contexts';
 import {WalletContext} from '../../contexts';
+import {isMobile} from "../../utils/environment";
 
 type Props = ThemeProps;
+
+const openLink = function(url: string) {
+    window.location.replace(url)
+}
 
 function Component({className}: ThemeProps): React.ReactElement<Props> {
   const {collectionInfo} = useContext(AppContext);
@@ -34,7 +39,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
   }, [isSubWalletInstalled, onConnectWallet, walletContext.currentWallet]);
 
   const onInstallWallet = () => {
-    openInNewTab(DOWNLOAD_URL)();
+    isMobile ? openLink('https://mobile.subwallet.app/?url=https%3A%2F%2Fnft.dotinvietnam.com') : openInNewTab(DOWNLOAD_URL)();
   };
 
   return (
@@ -51,7 +56,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
         icon={<Icon phosphorIcon={Wallet} weight="fill"/>}
         onClick={isSubWalletInstalled ? onConnectWallet : onInstallWallet}
       >
-        {isSubWalletInstalled ? 'Connect Subwallet' : 'Install Wallet'}
+        {isSubWalletInstalled ? 'Connect Subwallet' : isMobile ? 'Open SubWallet' : 'Install Wallet'}
       </Button>
 
       <div className={'__mint-count'}>
