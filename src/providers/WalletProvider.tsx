@@ -126,13 +126,15 @@ export function WalletProvider({children}: Props) {
       if (walletType === 'substrate') {
         const wallet = getWalletBySource(walletKey);
         setCurrentWallet(wallet);
-        if (wallet && wallet?.installed) {
-          afterSelectWallet(wallet).catch(console.error).finally(() => {
+        setTimeout(() => {
+          if (wallet && wallet?.installed) {
+            afterSelectWallet(wallet).catch(console.error).finally(() => {
+              setIsReady(true);
+            });
+          } else {
             setIsReady(true);
-          });
-        } else {
-          setIsReady(true);
-        }
+          }
+        }, 150);
       } else {
         const evmWallet = getEvmWalletBySource(walletKey);
         setCurrentWallet(evmWallet);
