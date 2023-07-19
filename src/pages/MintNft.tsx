@@ -287,7 +287,7 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
           </div>
           <div className={'__table-row'}>
             <div className={'__table-row-title'}>Gas Fee</div>
-            <div className={'__table-row-value'}>sponsored by SubWallet</div>
+            <div className={'__table-row-value'}>Sponsored by SubWallet</div>
           </div>
           <div className={'__table-footer'}>
             <div className={'__table-row-title'}>Total</div>
