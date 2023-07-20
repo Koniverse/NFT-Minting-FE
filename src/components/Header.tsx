@@ -53,7 +53,7 @@ export function Component({className}: HeaderProps): React.ReactElement {
             </a>
           </div>
           <div className="__menu-item">
-            <a className="__link-button" href='https://dotinvietnam.com/' target={"_blank"}>
+            <a className="__link-button" href='https://dotinvietnam.com/decoded-satellite-event.html' target={"_blank"}>
               DOTinVietNam
             </a>
           </div>
@@ -101,7 +101,7 @@ export function Component({className}: HeaderProps): React.ReactElement {
               </a>
             </div>
             <div className="__menu-item">
-              <a className="__link-button" href='https://dotinvietnam.com/' target={"_blank"}>
+              <a className="__link-button" href='https://dotinvietnam.com/decoded-satellite-event.html' target={"_blank"}>
                 DOTinVietNam
               </a>
             </div>
