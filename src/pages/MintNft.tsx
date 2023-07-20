@@ -10,6 +10,7 @@ import {ArrowCircleUpRight, CheckCircle, Question, Wallet, XCircle} from 'phosph
 import LoadingIcon from '@subwallet/react-ui/es/button/LoadingIcon';
 import CN from 'classnames';
 import Collection from '../components/Collection';
+import { formatDateToCustomFormat } from '../utils/datetime';
 
 type Props = ThemeProps;
 
@@ -93,6 +94,7 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
     mintedNft,
     setMintedNft,
   } = useContext(AppContext);
+  const currentCampaign = collectionInfo?.currentCampaign;
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<'check' | 'confirm'>('check');
   const walletContext = useContext(WalletContext);
@@ -251,11 +253,17 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
                           checkResult={mintCheckResult.notDuplicated}/>
               <div className={'__checklist-item-text'}>This is your first time minting this NFT</div>
             </div>
+            {currentCampaign && <div className={'__checklist-item'}>
+              <StatusIcon isLoading={loading} checked={mintCheckResult.inMintingTime !== undefined}
+                          checkResult={mintCheckResult.inMintingTime}/>
+              <div className={'__checklist-item-text'}>Mint
+                from {formatDateToCustomFormat(currentCampaign.startTimeObj)} to {formatDateToCustomFormat(currentCampaign.endTimeObj)}</div>
+            </div>}
           </div>
 
           <NextButton isLoading={loading}
                       needSign={!currentAccountData.signature}
-                      needRecheck={!!currentAccountData.signature && (!mintCheckResult.hasBalance || !mintCheckResult.notDuplicated)}
+                      needRecheck={!!currentAccountData.signature && (!mintCheckResult.hasBalance || !mintCheckResult.notDuplicated || !mintCheckResult.inMintingTime)}
                       recheckAction={mintCheck}
                       signAction={signToCheck}
                       nextAction={nextStep}/>
