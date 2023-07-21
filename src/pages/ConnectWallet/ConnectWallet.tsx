@@ -39,7 +39,7 @@ function Component({className}: ThemeProps): React.ReactElement<Props> {
   }, [isSubWalletInstalled, onConnectWallet, walletContext.currentWallet]);
 
   const onInstallWallet = () => {
-    isMobile ? openLink('https://mobile.subwallet.app/?url=https%3A%2F%2Fnft.dotinvietnam.com') : openInNewTab(DOWNLOAD_URL)();
+    isMobile ? openLink('https://mobile.subwallet.app/browser?url=https%3A%2F%2Fnft.dotinvietnam.com') : openInNewTab(DOWNLOAD_URL)();
   };
 
   return (
