@@ -2,7 +2,7 @@ import {MintCheckResult, MintedNftResponse, Theme, ThemeProps} from '../types';
 import styled, {ThemeContext} from 'styled-components';
 import React, {Context, useCallback, useContext, useEffect, useState} from 'react';
 import {AppContext, WalletContext} from '../contexts';
-import {Button, Form, Icon, Input, Number} from '@subwallet/react-ui';
+import {Button, Form, Icon, Input, notification, Number} from '@subwallet/react-ui';
 import {APICall} from '../api/nft';
 import {isAddress, isEthereumAddress} from '@polkadot/util-crypto';
 import {RuleObject} from '@subwallet/react-ui/es/form';
@@ -10,6 +10,7 @@ import {ArrowCircleUpRight, CheckCircle, Question, Wallet, XCircle} from 'phosph
 import LoadingIcon from '@subwallet/react-ui/es/button/LoadingIcon';
 import CN from 'classnames';
 import Collection from '../components/Collection';
+import useNotification from "../hooks/useNotification";
 
 type Props = ThemeProps;
 
@@ -96,6 +97,7 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<'check' | 'confirm'>('check');
   const walletContext = useContext(WalletContext);
+  const [notify, contextHolder] = notification.useNotification();
 
   // Mint Data
   const [mintCheckResult, setMintCheckResult] = useState<Partial<MintCheckResult>>({});
@@ -168,6 +170,7 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
             signature,
             campaignId,
           }).then((rs: MintCheckResult) => {
+
             if (!cancel) {
               setMintCheckResult(rs);
             }
@@ -185,7 +188,7 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
         cancel = true;
       };
     },
-    [collectionInfo?.currentCampaignId, currentAccountData, currentAddress, isAppReady, mintedNft, signToCheck],
+    [collectionInfo?.currentCampaignId, currentAccountData, currentAddress, isAppReady, mintedNft],
   );
 
   const nextStep = useCallback(() => {
@@ -210,7 +213,17 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
           recipient: recipient || currentAddress
         }
       ).then((rs: MintedNftResponse) => {
-        setMintedNft(rs);
+        if (rs.status === 'success') {
+          setMintedNft(rs);
+        } else {
+          notify.error({
+            key: 'minting-failed',
+            placement: 'top',
+            message: 'Minting Failed',
+            description: 'Please try to mint later.',
+            duration: 2.4,
+          });
+        }
       }).finally(() => {
         setLoading(false);
       });
@@ -222,6 +235,7 @@ function Component({className, theme}: ThemeProps): React.ReactElement<Props> {
       '-step-check': step === 'check',
       '-step-confirm': step === 'confirm',
     })}>
+      {contextHolder}
       <div className="__left-part">
         {
           collectionInfo && (
