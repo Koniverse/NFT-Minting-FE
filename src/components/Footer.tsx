@@ -15,9 +15,6 @@ enum SocialType {
   TELEGRAM = 'telegram',
 }
 
-class PhosphorIcon {
-}
-
 interface SocialItem {
   icon: SwIconProps['phosphorIcon'];
   type: SocialType;

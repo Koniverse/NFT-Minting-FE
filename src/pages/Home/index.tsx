@@ -10,17 +10,9 @@ import {useNavigate} from 'react-router';
 import { GlobeHemisphereWest } from 'phosphor-react';
 import {AppContext} from "../../contexts";
 import {isMobile} from "../../utils/environment";
+import { formatDateToCustomFormat } from '../../utils/datetime';
 
 type Props = ThemeProps;
-
-function formatDateToCustomFormat(date: Date) {
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const month = date.toLocaleString('default', { month: 'short' });
-  const day = date.getDate();
-
-  return `${day} ${month} ${hours}:${minutes}`;
-}
 
 function Component({className}: Props): React.ReactElement<Props> {
   const navigate = useNavigate();

@@ -145,4 +145,5 @@ export type MintCheckResult = {
   isOwner: boolean,
   hasBalance: boolean,
   notDuplicated: boolean,
+  inMintingTime: boolean,
 };
